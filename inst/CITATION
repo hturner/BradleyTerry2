@@ -1,0 +1,20 @@
+## R >= 2.8.0 passes package metadata to citation().
+if(!exists("meta") || is.null(meta)) meta <- packageDescription("BradleyTerry")
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version) 
+url <- sprintf("http://CRAN.R-project.org/package=BradleyTerry", meta$Version) 
+
+citEntry(entry="Manual",
+    title = {"Bradley-Terry models in R"},
+    author = personList(as.person("Heather Turner"),
+                        as.person("David Firth")),
+    year = year,
+    note = note,
+    url = url,
+    textVersion = paste(
+      "Heather Turner and David Firth", sprintf("(%s).", year),
+      "Bradley-Terry models in R.",
+      sprintf("(%s).", note), sprintf("(%s).", url))
+)
+
+

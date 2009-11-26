@@ -1,0 +1,15 @@
+print.glmmPQL <- function (x, digits = max(3, getOption("digits") - 3), ...)
+{
+    if (identical(x$sigma, 0)){
+        message("PQL algorithm converged to fixed effects model")
+        return(NextMethod())
+    }
+    cat("\nCall: ", deparse(x$call), "\n", sep = "", fill = TRUE)
+    if (length(coef(x))) {
+        cat("Fixed effects:\n\n")
+        print.default(format(x$coefficients, digits = digits),
+            print.gap = 2, quote = FALSE)
+    }
+    else cat("No fixed effects\n\n")
+    cat("\nRandom Effects Std. Dev.:", x$sigma, "\n")
+}

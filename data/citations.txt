@@ -1,0 +1,17 @@
+"winner" "loser" "Freq"
+"1" "Biometrika" "Biometrika" NA
+"2" "Comm Statist" "Biometrika" 33
+"3" "JASA" "Biometrika" 320
+"4" "JRSS-B" "Biometrika" 284
+"5" "Biometrika" "Comm Statist" 730
+"6" "Comm Statist" "Comm Statist" NA
+"7" "JASA" "Comm Statist" 813
+"8" "JRSS-B" "Comm Statist" 276
+"9" "Biometrika" "JASA" 498
+"10" "Comm Statist" "JASA" 68
+"11" "JASA" "JASA" NA
+"12" "JRSS-B" "JASA" 325
+"13" "Biometrika" "JRSS-B" 221
+"14" "Comm Statist" "JRSS-B" 17
+"15" "JASA" "JRSS-B" 142
+"16" "JRSS-B" "JRSS-B" NA

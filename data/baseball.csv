@@ -1,0 +1,43 @@
+"home.team","away.team","home.wins","away.wins"
+"Milwaukee","Detroit",4,3
+"Milwaukee","Toronto",4,2
+"Milwaukee","New York",4,3
+"Milwaukee","Boston",6,1
+"Milwaukee","Cleveland",4,2
+"Milwaukee","Baltimore",6,0
+"Detroit","Milwaukee",3,3
+"Detroit","Toronto",4,2
+"Detroit","New York",4,3
+"Detroit","Boston",6,0
+"Detroit","Cleveland",6,1
+"Detroit","Baltimore",4,3
+"Toronto","Milwaukee",2,5
+"Toronto","Detroit",4,3
+"Toronto","New York",2,4
+"Toronto","Boston",4,3
+"Toronto","Cleveland",4,2
+"Toronto","Baltimore",6,0
+"New York","Milwaukee",3,3
+"New York","Detroit",5,1
+"New York","Toronto",2,5
+"New York","Boston",4,3
+"New York","Cleveland",4,2
+"New York","Baltimore",6,1
+"Boston","Milwaukee",5,1
+"Boston","Detroit",2,5
+"Boston","Toronto",3,3
+"Boston","New York",4,2
+"Boston","Cleveland",5,2
+"Boston","Baltimore",6,0
+"Cleveland","Milwaukee",2,5
+"Cleveland","Detroit",3,3
+"Cleveland","Toronto",3,4
+"Cleveland","New York",4,3
+"Cleveland","Boston",4,2
+"Cleveland","Baltimore",2,4
+"Baltimore","Milwaukee",2,5
+"Baltimore","Detroit",1,5
+"Baltimore","Toronto",1,6
+"Baltimore","New York",2,4
+"Baltimore","Boston",1,6
+"Baltimore","Cleveland",3,4

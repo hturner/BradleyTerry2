@@ -1,0 +1,15 @@
+export(BTabilities, BTm, BTresiduals, countsToBinomial, Diff, glmmPQL.control)
+
+importFrom(brglm, brglm)
+importFrom(gtools, combinations)
+
+S3method(add1, BTm)
+S3method(anova, BTm)
+S3method(drop1, BTm)
+S3method(formula, BTm)
+S3method(print, BTm)
+S3method(print, glmmPQL)
+S3method(print, summary.glmmPQL)
+S3method(summary, glmmPQL)
+S3method(vcov, glmmPQL)
+
