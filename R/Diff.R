@@ -31,7 +31,7 @@ Diff <- function(player1, player2, formula = NULL,  id = NULL, data = NULL,
             offset <- model.offset(mf1)
             predvars <- setdiff(seq(ncol(mf1)),
                                 attr(attr(mf1, "terms"), "offset"))
-            predvars <- terms(~ . - 1,data = mf1[,predvars])
+            predvars <- terms(~ . ,data = mf1[, predvars, drop = FALSE])
             X1 <- model.matrix(predvars, mf1)
             X1miss <- is.na(rowSums(X1))
             mf2 <- model.frame(terms(fixed), data = c(player2, data),
@@ -41,7 +41,8 @@ Diff <- function(player1, player2, formula = NULL,  id = NULL, data = NULL,
             X2miss <- is.na(rowSums(X2))
 
             X <- missToZero(X1, X1miss) - missToZero(X2, X2miss)
-            attr(X, "assign") <- attr(X1, "assign")
+            X <- X[, -1, drop = FALSE]
+            attr(X, "assign") <- attr(X1, "assign")[-1]
             if (qr(na.omit(X))$rank == nplayers) break
 
             #unique(unlist(list(player.one[X1miss], player.two[X2miss])))
@@ -63,7 +64,7 @@ Diff <- function(player1, player2, formula = NULL,  id = NULL, data = NULL,
         if (length(separate.effect)) {
             X <- cbind(D[, separate.effect, drop = FALSE], X)
             attr(X, "assign") <- c(rep(0, length(separate.effect)),
-                                   attr(X1, "assign"))
+                                   attr(X1, "assign")[-1])
             if (!is.null(random))
                 random <- missToZero(D, separate.effect, 2)
         }

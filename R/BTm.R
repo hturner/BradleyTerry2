@@ -93,8 +93,7 @@ BTm <- function(outcome, player1, player2, formula = NULL,
                                     weights = weights, subset = subset,
                                     na.action = na.action, start = start,
                                     etastart = etastart, mustart = mustart,
-                                    offset = model$offset, control = control,
-                                    ...))
+                                    offset = model$offset, ...))
     }
     else {
         if (br)

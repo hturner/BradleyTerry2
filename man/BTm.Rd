@@ -127,7 +127,7 @@ BTm(formula, family = binomial, data = NULL, subset = NULL,
 ##  Statistics journal citation data from Stigler (1994)
 ##  -- see also Agresti (2002, p448)
 ########################################################
-data(citations, package = "BradleyTerry")
+data(citations, package = "BradleyTerry2")
 
 ## Convert frequencies to success/failure data
 results <- countsToBinomial(xtabs(Freq ~ winner + loser, data = citations))
@@ -136,30 +136,31 @@ results <- countsToBinomial(xtabs(Freq ~ winner + loser, data = citations))
 citeModel <- BTm(cbind(won, lost), player1, player2, data = results)
 
 ##  Now the same thing with a different "reference" journal
-update(citeModel, . ~ . - Diff(player1, player2)
-       + Diff(player1, player2, refcat = "JASA"))
+update(citeModel, refcat = "JASA")
 
 ##  Is the "citeability" of a journal predicted by its country of origin?
 journals <- data.frame(row.names = levels(results$player1),
     origin = factor(c("UK", "USA", "USA", "UK")))
-citeModel2 <- BTm(cbind(won, lost), player1, player2, ~ origin,
+citeModel2 <- BTm(cbind(won, lost), player1, player2,
+                  ~ origin[..] + (1|..),
                   data = list(journals, results))
 ##  Hmm... not so sure about the origin of "Comm Statist" ...
 is.na(journals$origin[2]) <- TRUE
-citeModel2 <- update(citeModel2, . ~ .)
+citeModel2 <- update(citeModel2, formula = ~ .)
 
 ##################################################################
 ##  Now an example with an order effect -- see Agresti (2002) p438
 ##################################################################
-data(baseball, package = "BradleyTerry")
+data(baseball, package = "BradleyTerry2")
 
 ##  Simple Bradley-Terry model, ignoring home advantage:
-baseballModel1 <- BTm(cbind(home.wins, away.wins) ~
-    -1 + Diff(home.team, away.team), data = baseball)
+baseballModel1 <- BTm(cbind(home.wins, away.wins), home.team, away.team,
+                      data = baseball)
 
-##  Now incorporate the "home advantage" effect, in this case just by
-##  including the intercept term:
-baseballModel2 <- update(baseballModel1, . ~ . + 1)
+##  Now incorporate the "home advantage" effect
+home.team <- with(baseball, data.frame(team = home.team, at.home = 1))
+away.team <- with(baseball, data.frame(team = away.team, at.home = 0))
+baseballModel2 <- update(baseballModel1, formula = ~ team + at.home)
 
 ##  Compare the fit of these two models:
 anova(baseballModel1, baseballModel2)

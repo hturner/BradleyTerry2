@@ -1,16 +1,17 @@
 add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
                       x = NULL, ...) {
+    if (is.null(object$random)) return(NextMethod())
+
     old.form <- formula(object)
-    new.form <- scope
+    new.form <- update.formula(old.form, scope)
 
-    orandom <- lme4:::expandSlash(lme4:::findbars(old.form[[2]]))
-    srandom <- lme4:::expandSlash(lme4:::findbars(new.form[[2]]))
-    if (!identical(orandom, srandom))
-        stop("Random effect structure of object and scope must be identical.")
-    if (is.null(orandom)) return(NextMethod())
-
-    if (!is.character(scope))
-        scope <- add.scope(old.form, update.formula(old.form, scope))
+    if (!is.character(scope)){
+        orandom <- lme4:::expandSlash(lme4:::findbars(old.form[[2]]))
+        srandom <- lme4:::expandSlash(lme4:::findbars(new.form[[2]]))
+        if (length(srandom) && !identical(orandom, srandom))
+            stop("Random effects structure of object and scope must be identical.")
+        scope <- add.scope(old.form, new.form)
+    }
     if (!length(scope))
         stop("no terms in scope for adding to object")
 
@@ -35,9 +36,8 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
     ## use original term labels: no sep effects or backticks (typically)
     oTerms <- attr(terms(lme4:::nobars(old.form)), "term.labels")
     Terms <- attr(terms(lme4:::nobars(new.form)), "term.labels")
-    oasgn <- object$assign
     asgn <- attr(x, "assign")
-    ousex <- asgn %in% oasgn
+    ousex <- asgn %in% c(0, which(Terms %in% oTerms))
 
     sTerms <- sapply(strsplit(Terms, ":", fixed = TRUE),
                      function(x) paste(sort(x), collapse = ":"))
@@ -61,9 +61,9 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
         stt <- paste(sort(strsplit(scope[i], ":")[[1]]), collapse = ":")
         usex <- match(asgn, match(stt, sTerms), 0) > 0 | ousex
         if (length(missing)) {
-            X1 <- missing$X1[, asgn[usex], drop = FALSE]
+            X1 <- missing$X1[, usex[asgn > 0], drop = FALSE]
             X1miss <- is.na(rowSums(X1))
-            X2 <- missing$X2[, asgn[usex], drop = FALSE]
+            X2 <- missing$X2[, usex[asgn > 0], drop = FALSE]
             X2miss <- is.na(rowSums(X2))
             new.sep <- unique(unlist(list(missing$player1[X1miss],
                                           missing$player2[X2miss])))

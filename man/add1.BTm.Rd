@@ -62,14 +62,11 @@ BTmodel1 <- BTm(result, winner, loser,
 
 drop1(BTmodel1)
 
-add1(BTmodel1, ~ throat.PC1[..] + throat.PC3[..] + head.length[..] +
-     SVL[..] + (1|..), test = "Chisq")
+add1(BTmodel1, ~ . + head.length[..] + SVL[..], test = "Chisq")
 
-BTmodel2 <- BTm(result ~ -1 + Diff(winner, loser, ~ throat.PC1 + throat.PC3 +
-                                   head.length, data = predictors),
-                data = contests, tol = 1e-3, trace = TRUE)
+BTmodel2 <- update(BTmodel1, formula = ~ . + head.length[..])
 
-drop1(BTmodel2, ~ -1 + Diff(winner, loser, ~ 0, data = predictors), test = "Chisq")
+drop1(BTmodel2, test = "Chisq")
 
 }
 \keyword{ models }

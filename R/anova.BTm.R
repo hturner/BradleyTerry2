@@ -54,9 +54,9 @@ anova.BTm <- function (object, ..., dispersion = NULL, test = NULL)
         for (i in 1:(nvars - 1)) {
             usex <- varseq %in% seq(i)
             if (length(missing)) {
-                X1 <- missing$X1[, varseq[usex], drop = FALSE]
+                X1 <- missing$X1[, usex[varseq > 0], drop = FALSE]
                 X1miss <- is.na(rowSums(X1))
-                X2 <- missing$X2[, varseq[usex], drop = FALSE]
+                X2 <- missing$X2[, usex[varseq > 0], drop = FALSE]
                 X2miss <- is.na(rowSums(X2))
                 new.sep <- unique(unlist(list(missing$player1[X1miss],
                                               missing$player2[X2miss])))

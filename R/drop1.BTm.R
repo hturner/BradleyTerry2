@@ -4,99 +4,61 @@ drop1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
     if (is.null(object$random))
         return(NextMethod())
 
-    ## extend object$formula
-    oTerms <- attr(terms(object), "term.labels")
-    diffID <- match(object$random, oTerms)
-    prefix <- oTerms[diffID]
-    m <- model.frame(object)
-    oTerms[diffID] <- list(paste("`", prefix,
-                                 attr(m[[object$random]], "term.labels"), "`",
-                                 sep = ""))
-    tl <- unlist(oTerms)
+    form <- formula(object)
 
-    if (missing(scope) || is.empty.model(scope)) #empty Diff formula?
-        scope <- Terms <- ""
-    else {
-        if (is.character(scope))
-            stop("scope must be a formula")
-        ##get expanded term labels from scope formula, pass to drop.scope & check against expanded
-        ##object formmula - check drop scope also has random effects?
-
-        ## extend scope formula
-        Terms <- terms(scope, specials = "Diff")
-        attrTerms <- attributes(Terms)
-        diffTerms <- rownames(attrTerms$factors)[attrTerms$specials$Diff]
-
-        fc <- object$call
-        fc$formula <- Terms
-        fob <- list(call = fc, terms = Terms)
-        class(fob) <- oldClass(object)
-        mf <- model.frame(fob, xlev = object$xlevels)
-
-        Terms <- attr(Terms, "term.labels")
-        diffID <- match(diffTerms, Terms)
-        Terms[diffID] <- list(paste("`", prefix,
-                                    attr(mf[[diffTerms]], "term.labels"), "`",
-                                    sep = ""))
-        scope <- unlist(Terms)
+    if (missing(scope))
+        scope <- drop.scope(lme4:::nobars(form))
+     else {
+        if (!is.character(scope)) {
+            srandom <- lme4:::expandSlash(lme4:::findbars(scope[[2]]))
+            if (length(srandom))
+                stop("Scope should not include random effects.")
+            scope <- attr(terms(update.formula(form, scope)),
+                          "term.labels")
+        }
+        if (!all(match(scope, terms(form), 0L) > 0L))
+            stop("scope is not a subset of term labels")
     }
-
-    scope <- drop.scope(reformulate(setdiff(tl, scope)))
-    if (!length(scope))
-        stop("no terms in scope for adding to object")
-    if (!all(match(scope, tl, 0L) > 0L))
-        stop("scope is not a subset of term labels")
 
     x <- model.matrix(object)
-    asgn <- ext.asgn <- attr(x, "assign")
-    ext.asgn[ext.asgn == diffID] <-  attr(m[[object$random]], "assign")/10 + diffID #single term
-    separate <- is.na(ext.asgn)
-    any.sep <- any(separate)
-    if (any.sep) {
-        match.sep <- list()
-        match.sep[[diffID]] <- matrix(0, nr = sum(separate),
-                                      nc = length(separate))
-        match.sep[[diffID]][,asgn == diffID & !separate] <-
-            attr(m[[object$random]], "match.sep")
-        match.sep <- do.call("rbind", match.sep)
-    }
-    diffID <- asgn == diffID
-    asgn <- ext.asgn
-    asgn[separate] <- 0
-    asgn <- match(asgn, unique.default(c(0, asgn))) - 1
+    asgn <- object$assign
+
+    missing <- object$missing
+    vars <- colnames(x)
+    sep <- factor(vars[asgn == 0], levels(object$player1[, object$id]))
 
     coefs <- coef(object)
     vc <- vcov(object, dispersion = scale) #vcov should deal with dispersion != 1
 
-    sTerms <- sapply(strsplit(scope, ":", fixed = TRUE), function(x) paste(sort(x),
-        collapse = ":"))
+    sTerms <- sapply(strsplit(scope, ":", fixed = TRUE),
+                     function(x) paste(sort(x), collapse = ":"))
     stat <- df <- numeric(length(scope))
-    names(stat) <- names(df) <- scope
+    names(stat) <- names(df) <- as.character(sapply(scope, as.name))
     tryerror <- FALSE
-    for (tt in scope) {
-        stt <- paste(sort(strsplit(tt, ":")[[1]]), collapse = ":")
+    for (i in seq(scope)) {
+        stt <- paste(sort(strsplit(scope[i], ":")[[1]]), collapse = ":")
         usex <- match(asgn, match(stt, sTerms), 0) > 0
-        usex[separate] <- rowSums((!match.sep)[, !usex & !separate & diffID, drop = FALSE]) == 0
-        ind <- usex
+        if (length(missing)) {
+            X1 <- missing$X1[, !usex[asgn > 0], drop = FALSE]
+            X1miss <- is.na(rowSums(X1))
+            X2 <- missing$X2[, !usex[asgn > 0], drop = FALSE]
+            X2miss <- is.na(rowSums(X2))
+            new.sep <- unique(unlist(list(missing$player1[X1miss],
+                                          missing$player2[X2miss])))
+            usex <- usex | vars %in% setdiff(sep, new.sep)
+        }
         trystat <- try(t(coefs[usex]) %*% chol2inv(chol(vc[usex, usex])) %*%
                        coefs[usex], silent = TRUE)
         if (inherits(trystat, "try-error")) {
-            stat[tt] <- df[tt] <- NA
+            stat[i] <- df[i] <- NA
             tryerror <- TRUE
         }
         else {
-            stat[tt] <- trystat
-            df[tt] <- sum(ind)
+            stat[i] <- trystat
+            df[i] <- sum(usex)
         }
     }
     table <- data.frame(stat, df)
-    names(df) <- gsub("`", "", names(df))
-    if (nchar(prefix) > 25) {
-        DiffCall <- match.call(Diff, parse(text = prefix))
-        short <- paste("Diff(", deparse(DiffCall$player1), ", ",
-                       deparse(DiffCall$player2), ", ...)", sep = "")
-        names(df) <- gsub(prefix, short, names(df), fixed = TRUE)
-    }
     dimnames(table) <- list(names(df), c("Statistic", "Df"))
     title <- "Single term deletions\n"
     topnote <- gsub("\\s+", " ", paste("Model: ",
