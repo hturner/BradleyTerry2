@@ -111,7 +111,7 @@ anova.BTm <- function (object, ..., dispersion = NULL, test = NULL)
     dimnames(table) <- list(c("NULL", termLabels[varseq > 0]), c("Statistic", "Df"))
     title <- paste("Sequential Wald Tests", "\n\nModel: ",
                    object$family$family, ", link: ", object$family$link,
-                   "\n\nResponse: ", formula(object$terms)[[2]],
+                   "\n\nResponse: ", formula(object)[[2]],
                    "\n\nPredictor: ", paste(object$formula, collapse = ""),
                    "\n\nTerms added sequentially (first to last)",
                    if (tryerror)

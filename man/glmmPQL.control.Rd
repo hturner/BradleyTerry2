@@ -52,9 +52,9 @@ result <- rep(1, nrow(contests))
 
 ## BTm passes arguments on to glmmPQL.control()
 args(BTm)
-BTmodel <- BTm(result ~ -1 + Diff(winner, loser, ~ throat.PC1 + throat.PC3 +
-                                  head.length + SVL, data = predictors),
-               data = contests, tol = 1e-3, trace = TRUE)
+BTmodel <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
+               head.length[..] + SVL[..] + (1|..),
+               data = list(contests, predictors), tol = 1e-3, trace = TRUE)
 summary(BTmodel)
 }
 \keyword{ models }

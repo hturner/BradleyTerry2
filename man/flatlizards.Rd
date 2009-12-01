@@ -82,8 +82,7 @@
   a lizard. \emph{Animal Behaviour} \bold{72}, 353-363. (\url{http://dx.doi.org/10.1016/j.anbehav.2005.10.018})
 }
 \examples{
-library(BradleyTerry)
-data(flatlizards)
+data(flatlizards, package = "BradleyTerry2")
 ##
 ##  Fit the standard Bradley-Terry model, using the bias-reduced
 ##  maximum likelihood method:
@@ -107,13 +106,12 @@ summary(BTmodel)
 Whiting.model <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
                      head.length[..] + SVL[..], family = binomial,
                      data = list(contests, predictors))
-names(Whiting.model$coefficients) <- c("lizard96", "lizard99", "throat.PC1", "throat.PC3", "head.length", "SVL")
 summary(Whiting.model)
 ##
-##  Equivalently, fit the same model using BTm:
+##  Equivalently, fit the same model using glmmPQL:
 ##
 Whiting.model <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
-                     head.length[..] + SVL[..], sigma = 0,
+                     head.length[..] + SVL[..] + (1|..), sigma = 0,
                      sigma.fixed = TRUE, data = list(contests, predictors))
 summary(Whiting.model)
 ##
@@ -140,11 +138,10 @@ summary(Whiting.model2)
 ##  at least as natural to use probit rather than logit as the link
 ##  function:
 ##
-Whiting.model3 <- BTm(result,  ~ -1 + Diff(winner, loser,
-                                   ~ throat.PC1 + throat.PC3 +
-                                     head.length + SVL, data = predictors),
-                family = binomial(link = "probit"),
-                data = contests, trace = TRUE)
+Whiting.model3 <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
+                      head.length[..] + SVL[..] + (1|..),
+                      family = binomial(link = "probit"),
+                      data = list(contests, predictors), trace = TRUE)
 summary(Whiting.model3)
 BTabilities(Whiting.model3)
 ##  Note the "separate" attribute here, identifying two lizards with

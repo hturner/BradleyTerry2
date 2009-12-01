@@ -40,7 +40,6 @@ freq <- xtabs(Freq ~ ., citations)
 results <- countsToBinomial(freq)
 
 ## Standard Bradley-Terry model fitted to these data
-citeModel <- BTm(cbind(won, lost) ~ -1 + Diff(player1, player2),
-                 data = results)
+citeModel <-  BTm(cbind(won, lost), player1, player2, data = results)
 }
 \keyword{datasets}

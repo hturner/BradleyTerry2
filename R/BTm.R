@@ -23,10 +23,16 @@ BTm <- function(outcome, player1, player2, formula = NULL,
     if (!is.data.frame(data))
         data <- unlist(data, recursive = FALSE) ##-- subset etc? apply to model.frame
     ## (will take first occurence of replicated names)
-    Y <- eval(substitute(data.frame(outcome)), data)
-    player1 <- eval(substitute(data.frame(player1)), data)
-    player2 <- eval(substitute(data.frame(player2)), data)
-    colnames(player1) <- colnames(player2) <- id
+    withIfNecessary <- function(x, data) {
+        if (class(try(eval(x), silent = TRUE)) == "try-error")
+            eval(substitute(data.frame(x), list(x = x)), data)
+        else eval(substitute(data.frame(x), list(x = x)))
+    }
+    Y <- withIfNecessary(substitute(outcome), data)
+    player1 <- withIfNecessary(substitute(player1), data)
+    player2 <- withIfNecessary(substitute(player2), data)
+    if (ncol(player1) == 1) colnames(player1) <- colnames(player2) <- id
+    if (is.null(formula)) formula <- reformulate(id)
     model <- Diff(player1, player2, formula, id, data, separate.effect, refcat)
     mf <- cbind(Y, model$X)
     colnames(mf) <- gsub("`", "", colnames(mf))

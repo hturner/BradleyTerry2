@@ -2,7 +2,7 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
                       x = NULL, ...) {
     if (is.null(object$random)) return(NextMethod())
 
-    old.form <- formula(object)
+    old.form <- object$formula
     new.form <- update.formula(old.form, scope)
 
     if (!is.character(scope)){
@@ -102,7 +102,7 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
     table <- data.frame(stat, df)
     dimnames(table) <- list(names(df), c("Statistic", "Df"))
     title <- "Single term additions\n"
-    topnote <- paste("Model: ", deparse(as.vector(formula(object))),
+    topnote <- paste("Model: ", deparse(as.vector(object$formula)),
                      if (scale > 0) paste("\nscale: ", format(scale), "\n"),
                      if (tryerror)
                      "\n\nTest statistic unestimable for at least one term")

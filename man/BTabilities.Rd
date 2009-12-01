@@ -35,16 +35,15 @@ data(citations, package = "BradleyTerry2")
 results <- countsToBinomial(xtabs(Freq ~ winner + loser, data = citations))
 
 ##  First fit the "standard" Bradley-Terry model
-citeModel <- BTm(cbind(won, lost) ~ -1 + Diff(player1, player2),
-                 data = results)
+citeModel <- BTm(cbind(won, lost), player1, player2, data = results)
 BTabilities(citeModel)
 
 ##  Now fit a model in which country of origin predicts "ability"
 journals <- data.frame(row.names = levels(results$player1),
     origin = factor(c("UK", "USA", "USA", "UK")))
-citeModel2 <- BTm(cbind(won, lost) ~ -1 +
-                   Diff(player1, player2, ~origin, data = journals),
-                   data = results)
+citeModel2 <- BTm(cbind(won, lost), player1, player2,
+                  ~origin[..] + (1|..),
+                  data = list(journals, results))
 BTabilities(citeModel2)
 }
 \keyword{ models }

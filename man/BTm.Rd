@@ -155,7 +155,7 @@ data(baseball, package = "BradleyTerry2")
 
 ##  Simple Bradley-Terry model, ignoring home advantage:
 baseballModel1 <- BTm(cbind(home.wins, away.wins), home.team, away.team,
-                      data = baseball)
+                      data = baseball, id = "team")
 
 ##  Now incorporate the "home advantage" effect
 home.team <- with(baseball, data.frame(team = home.team, at.home = 1))

@@ -1,4 +1,4 @@
-Diff <- function(player1, player2, formula = NULL,  id = NULL, data = NULL,
+Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
                  #offset = NULL,
                  separate.effect = NULL, refcat = NULL) {
     player.one <- player1[[id]]
@@ -8,6 +8,7 @@ Diff <- function(player1, player2, formula = NULL,  id = NULL, data = NULL,
         !identical(levels(player.one), levels(player.two)))
         stop("'player1$", id, "' and 'player2$", id,
              "' must be factors with the same levels")
+    if(is.null(formula)) formula <- reformulate(id)
 
     players <- levels(player.one)
     nplayers <- nlevels(player.one)
@@ -17,8 +18,7 @@ Diff <- function(player1, player2, formula = NULL,  id = NULL, data = NULL,
     D <- D - (col(D) == as.numeric(player.two))
     colnames(D) <- players
 
-    if (!is.null(formula)) {
-
+    if (formula[[2]] != id) {
         fixed <- lme4:::nobars(formula)
         offset <- missing <- NULL
         X <- matrix(nr = nrow(D), nc = 0)
@@ -43,7 +43,13 @@ Diff <- function(player1, player2, formula = NULL,  id = NULL, data = NULL,
             X <- missToZero(X1, X1miss) - missToZero(X2, X2miss)
             X <- X[, -1, drop = FALSE]
             attr(X, "assign") <- attr(X1, "assign")[-1]
-            if (qr(na.omit(X))$rank == nplayers) break
+            if (qr(na.omit(X))$rank == nplayers &&
+                !(id %in% attr(predvars, "term.labels"))) {
+                if (is.null(refcat))
+                    list(X = D[, -1])
+                else
+                    list(X = D[, -match(refcat, players)])
+            }
 
             #unique(unlist(list(player.one[X1miss], player.two[X2miss])))
             missing <- unique(c(player.one[X1miss], player.two[X2miss]))
@@ -56,7 +62,7 @@ Diff <- function(player1, player2, formula = NULL,  id = NULL, data = NULL,
                      "structure allowed.")
             random <- D
         }
-        else if (fixed[[2]] != id)
+        else if (!(id %in% attr(predvars, "term.labels")))
             warning("Ability modelled by predictors but no random effects",
                     call. = FALSE)
 
@@ -80,7 +86,7 @@ Diff <- function(player1, player2, formula = NULL,  id = NULL, data = NULL,
         return(list(X = X, random = random, offset = offset, missing = missing))
     }
 
-    colnames(D) <- paste("..", colnames(D), sep = "")
+    colnames(D) <- paste(id, colnames(D), sep = "")
     if (is.null(refcat))
         list(X = D[, -1])
     else

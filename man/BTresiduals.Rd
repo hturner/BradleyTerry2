@@ -41,9 +41,9 @@ results <- countsToBinomial(xtabs(Freq ~ winner + loser, data = citations))
 ##
 journals <- data.frame(row.names = levels(results$player1),
     origin = factor(c("UK", "USA", "USA", "UK")))
-citeModel2 <- BTm(cbind(won, lost) ~ -1 +
-                   Diff(player1, player2, ~origin, data = journals),
-                   data = results)
+citeModel2 <- BTm(cbind(won, lost), player1, player2,
+                  ~ origin[..] + (1|..),
+                  data = list(journals, results))
 BTresiduals(citeModel2)
 }
 \keyword{ models }
