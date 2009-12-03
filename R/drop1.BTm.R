@@ -1,10 +1,12 @@
 drop1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
                       ...) {
     ## Pass on if no random effects
-    if (is.null(object$random))
+    if (is.null(object$random)){
+        object$formula <- formula(terms(object))
         return(NextMethod())
+    }
 
-    form <- object$formula
+    form <- formula(object)
 
     if (missing(scope))
         scope <- drop.scope(lme4:::nobars(form))
@@ -62,7 +64,7 @@ drop1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
     dimnames(table) <- list(names(df), c("Statistic", "Df"))
     title <- "Single term deletions\n"
     topnote <- gsub("\\s+", " ", paste("Model: ",
-                                     paste(deparse(as.vector(object$formula)),
+                                     paste(deparse(as.vector(formula(object))),
                                            collapse = ""),
                      if (scale > 0) paste("\nscale: ", format(scale), "\n"),
                      if (tryerror)

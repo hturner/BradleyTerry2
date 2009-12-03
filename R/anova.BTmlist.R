@@ -1,6 +1,6 @@
 anova.BTmlist <- function (object, ..., dispersion = NULL, test = NULL) {
     responses <- as.character(lapply(object, function(x) {
-        deparse(formula(x)[[2]])
+        deparse(formula(terms(x))[[2]])
     }))
     sameresp <- responses == responses[1]
     if (!all(sameresp)) {
@@ -29,7 +29,7 @@ anova.BTmlist <- function (object, ..., dispersion = NULL, test = NULL) {
     }
     stat[1] <- NA
     table <- data.frame(stat, c(NA, diff(ncoefs)))
-    variables <- lapply(object, function(x) paste(deparse(x$formula),
+    variables <- lapply(object, function(x) paste(deparse(formula(x)),
                                                   collapse = "\n"))
     dimnames(table) <- list(1:nmodels, c("Statistic", "Df"))
     title <- paste("Sequential Wald Tests\n\n",

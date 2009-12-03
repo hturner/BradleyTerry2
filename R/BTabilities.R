@@ -5,27 +5,23 @@ BTabilities <-  function (model, formula = NULL)
 
     X0 <- model.matrix(model)
     if (qr(X0)$rank != nlevels(model$player1[, model$id]) - 1) {
-
-        players <- model$player1[!duplicated(model$player1[, model$id]),,
-                                 drop = FALSE]
-        extra <- match(setdiff(players, levels(model$player1[, model$id])),
-                       model$player2[, model$id], 0)
-        players <- rbind(players, model$player2[extra,, drop = FALSE])
-
         if (is.null(formula)) { # assume player covariates indexed by id
             fixed <- lme4:::nobars(model$formula)
-            mf <- model.frame(terms(fixed), data = c(players, model$data),
-                              na.action = na.pass)
-            by.id <- grep(paste("[", model$id, "]", sep = ""), colnames(mf))
-            drop <- setdiff(seq(ncol(mf)), by.id)
+            factors <- attr(terms(fixed), "factors")
+            vars <- rownames(vars)
+            by.id <- c(grep(paste("[", model$id, "]", sep = ""), vars,
+                            fixed = TRUE), which(vars == model$id))
+            drop <- setdiff(seq(length(vars)), by.id)
             ## following will only work for linear terms
             keep <- colSums(attr(terms(fixed), "factors")[drop,, drop = FALSE]) == 0
             formula <- reformulate(names(keep)[keep])
         }
-        else
-            mf <- model.frame(terms(formula), data = c(players, model$data),
-                              na.action = na.pass)
+        players <- rbind(model$player1, model$player2)
+        mf <- model.frame(terms(formula), data = c(players, model$data),
+                          na.action = na.pass)
+        mf <- unique(mf)
 
+        players <- mf[model$id]
         offset <- model.offset(mf)
         if (is.null(offset)) offset <- 0
         predvars <- setdiff(seq(ncol(mf)),
