@@ -1,64 +1,62 @@
-BTabilities <-  function (model)
+BTabilities <-  function (model, formula = NULL)
 {
     if (!inherits(model, "BTm"))
         stop("model is not of class BTm")
 
-    if (!is.null(model$random)) {
-        ## assume one diff Term for now
-        mf <- model.frame(model)
-        attrDiff <- attributes(mf[[model$random]])
-        player.vars <- attrDiff$model #inc NA
-        player.names <- rownames(player.vars)
-        offset <- model.offset(player.vars)
+    X0 <- model.matrix(model)
+    if (qr(X0)$rank != nlevels(model$player1[, model$id]) - 1) {
+
+        players <- model$player1[!duplicated(model$player1[, model$id]),,
+                                 drop = FALSE]
+        extra <- match(setdiff(players, levels(model$player1[, model$id])),
+                       model$player2[, model$id], 0)
+        players <- rbind(players, model$player2[extra,, drop = FALSE])
+
+        if (is.null(formula)) { # assume player covariates indexed by id
+            fixed <- lme4:::nobars(model$formula)
+            mf <- model.frame(terms(fixed), data = c(players, model$data),
+                              na.action = na.pass)
+            by.id <- grep(paste("[", model$id, "]", sep = ""), colnames(mf))
+            drop <- setdiff(seq(ncol(mf)), by.id)
+            ## following will only work for linear terms
+            keep <- colSums(attr(terms(fixed), "factors")[drop,, drop = FALSE]) == 0
+            formula <- reformulate(names(keep)[keep])
+        }
+        else
+            mf <- model.frame(terms(formula), data = c(players, model$data),
+                              na.action = na.pass)
+
+        offset <- model.offset(mf)
         if (is.null(offset)) offset <- 0
-        player.vars <- model.matrix(update(attrDiff$formula, ~ . + 1), player.vars)
-        player.vars <- player.vars[, -1, drop = FALSE]
-        if (!is.null(attrDiff$match.sep)) {
-            which.sep <- match(rownames(attrDiff$match.sep), player.names)
-            player.vars[which.sep,] <- 0
+        predvars <- setdiff(seq(ncol(mf)),
+                            attr(attr(mf, "terms"), "offset"))
+        predvars <- terms(~ . ,data = mf[, predvars, drop = FALSE])
+        X <- model.matrix(predvars, mf)
+        Xmiss <- is.na(rowSums(X)) |  players %in% model$separate.effect
+        X <- missToZero(X[, -1, drop = FALSE], Xmiss)
+        separate.effect <- unique(c(players[Xmiss], model$separate.effect))
+        if (length(separate.effect)) {
+            sep.fac <- factor(players[players %in% separate.effect],
+                              levels = separate.effect)
+            X <- cbind(model.matrix(~sep.fac), X)
         }
 
-        X <- model.matrix(model)
-        asgn <- attr(X, "assign")
-        termLabels <- attr(model$terms, "term.labels")
-        diffID <- match(model$random, termLabels)
-        diffLabels <- attr(mf[[model$random]], "term.labels")
-        if (length(diffLabels) > 1) {
-            termLabels[diffID] <- list(paste(termLabels[diffID],
-                                             diffLabels, sep = ""))
-            termLabels <- unlist(termLabels)
-        }
-        ext.asgn <- attr(mf[[model$random]], "assign")/10 + diffID
-        separate <- is.na(ext.asgn)
-        diffCoefs <- asgn == diffID & !separate
-        coefs <- coef(model)[diffCoefs]
-        abilities <- player.vars %*% coefs + offset
-        se.ability <- rep(0, length(abilities))
-        if (length(coefs) > 0) {
-            sqrt.vcov <- chol(vcov(model)[diffCoefs, diffCoefs])
-            se.ability <- sqrt(diag(crossprod(sqrt.vcov %*% t(player.vars))))
-        }
-        if (!is.null(attrDiff$match.sep)) {
-            abilities[which.sep] <- coef(model)[separate]
-            se.ability[which.sep] <- sqrt(diag(vcov(model))[separate])
-        }
-        separate <- rownames(attrDiff$match.sep)
+        kept <- model$assign %in% which(keep)
+
+        sqrt.vcov <- chol(vcov(model)[kept, kept])
+        se <- sqrt(diag(crossprod(sqrt.vcov %*% t(X))))
+        abilities <- cbind(X %*% coef(model)[kept] + offset, se)
+        colnames(abilities) <- c("ability", "s.e.")
+        rownames(abilities) <- sapply(as.character(players[, model$id]), as.name)
     }
     else {
-        asgn <- attr(model.matrix(model), "assign")
-        diffID <- attr(terms(model), "specials")$Diff
-        summ <- coef(summary(model))[asgn == diffID - 1,]
-        abilities <- c(0, summ[, 1])
-        se.ability <- c(0, summ[, 2])
-        players <- all.vars(attr(terms(model), "variables")[[diffID + 1]])
-        player1 <- as.factor(with(model$data, get(players[1])))
-        player2 <- as.factor(with(model$data, get(players[2])))
-        player.names <- union(levels(player1), levels(player2))
-        separate <- NULL
+        asgn <- model$assign
+        if (is.null(asgn))
+            abilities <- TRUE
+        else
+            abilities <- asgn == which(attr(terms(model$formula), "term.labels") == model$id)
+        summ <- coef(summary(model))[abilities ,]
+        abilities <- cbind(c(0, summ[, 1]), c(0, summ[, 2]))
     }
-    abilities <- cbind(abilities, se.ability)
-    colnames(abilities) <- c("ability", "s.e.")
-    rownames(abilities) <- player.names
-    attr(abilities, "separate") <- separate
     abilities
 }

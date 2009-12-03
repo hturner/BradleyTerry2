@@ -33,17 +33,17 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
                                 attr(attr(mf1, "terms"), "offset"))
             predvars <- terms(~ . ,data = mf1[, predvars, drop = FALSE])
             X1 <- model.matrix(predvars, mf1)
-            X1miss <- is.na(rowSums(X1))
+            X1miss <- is.na(rowSums(X1)) |  player1 %in% separate.effect
             mf2 <- model.frame(terms(fixed), data = c(player2, data),
                                na.action = na.pass)
             if (!is.null(offset)) offset <- offset - model.offset(mf2)
             X2 <- model.matrix(predvars, mf2)
-            X2miss <- is.na(rowSums(X2))
+            X2miss <- is.na(rowSums(X2)) |  player2 %in% separate.effect
 
             X <- missToZero(X1, X1miss) - missToZero(X2, X2miss)
             X <- X[, -1, drop = FALSE]
             attr(X, "assign") <- attr(X1, "assign")[-1]
-            if (qr(na.omit(X))$rank == nplayers &&
+            if (qr(X)$rank == nplayers &&
                 !(id %in% attr(predvars, "term.labels"))) {
                 if (is.null(refcat))
                     list(X = D[, -1])
