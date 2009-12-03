@@ -4,24 +4,25 @@ BTabilities <-  function (model, formula = NULL)
         stop("model is not of class BTm")
 
     X0 <- model.matrix(model)
-    if (qr(X0)$rank != nlevels(model$player1[, model$id]) - 1) {
+    if (!(model$id %in% attr(terms(model$formula), "term.labels"))) {
+        players <- model$player1[!duplicated(model$player1[, model$id]), ,
+                                 drop = FALSE]
+        extra <- match(setdiff(levels(model$player1), players),
+                       model$player2[, model$id], 0)
+        players <- rbind(players, model$player2[extra,, drop = FALSE])
         if (is.null(formula)) { # assume player covariates indexed by id
             fixed <- lme4:::nobars(model$formula)
             factors <- attr(terms(fixed), "factors")
-            vars <- rownames(vars)
-            by.id <- c(grep(paste("[", model$id, "]", sep = ""), vars,
-                            fixed = TRUE), which(vars == model$id))
+            vars <- rownames(factors)
+            by.id <- grep(paste("[", model$id, "]", sep = ""), vars,
+                          fixed = TRUE)
             drop <- setdiff(seq(length(vars)), by.id)
             ## following will only work for linear terms
-            keep <- colSums(attr(terms(fixed), "factors")[drop,, drop = FALSE]) == 0
+            keep <- colSums(factors[drop, , drop = FALSE]) == 0
             formula <- reformulate(names(keep)[keep])
         }
-        players <- rbind(model$player1, model$player2)
         mf <- model.frame(terms(formula), data = c(players, model$data),
                           na.action = na.pass)
-        mf <- unique(mf)
-
-        players <- mf[model$id]
         offset <- model.offset(mf)
         if (is.null(offset)) offset <- 0
         predvars <- setdiff(seq(ncol(mf)),
@@ -42,7 +43,6 @@ BTabilities <-  function (model, formula = NULL)
         sqrt.vcov <- chol(vcov(model)[kept, kept])
         se <- sqrt(diag(crossprod(sqrt.vcov %*% t(X))))
         abilities <- cbind(X %*% coef(model)[kept] + offset, se)
-        colnames(abilities) <- c("ability", "s.e.")
         rownames(abilities) <- sapply(as.character(players[, model$id]), as.name)
     }
     else {
@@ -54,5 +54,7 @@ BTabilities <-  function (model, formula = NULL)
         summ <- coef(summary(model))[abilities ,]
         abilities <- cbind(c(0, summ[, 1]), c(0, summ[, 2]))
     }
+    colnames(abilities) <- c("ability", "s.e.")
+    rownames(abilities) <- levels(model$player1[, model$id])
     abilities
 }

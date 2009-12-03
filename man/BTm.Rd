@@ -140,9 +140,13 @@ update(citeModel, refcat = "JASA")
 
 ##  Is the "citeability" of a journal predicted by its country of origin?
 journals <- data.frame(row.names = levels(results$player1),
-    origin = factor(c("UK", "USA", "USA", "UK")))
+    origin = factor(c("UK", "USA", "USA", "UK")),
+    impact = c(2.1, 1.8, 2.7, 3.4),
+    name = factor(c("b", "c", "j", "j")))
+results <- cbind(results, date = c(1, 2, 3, 4, 5, 6))
+##interaction w/ contest-specific variable not working
 citeModel2 <- BTm(cbind(won, lost), player1, player2,
-                  ~ origin[..] + (1|..),
+                  ~ origin[..] +impact[..]:date,
                   data = list(journals, results))
 ##  Hmm... not so sure about the origin of "Comm Statist" ...
 is.na(journals$origin[2]) <- TRUE

@@ -29,6 +29,7 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
                 stop("Predictor variables are not of the correct length --",
                      "they probably need indexing in 'formula'.")
             offset <- model.offset(mf1)
+            if (is.null(offset)) offset <- rep(0, nrow(mf1))
             predvars <- setdiff(seq(ncol(mf1)),
                                 attr(attr(mf1, "terms"), "offset"))
             predvars <- terms(~ . ,data = mf1[, predvars, drop = FALSE])
@@ -43,12 +44,17 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
             X <- missToZero(X1, X1miss) - missToZero(X2, X2miss)
             X <- X[, -1, drop = FALSE]
             attr(X, "assign") <- attr(X1, "assign")[-1]
-            if (qr(X)$rank == nplayers &&
+            if (qr(X)$rank == qr(cbind(D, X))$rank &&
                 !(id %in% attr(predvars, "term.labels"))) {
+                message("Ability model saturated, replacing with separate effects.")
                 if (is.null(refcat))
-                    list(X = D[, -1])
+                    X <- cbind(D[,-1], X)
                 else
-                    list(X = D[, -match(refcat, players)])
+                    X <- cbind(D[, -match(refcat, players)])
+
+                drop <- rownames(alias(X[,1] ~ . - 1, data.frame(X))$Complete)
+                return(list(X = X[, !(make.names(colnames(X)) %in% drop)],
+                            offset = offset))
             }
 
             #unique(unlist(list(player.one[X1miss], player.two[X2miss])))
