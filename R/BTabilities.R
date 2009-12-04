@@ -7,7 +7,8 @@ BTabilities <-  function (model, formula = NULL)
     if (!(model$id %in% attr(terms(model$formula), "term.labels"))) {
         players <- model$player1[!duplicated(model$player1[, model$id]), ,
                                  drop = FALSE]
-        extra <- match(setdiff(levels(model$player1), players),
+        extra <- match(setdiff(levels(model$player1[, model$id]),
+                               players[, model$id]),
                        model$player2[, model$id], 0)
         players <- rbind(players, model$player2[extra,, drop = FALSE])
         if (is.null(formula)) { # assume player covariates indexed by id
@@ -23,6 +24,7 @@ BTabilities <-  function (model, formula = NULL)
         }
         mf <- model.frame(terms(formula), data = c(players, model$data),
                           na.action = na.pass)
+        players <- players[, model$id]
         offset <- model.offset(mf)
         if (is.null(offset)) offset <- 0
         predvars <- setdiff(seq(ncol(mf)),
@@ -31,19 +33,21 @@ BTabilities <-  function (model, formula = NULL)
         X <- model.matrix(predvars, mf)
         Xmiss <- is.na(rowSums(X)) |  players %in% model$separate.effect
         X <- missToZero(X[, -1, drop = FALSE], Xmiss)
-        separate.effect <- unique(c(players[Xmiss], model$separate.effect))
-        if (length(separate.effect)) {
-            sep.fac <- factor(players[players %in% separate.effect],
-                              levels = separate.effect)
-            X <- cbind(model.matrix(~sep.fac), X)
+        separate.effect <- unique(union(players[Xmiss],
+                                        model$separate.effect))
+        ns <- length(separate.effect)
+        if (ns) {
+            S <- matrix(0, nrow = nrow(X), ncol = ns)
+            S[cbind(which(players %in% separate.effect), seq(ns))] <- 1
+            X <- cbind(S, X)
         }
 
-        kept <- model$assign %in% which(keep)
+        kept <- model$assign %in% c(0, which(keep))
 
         sqrt.vcov <- chol(vcov(model)[kept, kept])
         se <- sqrt(diag(crossprod(sqrt.vcov %*% t(X))))
         abilities <- cbind(X %*% coef(model)[kept] + offset, se)
-        rownames(abilities) <- sapply(as.character(players[, model$id]), as.name)
+        rownames(abilities) <- sapply(as.character(players), as.name)
     }
     else {
         asgn <- model$assign

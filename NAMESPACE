@@ -1,4 +1,5 @@
-export(BTabilities, BTm, BTresiduals, countsToBinomial, Diff, glmmPQL.control)
+export(BTabilities, BTm, countsToBinomial, Diff, glmmPQL, glmmPQL.control,
+       glmmPQL.fit)
 
 importFrom(brglm, brglm)
 importFrom(gtools, combinations)
@@ -10,6 +11,7 @@ S3method(formula, BTm)
 S3method(print, BTm)
 S3method(print, glmmPQL)
 S3method(print, summary.glmmPQL)
+S3method(residuals, BTm)
 S3method(summary, glmmPQL)
 S3method(vcov, glmmPQL)
 

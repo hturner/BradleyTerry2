@@ -1,6 +1,6 @@
-glmmPQL.fit <- function(X, y, Z,  weights = rep(1, length(y)), start = NULL,
+glmmPQL.fit <- function(X, y, Z,  weights = rep(1, NROW(y)), start = NULL,
                         etastart = NULL, mustart = NULL,
-                        offset = rep(0, length(y)), family = gaussian(),
+                        offset = rep(0, NROW(y)), family = gaussian(),
                         control = glmmPQL.control(...),
                         sigma = NULL, sigma.fixed = FALSE, ...) {
     matchCall <- as.list(match.call(expand.dots = FALSE))

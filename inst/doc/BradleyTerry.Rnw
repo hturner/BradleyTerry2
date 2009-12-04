@@ -140,7 +140,7 @@ The binomial response can then be modelled by the difference in player abilities
 as follows:
 @
 <<citeModel>>=
-citeModel <- BTm(cbind(won, lost) ~ -1 + Diff(player1, player2))
+citeModel <- BTm(cbind(won, lost), player1, player2, data = results)
 citeModel
 @ %def
 The coefficients here are maximum likelihood estimates of $\lambda_2, \lambda_3,
@@ -156,8 +156,7 @@ optional \Rfunarg{refcat} argument of the \Rfunction{Diff} function: for
 example, making use of \Rfunction{update} to avoid re-specifying the whole model,
 @
 <<citeModelupdate>>=
-update(citeModel, . ~ . - Diff(player1, player2)
-       + Diff(player1, player2, refcat = "JASA"))
+update(citeModel, refcat = "JASA")
 detach(results)
 @ %def
 --- the same model in a different parameterization.
@@ -198,9 +197,8 @@ model above but with ability determined by the journal's country of origin:
 <<citeModel2>>=
 journals <- data.frame(row.names = levels(results$player1),
          origin = factor(c("UK", "USA", "USA", "UK")))
-citeModel2 <- BTm(cbind(won, lost) ~ -1 +
-                  Diff(player1, player2, ~origin, data = journals),
-                  data = results)
+citeModel2 <- BTm(cbind(won, lost), player1, player2,
+                  ~origin[..] + (1|..), data = list(journals, results))
 citeModel2
 @ %def
 Note that the categorical variable \Robject{origin} is passed to the
@@ -257,7 +255,7 @@ of origin is unknown for one of the journals (say, \emph{Communications in
   Statistics}):
 @
 <<citeModel2update>>=
-update(citeModel2, . ~ .)
+update(citeModel2, ~ .)
 @ %def
 %% ?? no longer have deviance!
 The fit of this model --- which in effect allows distinct abilities for
@@ -300,8 +298,8 @@ example that Milwaukee played 7 home ggames against Detroit and won 4 of them.
 The `standard' Bradley-Terry model without a home-advantage parameter is fitted as before:
 @
 <<baseballModel>>=
-baseballModel1 <- BTm(cbind(home.wins, away.wins) ~
-                      -1 + Diff(home.team, away.team), data = baseball)
+baseballModel1 <- BTm(cbind(home.wins, away.wins), home.team, away.team,
+                      data = baseball, id = "team")
 summary(baseballModel1)
 @ %def
 The reference team is Baltimore, estimated to be the weakest of these seven,
@@ -312,7 +310,9 @@ home-advantage effect can be included simply by adding an intercept to the model
 above:
 @
 <<baseballModelupdate>>=
-baseballModel2 <- update(baseballModel1, . ~ . + 1)
+home.team <- with(baseball, data.frame(team = home.team, at.home = 1))
+away.team <- with(baseball, data.frame(team = away.team, at.home = 0))
+baseballModel2 <- update(baseballModel1, formula = ~ team + at.home)
 summary(baseballModel2)
 @ %def
 This reproduces the results given on page 438 of \citet{agre:02}: the home team
@@ -357,7 +357,7 @@ More useful for diagnostics on the linear predictor $\sum\beta_rx_{ir}$ are
 `player'-level residuals, obtained by using the function \Rfunction{BTresiduals}:
 @
 <<BTresiduals>>=
-BTresiduals(citeModel2)
+residuals(citeModel2, type = "grouped")
 @ %def
 These residuals estimate the error in the linear predictor; they are obtained by
 suitable aggregation of the so-called `working' residuals from the PQL fit.
@@ -372,7 +372,7 @@ on very little information. Weighted least-squares regression of these residuals
 on any variable already in the model is null.  For example:
 @
 <<residualWLS>>=
-resids <- BTresiduals(citeModel2)
+resids <- residuals(citeModel2, type = "grouped")
 journals$origin[2] <- "USA"  ## ie the previous value is restored
 lm(resids ~ origin, weights = attr(resids, "weights"),
    data = journals)

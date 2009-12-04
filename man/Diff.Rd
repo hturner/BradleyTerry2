@@ -70,22 +70,18 @@ data(citations, package = "BradleyTerry2")
 ## Convert frequencies to success/failure data
 results <- countsToBinomial(xtabs(Freq ~ winner + loser, data = citations))
 
-##  First fit the "standard" Bradley-Terry model
-##  BTm and glm give same result
-citeModela <- BTm(cbind(won, lost) ~ -1 + Diff(player1, player2),
-                  data = results)
-citeModelb <- glm(cbind(won, lost) ~ -1 + Diff(player1, player2),
-                  family = binomial, data = results)
+##  Fixed effects model
+player1 <- data.frame(.. = results$player1)
+player2 <- data.frame(.. = results$player2)
+y <- with(results, cbind(won, lost))
+model <- Diff(player1, player2)
+citeModel <- glm.fit(model$X, y, family = binomial())
 
-##  Is the "citeability" of a journal predicted by its country oforigin?
-##  glm ignores random effects returned by Diff
+##  Model with random effects
 journal <- data.frame(origin = factor(c("UK", "USA", "USA", "UK")))
 rownames(journal) <- levels(results$player1)
-citeModel2a <- BTm(cbind(won, lost) ~ -1 +
-                   Diff(player1, player2, ~origin, data = journal),
-                   data = results)
-citeModel2b <- glm(cbind(won, lost) ~ -1  +
-                   Diff(player1, player2, ~origin, data = journal),
-                   data = results, family = binomial)
+
+model <- Diff(player1, player2, formula = ~origin[..] + (1|..), data = journal)
+citeModel2 <- glmmPQL.fit(model$X, y, model$random, family = binomial())
 }
 \keyword{ models }

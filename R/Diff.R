@@ -16,36 +16,33 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
     D <- matrix(nrow = ncontests, ncol = nplayers)
     D <- col(D) == as.numeric(player.one)
     D <- D - (col(D) == as.numeric(player.two))
-    colnames(D) <- players
+    colnames(D) <- sapply(paste(id, players, sep = ""), as.name)
 
     if (formula[[2]] != id) {
         fixed <- lme4:::nobars(formula)
         offset <- missing <- NULL
         X <- matrix(nr = nrow(D), nc = 0)
         if (!is.null(fixed)) {
-            mf1 <- model.frame(terms(fixed), data = c(player1, data),
-                               na.action = na.pass)
+            mt <- terms(fixed)
+            mf1 <- model.frame(mt, data = c(player1, data), na.action = na.pass)
             if (nrow(mf1) != nrow(D))
                 stop("Predictor variables are not of the correct length --",
                      "they probably need indexing in 'formula'.")
             offset <- model.offset(mf1)
-            if (is.null(offset)) offset <- rep(0, nrow(mf1))
-            predvars <- setdiff(seq(ncol(mf1)),
-                                attr(attr(mf1, "terms"), "offset"))
-            predvars <- terms(~ . ,data = mf1[, predvars, drop = FALSE])
-            X1 <- model.matrix(predvars, mf1)
+            X1 <- model.matrix(fixed, mf1)
             X1miss <- is.na(rowSums(X1)) |  player1 %in% separate.effect
-            mf2 <- model.frame(terms(fixed), data = c(player2, data),
-                               na.action = na.pass)
+            mf2 <- model.frame(mt, data = c(player2, data), na.action = na.pass)
             if (!is.null(offset)) offset <- offset - model.offset(mf2)
-            X2 <- model.matrix(predvars, mf2)
+            else offset <- rep(0, nrow(mf2))
+            X2 <- model.matrix(fixed, mf2)
             X2miss <- is.na(rowSums(X2)) |  player2 %in% separate.effect
 
             X <- missToZero(X1, X1miss) - missToZero(X2, X2miss)
             X <- X[, -1, drop = FALSE]
             attr(X, "assign") <- attr(X1, "assign")[-1]
+            colnames(X) <- sapply(colnames(X), as.name)
             if (qr(X)$rank == qr(cbind(D, X))$rank &&
-                !(id %in% attr(predvars, "term.labels"))) {
+                !(id %in% attr(mt, "term.labels"))) {
                 message("Ability model saturated, replacing with separate effects.")
                 if (is.null(refcat))
                     X <- cbind(D[,-1], X)
@@ -68,11 +65,11 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
                      "structure allowed.")
             random <- D
         }
-        else if (!(id %in% attr(predvars, "term.labels")))
+        else if (!(id %in% attr(mt, "term.labels")))
             warning("Ability modelled by predictors but no random effects",
                     call. = FALSE)
 
-        separate.effect <- unique(c(missing, separate.effect))
+        separate.effect <- unique(union(missing, separate.effect))
         if (length(separate.effect)) {
             X <- cbind(D[, separate.effect, drop = FALSE], X)
             attr(X, "assign") <- c(rep(0, length(separate.effect)),
@@ -87,12 +84,11 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
             missing <- list(cases = Xmiss,
                             player1 = player.one[Xmiss],
                             player2 = player.two[Xmiss],
-                            X1 = X1[Xmiss,], X2 = X2[Xmiss,], Z = Z)
+                            X1 = X1[Xmiss, -1], X2 = X2[Xmiss, -1], Z = Z)
         }
         return(list(X = X, random = random, offset = offset, missing = missing))
     }
 
-    colnames(D) <- paste(id, colnames(D), sep = "")
     if (is.null(refcat))
         list(X = D[, -1])
     else

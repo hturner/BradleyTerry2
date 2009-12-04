@@ -11,10 +11,16 @@ anova.BTm <- function (object, ..., dispersion = NULL, test = NULL)
     dotargs <- dotargs[!named]
 
     ## Pass on if no random effects
-    fixed <- unlist(lapply(c(list(object), dotargs),
-                           function(x) is.null(x$random)))
-    if (all(fixed))
-        return(NextMethod())
+    models <- c(list(object), dotargs)
+    fixed <- unlist(lapply(models, function(x) is.null(x$random)))
+    if (all(fixed)) {
+        models <- lapply(models, function(x) {
+            x$formula <- formula(x$terms)
+            class(x) <- setdiff(class(x), "BTm")
+            x})
+        call <- match.call()
+        return(do.call("anova", c(models, call$dispersion, call$test)))
+    }
     if (!all(!fixed))
         stop("Models must have the same random effects structure")
 

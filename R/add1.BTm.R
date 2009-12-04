@@ -28,7 +28,7 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
         x <- model$X
         Z <- model$random
         missing <- model$missing
-        if (!is.null(model$offset))
+        if (sum(model$offset) > 0)
             warning("ignoring offset terms in scope")
     }
     else {
@@ -45,7 +45,6 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
     sTerms <- sapply(strsplit(Terms, ":", fixed = TRUE),
                      function(x) paste(sort(x), collapse = ":"))
 
-    X <- x[, ousex, drop = FALSE]
     #n <- nrow(x)
     vars <- colnames(x)
     predvars <- which(asgn != 0)
@@ -74,7 +73,7 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
             if (!identical(new.sep, sep)) {
                 ## replace all vars according to *current* missingness
                 ## -- may be NA for unused vars
-                X[missing$cases, predvars] <- missToZero(missing$X1, X1miss) -
+                x[missing$cases, predvars] <- missToZero(missing$X1, X1miss) -
                     missToZero(missing$X2, X2miss)
                 sep <- new.sep
                 fixed <- split(colnames(missing$Z),

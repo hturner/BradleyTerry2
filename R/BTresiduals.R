@@ -1,40 +1,23 @@
-BTresiduals <- function(model){
-    if (!inherits(model, "BTm"))
-        stop("model is not of class BTm")
+residuals.BTm <- function(object, type = c("deviance", "pearson", "working",
+                          "response", "partial", "grouped"), by = object$id,
+                          ...) {
+    type <- match.arg(type)
+    if (type != "grouped") return(NextMethod())
 
-    if (length(model$random)) {
-        mf <- model.frame(model)[[model$random]]
-        attrDiff <- attributes(mf)
-        player.vars <- attrDiff$model #inc NA
-        player.names <- rownames(player.vars)
-        X <- mf[,rownames(attrDiff$match.sep)]
-        Z <- attrDiff$random
-        formula <- update(model$formula, . ~ offset(eta) - 1)
-        model <-  glm(formula, family = model$family,
-                      data = c(model$data, list(eta = model$linear.predictors)))
-    }
-    else {
-        attrTerms <- attributes(model$terms)
-        diffID <- attrTerms$specials$Diff
-        diffTerms <- rownames(attrTerms$factors)[diffID]
-        if (!length(diffTerms))
-            stop("not a Bradley Terry model")
-        Z <- model.matrix(model)
-        asgn <- attr(Z, "assign")
-        diffID <- match(diffTerms, attrTerms$term.labels)
-        Z <- Z[, asgn == diffID, drop = FALSE]
-    }
+    ## for glm, lm would just be
+    ## X <- model.matrix(formula, data = object$data)
+    formula <- as.formula(paste("~", by, "- 1"))
+    mt <- terms(formula)
+    mf1 <- model.frame(mt, data = c(object$player1, object$data))
+    X1 <- model.matrix(mt, data = mf1)
+    mf2 <- model.frame(mt, data = c(object$player2, object$data))
+    X2 <- model.matrix(mt, data = mf2)
+    X <- X1 - X2
 
-    r <- model$residuals  ## the "working" residuals
-    w <- model$weights
-    total.resid <- crossprod(Z, r * w)
-    total.weight <- crossprod(abs(Z), w)
-    if (exists("X")) {
-        total.resid <- rbind(total.resid,
-                             crossprod(X, r * w))[player.names, , drop = FALSE]
-        total.weight <- rbind(total.weight,
-                              crossprod(abs(X), w))[player.names, , drop = FALSE]
-    }
+    r <- object$residuals  ## the "working" residuals
+    w <- object$weights
+    total.resid <- crossprod(X, r * w)
+    total.weight <- crossprod(abs(X), w)
     result <- total.resid / total.weight
     attr(result, "weights") <- total.weight
     result

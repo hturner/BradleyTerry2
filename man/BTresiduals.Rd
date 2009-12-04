@@ -44,6 +44,6 @@ journals <- data.frame(row.names = levels(results$player1),
 citeModel2 <- BTm(cbind(won, lost), player1, player2,
                   ~ origin[..] + (1|..),
                   data = list(journals, results))
-BTresiduals(citeModel2)
+residuals(citeModel2, type = "grouped")
 }
 \keyword{ models }
