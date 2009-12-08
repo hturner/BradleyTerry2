@@ -225,15 +225,14 @@ glmmPQL.fit <- function(X, y, Z,  weights = rep(1, NROW(y)), start = NULL,
          aic = if (glm)
          family$aic(y, length(y), mu, w, sum(family$dev.resids(y, mu, w))) + 2 * rank,
          null.deviance = if (glm) {
-             wtdmu <- ifelse(!attr(X, "assign")[1], sum(w * y)/sum(w),
-                             family$linkinv(offset))
+             wtdmu <- family$linkinv(offset)
              sum(family$dev.resids(y, wtdmu, w))
          },
          iter = ifelse(glm, NA, i),
          weights = wy,
          prior.weights = w,
          df.residual = length(y) - rank,
-         df.null = if (glm) length(y) - sum(w == 0) - !attr(X, "assign")[1],
+         df.null = if (glm) length(y) - sum(w == 0),
          y = y,
          sigma = sigma, sigma.fixed = sigma.fixed,
          varFix = varFix, varSigma = varSigma, converged = conv)

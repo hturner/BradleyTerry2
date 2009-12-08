@@ -2,8 +2,8 @@ BTm <- function(outcome, player1, player2, formula = NULL,
                 id = "..", separate.effect = NULL, refcat = NULL,
                 family = binomial, data = NULL, weights = NULL, subset = NULL,
                 na.action = NULL, start = NULL, etastart = NULL, mustart = NULL,
-                offset = NULL, br = FALSE, sigma = 0.1, sigma.fixed = FALSE,
-                control = glmmPQL.control(...), ...){
+                offset = NULL, br = FALSE, control = glmmPQL.control(...),
+                model = TRUE, x = FALSE, y = TRUE, contrasts = NULL, ...){
     call <- match.call()
 
     if (is.character(family))
@@ -33,35 +33,46 @@ BTm <- function(outcome, player1, player2, formula = NULL,
     player2 <- withIfNecessary(substitute(player2), data)
     if (ncol(player1) == 1) colnames(player1) <- colnames(player2) <- id
     if (is.null(formula)) formula <- reformulate(id)
-    model <- Diff(player1, player2, formula, id, data, separate.effect, refcat)
-    mf <- cbind(Y, model$X)
+    diffModel <- Diff(player1, player2, formula, id, data, separate.effect, refcat,
+                      contrasts)
+    mf <- cbind(Y, diffModel$X)
     colnames(mf) <- gsub("`", "", colnames(mf))
     dummy <- as.formula(paste(deparse(substitute(outcome)), " ~ ",
-                              paste(colnames(model$X), collapse = "+"),
+                              paste(colnames(diffModel$X), collapse = "+"),
                               " - 1", sep = ""))
-    if (is.null(model$random)) {
-        method <- ifelse(br, "brglm", "glm")
-        fit <- do.call(method, list(dummy, family = family, data = mf,
-                                    weights = weights, subset = subset,
-                                    na.action = na.action, start = start,
-                                    etastart = etastart, mustart = mustart,
-                                    offset = model$offset, ...))
+    fcall <- as.list(match.call(expand.dots = FALSE))
+    argPos <- match(c("weights", "subset", "na.action", "start", "etastart",
+                      "mustart", "control", "model", "x"), names(fcall), 0)
+    dotArgs <- fcall$"..."
+    if (is.null(diffModel$random)) {
+        method <- get(ifelse(br, "brglm", "glm"), mode = "function")
+        fit <- as.call(c(method, fcall[argPos],
+                         list(formula = dummy, family = family, data = mf,
+                              offset = diffModel$offset), dotArgs))
+        fit <- eval(fit, parent.frame())
     }
     else {
-        if (br)
-            warning("'br' argument ignored for models with random effects")
-        method <- "glmmPQL"
-        method.call <- do.call(method,
-                               list(fixed = dummy,
-                                    random = model$random,
-                                    family = family, data = mf,
-                                    subset = subset, weights = weights,
-                                    offset = model$offset,
-                                    na.action = na.action, start = start,
-                                    etastart = etastart, mustart = mustart,
-                                    control = control, sigma = sigma,
-                                    sigma.fixed = sigma.fixed, ...))
-        fit <- eval(method.call)
+        method <- get("glmmPQL", mode = "function")
+        fit <- as.call(c(method, fcall[argPos],
+                         list(dummy, diffModel$random, family = family,
+                              data = mf, offset = diffModel$offset), dotArgs))
+        fit <- eval(fit, parent.frame())
+        if (!identical(fit$sigma, 0))  fit$random <- diffModel$random
+        if (br) {
+            if (identical(fit$sigma, 0)){
+                argPos <- match(c("weights", "subset", "na.action", "model", "x"),
+                                names(fcall), 0)
+                fit <- as.call(c(as.name("brglm"), fcall[argPos],
+                                 list(dummy, family = family, data = mf,
+                                      offset = diffModel$offset,
+                                      etastart = fit$linear.predictors),
+                                 dotArgs))
+                fit <- eval(fit, parent.frame())
+            }
+            else
+                warning("'br' argument ignored for models with random effects",
+                        call. = FALSE)
+        }
     }
     fit$call <- call
     fit$id <- id
@@ -70,10 +81,9 @@ BTm <- function(outcome, player1, player2, formula = NULL,
     fit$formula <- formula
     fit$player1 <- player1
     fit$player2 <- player2
-    fit$missing <- model$missing
-    fit$assign <- attr(model$X, "assign")
+    fit$missing <- diffModel$missing
+    fit$assign <- attr(diffModel$X, "assign")
     fit$data <- data
-    fit$random <- model$random
     class(fit) <- c("BTm", class(fit))
     fit
 }

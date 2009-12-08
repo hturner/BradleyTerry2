@@ -1,6 +1,5 @@
 Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
-                 #offset = NULL,
-                 separate.effect = NULL, refcat = NULL) {
+                 separate.effect = NULL, refcat = NULL, contrasts = NULL) {
     player.one <- player1[[id]]
     player.two <- player2[[id]]
 
@@ -29,12 +28,12 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
                 stop("Predictor variables are not of the correct length --",
                      "they probably need indexing in 'formula'.")
             offset <- model.offset(mf1)
-            X1 <- model.matrix(fixed, mf1)
+            X1 <- model.matrix(fixed, mf1, contrasts = contrasts)
             X1miss <- is.na(rowSums(X1)) |  player1 %in% separate.effect
             mf2 <- model.frame(mt, data = c(player2, data), na.action = na.pass)
             if (!is.null(offset)) offset <- offset - model.offset(mf2)
             else offset <- rep(0, nrow(mf2))
-            X2 <- model.matrix(fixed, mf2)
+            X2 <- model.matrix(fixed, mf2, contrasts = contrasts)
             X2miss <- is.na(rowSums(X2)) |  player2 %in% separate.effect
 
             X <- missToZero(X1, X1miss) - missToZero(X2, X2miss)
