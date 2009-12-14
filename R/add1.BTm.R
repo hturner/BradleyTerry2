@@ -69,7 +69,7 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
             X2miss <- is.na(rowSums(X2))
             new.sep <- unique(unlist(list(missing$player1[X1miss],
                                           missing$player2[X2miss])))
-            usex <- usex | vars %in% new.sep
+            usex <- usex | vars %in% paste(object$id, new.sep, sep = "")
             if (!identical(new.sep, sep)) {
                 ## replace all vars according to *current* missingness
                 ## -- may be NA for unused vars

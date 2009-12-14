@@ -46,7 +46,7 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
                 if (is.null(refcat))
                     X <- cbind(D[,-1], X)
                 else
-                    X <- cbind(D[, -match(refcat, players)])
+                    X <- cbind(D[, -match(refcat, players)], X)
 
                 drop <- rownames(alias(X[,1] ~ . - 1, data.frame(X))$Complete)
                 return(list(X = X[, !(make.names(colnames(X)) %in% drop)],
@@ -79,7 +79,7 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
         if (length(missing)) {
             Xmiss <- X1miss | X2miss
             Z <- D[, missing]
-            attr(Z, "id") <- colnames(Z) # only for simple r.e.
+            attr(Z, "id") <- players[missing] # only for simple r.e.
             missing <- list(cases = Xmiss,
                             player1 = player.one[Xmiss],
                             player2 = player.two[Xmiss],

@@ -47,7 +47,8 @@ drop1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
             X2miss <- is.na(rowSums(X2))
             new.sep <- unique(unlist(list(missing$player1[X1miss],
                                           missing$player2[X2miss])))
-            usex <- usex | vars %in% setdiff(sep, new.sep)
+            usex <- (usex |
+                     vars %in% paste(object$id, setdiff(sep, new.sep), sep = ""))
         }
         trystat <- try(t(coefs[usex]) %*% chol2inv(chol(vc[usex, usex])) %*%
                        coefs[usex], silent = TRUE)

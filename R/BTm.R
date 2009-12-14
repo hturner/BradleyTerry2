@@ -57,7 +57,6 @@ BTm <- function(outcome, player1, player2, formula = NULL,
                          list(dummy, diffModel$random, family = family,
                               data = mf, offset = diffModel$offset), dotArgs))
         fit <- eval(fit, parent.frame())
-        if (!identical(fit$sigma, 0))  fit$random <- diffModel$random
         if (br) {
             if (identical(fit$sigma, 0)){
                 argPos <- match(c("weights", "subset", "na.action", "model", "x"),
@@ -65,9 +64,9 @@ BTm <- function(outcome, player1, player2, formula = NULL,
                 fit <- as.call(c(as.name("brglm"), fcall[argPos],
                                  list(dummy, family = family, data = mf,
                                       offset = diffModel$offset,
-                                      etastart = fit$linear.predictors),
-                                 dotArgs))
+                                      etastart = fit$linear.predictors)))
                 fit <- eval(fit, parent.frame())
+                fit$class <- c("glmmPQL", class(fit))
             }
             else
                 warning("'br' argument ignored for models with random effects",
@@ -84,6 +83,7 @@ BTm <- function(outcome, player1, player2, formula = NULL,
     fit$missing <- diffModel$missing
     fit$assign <- attr(diffModel$X, "assign")
     fit$data <- data
+    fit$random <- diffModel$random
     class(fit) <- c("BTm", class(fit))
     fit
 }

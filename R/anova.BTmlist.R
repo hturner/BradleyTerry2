@@ -1,4 +1,11 @@
 anova.BTmlist <- function (object, ..., dispersion = NULL, test = NULL) {
+    ## Pass on if no random effects
+    fixed <- unlist(lapply(object, function(x) is.null(x$random)))
+    if (all(fixed))
+        return(NextMethod())
+    else if (!all(!fixed))
+        stop("Models must have the same random effects structure")
+
     responses <- as.character(lapply(object, function(x) {
         deparse(formula(terms(x))[[2]])
     }))

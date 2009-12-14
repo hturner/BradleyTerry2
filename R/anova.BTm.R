@@ -66,7 +66,7 @@ anova.BTm <- function (object, ..., dispersion = NULL, test = NULL)
                 X2miss <- is.na(rowSums(X2))
                 new.sep <- unique(unlist(list(missing$player1[X1miss],
                                               missing$player2[X2miss])))
-                usex <- usex | termLabels %in% new.sep
+                usex <- usex | vars %in% paste(object$id, new.sep, sep = "")
                 if (!identical(new.sep, sep)) {
                     ## replace all vars according to *current* missingness
                     ## -- may be NA for unused vars
@@ -88,7 +88,7 @@ anova.BTm <- function (object, ..., dispersion = NULL, test = NULL)
             class(fit) <- oldClass(object)
             ind <- setdiff(vars[usex], ind)
             trystat <- try(t(coef(fit)[ind]) %*%
-                           chol2inv(chol(vcov(fit, dispersion = dispersion)[ind, ind])) %*%
+                           chol2inv(chol(suppressMessages(vcov(fit, dispersion = dispersion))[ind, ind])) %*%
                            coef(fit)[ind], silent = TRUE) #vcov should deal with dispersion != 1
             if (inherits(trystat, "try-error")) {
                 stat[i] <- df[i] <- NA
@@ -100,7 +100,8 @@ anova.BTm <- function (object, ..., dispersion = NULL, test = NULL)
             }
         }
     }
-    ind <- varseq == nvars | termLabels %in% setdiff(vars[varseq == 0], sep)
+    ind <- (varseq == nvars |
+            vars %in% paste(object$id, setdiff(vars[varseq == 0], sep), ""))
     trystat <- try(t(coef(object)[ind]) %*% chol2inv(chol(object$varFix[ind, ind])) %*%
                    coef(object)[ind], silent = TRUE)
     if (inherits(trystat, "try-error")) {
