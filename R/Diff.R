@@ -23,13 +23,45 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
         X <- matrix(nr = nrow(D), nc = 0)
         if (!is.null(fixed)) {
             mt <- terms(fixed)
-            indexed <- grep("[", rownames(attr(mt, "factors")), fixed = TRUE)
-            if (length(indexed)) {
-                index.name <- gsub("[^[]*[[]([^]]*)[]]", "\\1",
-                                   rownames(attr(mt, "factors")))
-                fixed <- reformulate(c(attr(mt, "term.labels"), index.name))
+            term.labels <- as.character(sapply(attr(mt, "term.labels"),
+                                               as.name))
+
+            vars <- rownames(attr(mt, "factors"))
+            indexed <- grep("[[]", vars)
+            sep <- list()
+            if (length(indexed)) { #set NAs to zero
+                indices <- gsub("[^[]*[[]([^]]*)[]]", "\\1", vars[indexed])
+                vars <- gsub("([^[]*)[[][^]]*[]]", "\\1", vars[indexed])
+                grp <- split(vars, indices)
+                for (ind in names(grp)) {
+                    vars <- model.frame(terms(reformulate(grp[[ind]])),
+                                        data = data, na.action = na.pass)
+                    lev <- levels(eval(as.name(i), c(player1, data)))
+                    sep[[ind]] <- is.na(rowSums(dat)) | lev %in% separate.effect
+                    vars[sep[[ind]], ] <- 0
+                    data[grp[[ind]]] <- vars
+                }
+
+                ## will need to check for saturation in each set of indexed var
+                ## - replacing with sep effects and removing corresponding random effects
+
+                if (qr(X)$rank == qr(cbind(D, X))$rank &&
+                    !(id %in% attr(mt, "term.labels"))) {
+                    message("Ability model saturated, replacing with separate effects.")
+                    if (is.null(refcat))
+                        X <- cbind(D[,-1], X)
+                    else
+                        X <- cbind(D[, -match(refcat, players)], X)
+
+                    drop <- rownames(alias(X[,1] ~ . - 1, data.frame(X))$Complete)
+                    return(list(X = X[, !(make.names(colnames(X)) %in% drop)],
+                                offset = offset))
+                }
+
+                fixed <- reformulate(c(indices, attr(mt, "term.labels")))
                 mt <- terms(fixed)
             }
+
             mf1 <- model.frame(mt, data = c(player1, data), na.action = na.pass)
             if (nrow(mf1) != nrow(D))
                 stop("Predictor variables are not of the correct length --",
@@ -39,27 +71,16 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
             if (!is.null(offset)) offset <- offset - model.offset(mf2)
             else offset <- rep(0, nrow(mf2))
 
-            ## set rows corresponding to missing players, judges etc to zero
-            ## over appropriate subset of columns
-            sep <- list()
-            if (length(indexed)){
-                sp <- split(indexed, index.name)
-                zapfactor <- function(x, keep){lev <- levels(x)
-                                               newlev <- make.unique(c(lev, "nosep"))
-                                               ext <- newlev[length(newlev)]
-                                               levels(x)[!lev %in% keep]  <- ext
-                                               x}
-                for (index in names(sp)) {
-                    hasNA <- {is.na(rowSums(mf1[sp[[index]]])) |
-                              mf1[index] %in% separate.effect}
-                    mf1[hasNA, sp[[index]]] <- 0
-                    sep[[index]] <- mf1[hasNA, index]
-                    hasNA <- is.na(rowSums(mf2[sp[[index]]]))
-                    mf2[hasNA, sp[[index]]] <- 0
-                    sep[[index]] <- unique(union(mf2[hasNA, index], sep[[index]]))
-                    browser()
-                    mf1[index] <- zapfactor(mf1[[index]], sep[[index]])
-                    mf2[index] <- zapfactor(mf2[[index]], sep[[index]])
+            if (length(indexed)){ #create separate effect factor
+                recode <- function(x, keep){
+                    lev <- levels(x)
+                    ext <- make.unique(c(lev[keep], "nosep"))[sum(keep) + 1]
+                    levels(x)[!keep]  <- ext
+                    relevel(x, ref = ext)
+                }
+                for (ind in names(grp)) {
+                    mf1[ind] <- recode(mf1[[ind]], sep[[ind]])
+                    mf2[ind] <- recode(mf2[[ind]], sep[[ind]])
                 }
             }
 
@@ -69,19 +90,8 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
             X <- X[, -1, drop = FALSE]
             attr(X, "assign") <- attr(X1, "assign")[-1]
             colnames(X) <- sapply(colnames(X), as.name)
-            if (qr(X)$rank == qr(cbind(D, X))$rank &&
-                !(id %in% attr(mt, "term.labels"))) {
-                message("Ability model saturated, replacing with separate effects.")
-                if (is.null(refcat))
-                    X <- cbind(D[,-1], X)
-                else
-                    X <- cbind(D[, -match(refcat, players)], X)
-
-                drop <- rownames(alias(X[,1] ~ . - 1, data.frame(X))$Complete)
-                return(list(X = X[, !(make.names(colnames(X)) %in% drop)],
-                            offset = offset))
-            }
         }
+
         random <- lme4:::expandSlash(lme4:::findbars(formula[[2]]))
         if (!is.null(random)) {
             if (length(random) > 1 ||
@@ -94,24 +104,12 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
             warning("Ability modelled by predictors but no random effects",
                     call. = FALSE)
 
-        term.labels <- as.character(sapply(attr(mt, "term.labels"), as.name))
         if (length(sep)) {
-            X <- cbind(D[, sep[[id]], drop = FALSE], X)
-            attr(X, "assign") <- c(rep(0, length(sep[[id]])),
-                                   attr(X1, "assign")[-1])
+            attr(X, "assign") <- attr(X, "assign") - 1
             if (!is.null(random))
-                random <- missToZero(D, separate.effect, 2)
+                random <- D[,!sep[[id]]]
         }
-        if (length(missing)) {
-            Xmiss <- X1miss | X2miss
-            Z <- D[, missing]
-            attr(Z, "id") <- players[missing] # only for simple r.e.
-            missing <- list(cases = Xmiss,
-                            player1 = player.one[Xmiss],
-                            player2 = player.two[Xmiss],
-                            X1 = X1[Xmiss, -1], X2 = X2[Xmiss, -1], Z = Z)
-        }
-        return(list(X = X, random = random, offset = offset, missing = missing,
+        return(list(X = X, random = random, offset = offset,
                     term.labels = term.labels))
     }
 
