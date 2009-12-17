@@ -1,4 +1,4 @@
-BTabilities <-  function (model, formula = NULL)
+BTabilities <-  function (model)
 {
     if (!inherits(model, "BTm"))
         stop("model is not of class BTm")
@@ -11,17 +11,17 @@ BTabilities <-  function (model, formula = NULL)
                                players[, model$id]),
                        model$player2[, model$id], 0)
         players <- rbind(players, model$player2[extra,, drop = FALSE])
-        if (is.null(formula)) { # assume player covariates indexed by id
-            fixed <- lme4:::nobars(model$formula)
-            factors <- attr(terms(fixed), "factors")
-            vars <- rownames(factors)
-            by.id <- grep(paste("[", model$id, "]", sep = ""), vars,
-                          fixed = TRUE)
-            drop <- setdiff(seq(length(vars)), by.id)
-            ## following will only work for linear terms
-            keep <- colSums(factors[drop, , drop = FALSE]) == 0
-            formula <- reformulate(names(keep)[keep])
-        }
+        ## assume player covariates indexed by id
+        fixed <- lme4:::nobars(model$formula)
+        factors <- attr(terms(fixed), "factors")
+        vars <- rownames(factors)
+        by.id <- grep(paste("[", model$id, "]", sep = ""), vars,
+                      fixed = TRUE)
+        drop <- setdiff(seq(length(vars)), by.id)
+        ## following will only work for linear terms
+        ## (drop any term involving non-player covariate)
+        keep <- colSums(factors[drop, , drop = FALSE]) == 0
+        formula <- reformulate(names(keep)[keep])
         mf <- model.frame(terms(formula), data = c(players, model$data),
                           na.action = na.pass)
         players <- players[, model$id]
@@ -48,6 +48,7 @@ BTabilities <-  function (model, formula = NULL)
         se <- sqrt(diag(crossprod(sqrt.vcov %*% t(X))))
         abilities <- cbind(X %*% coef(model)[kept] + offset, se)
         rownames(abilities) <- sapply(as.character(players), as.name)
+        attr(abilities, "separate") <- separate.effect
     }
     else {
         asgn <- model$assign

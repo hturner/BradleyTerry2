@@ -1,9 +1,15 @@
 drop1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
                       ...) {
+    x <- model.matrix(object)
+
     ## Pass on if no random effects
     if (is.null(object$random)){
-        object$formula <- formula(terms(object))
-        return(NextMethod())
+        object$x <- x
+        attr(object$x, "assign") <- object$assign
+        object$terms <- terms(object$formula)
+        stat.table <- NextMethod()
+        rownames(stat.table)[-1] <- sapply(rownames(stat.table)[-1], as.name)
+        return(stat.table)
     }
 
     form <- formula(object)
@@ -22,12 +28,7 @@ drop1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
             stop("scope is not a subset of term labels")
     }
 
-    x <- model.matrix(object)
     asgn <- object$assign
-
-    missing <- object$missing
-    vars <- colnames(x)
-    sep <- factor(vars[asgn == 0], levels(object$player1[, object$id]))
 
     coefs <- coef(object)
     vc <- vcov(object, dispersion = scale) #vcov should deal with dispersion != 1
@@ -40,16 +41,6 @@ drop1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
     for (i in seq(scope)) {
         stt <- paste(sort(strsplit(scope[i], ":")[[1]]), collapse = ":")
         usex <- match(asgn, match(stt, sTerms), 0) > 0
-        if (length(missing)) {
-            X1 <- missing$X1[, !usex[asgn > 0], drop = FALSE]
-            X1miss <- is.na(rowSums(X1))
-            X2 <- missing$X2[, !usex[asgn > 0], drop = FALSE]
-            X2miss <- is.na(rowSums(X2))
-            new.sep <- unique(unlist(list(missing$player1[X1miss],
-                                          missing$player2[X2miss])))
-            usex <- (usex |
-                     vars %in% paste(object$id, setdiff(sep, new.sep), sep = ""))
-        }
         trystat <- try(t(coefs[usex]) %*% chol2inv(chol(vc[usex, usex])) %*%
                        coefs[usex], silent = TRUE)
         if (inherits(trystat, "try-error")) {

@@ -82,6 +82,7 @@ BTm <- function(outcome, player1, player2, formula = NULL,
     fit$player2 <- player2
     fit$missing <- diffModel$missing
     fit$assign <- attr(diffModel$X, "assign")
+    fit$term.labels <- diffModel$term.labels
     fit$data <- data
     fit$random <- diffModel$random
     class(fit) <- c("BTm", class(fit))

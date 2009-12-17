@@ -9,14 +9,30 @@
   penalized quasi-likelihood when abilities are modelled by covariates.
 }
 \usage{
-BTm(formula, family = binomial, data = NULL, subset = NULL,
-    na.action = NULL, start = NULL, etastart = NULL,
-    mustart = NULL, offset = NULL, br = FALSE, sigma = 0.1,
-    sigma.fixed = FALSE, control = glmmPQL.control(...), ...)
+BTm(outcome, player1, player2, formula = NULL, id = "..", 
+    separate.effect = NULL, refcat = NULL, family = binomial, 
+    data = NULL, weights = NULL, subset = NULL, na.action = NULL, 
+    start = NULL, etastart = NULL, mustart = NULL, offset = NULL, 
+    br = FALSE, control = glmmPQL.control(...), model = TRUE, 
+    x = FALSE, y = TRUE, contrasts = NULL, ...) 
 }
 \arguments{
-  \item{formula}{ An object of class \code{"formula"} specifying the
-    model to be fitted. See details for more information. }
+  \item{outcome}{ The binomial response: either a numeric vector, a
+    factor in which the first level denotes failure and all other
+    success, or a two-column matrix with the columns giving the numbers
+    of successes and failures. }
+  \item{player1}{ Either an ID factor specifying the first player in
+    each contest, or a data.frame containing such a factor and possibly
+    other player-specific covariates. If given in a data.frame, the
+    factor must have the name given in the \code{id} argument. If a
+    factor is specified it will be used to create such a data.frame. }
+  \item{player2}{ An object corresponding to that given in
+    \code{player1} for the second player in each contest, with identical
+    structure -- in particular factors must have the same levels. }
+  \item{formula}{ An formula with no left-hand-side specifying the
+    model for player ability. See details for more information. }
+  \item{id}{ The name of the ID factor specifying either the first
+    player 
   \item{family}{ A description of the error distribution and link
     function to be used in the model. Only the binomial family is
     implemented, with either "logit", "probit" , or "cauchit" link. (See

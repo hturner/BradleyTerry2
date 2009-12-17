@@ -5,11 +5,15 @@
    Extracts the \code{abilities} component from a model object of class \code{\link{BTm}}.
 }
 \usage{
-BTabilities(model)
+BTabilities(model, formula = NULL)
 }
 \arguments{
   \item{model}{a model object for which \code{inherits(model, "BTm")} is
     \code{TRUE}}
+  \item{formula}{optional: a formula specifying the terms from the
+    model that should be used to compute the abilities. By default all
+    terms in \code{formula(object)} that are indexed by \code{object$id}
+    are included.}
 }
 \value{
   A two-column numeric matrix, with columns named "ability" and "se";

@@ -1,10 +1,5 @@
 add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
                       x = NULL, ...) {
-    if (is.null(object$random)){
-        object$formula <- formula(terms(object))
-        return(NextMethod())
-    }
-
     old.form <- formula(object)
     new.form <- update.formula(old.form, scope)
 
@@ -18,23 +13,30 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
     if (!length(scope))
         stop("no terms in scope for adding to object")
 
-    # y & wt don't change as can only have NA in response
-    y <- object$y
-    wt <- object$prior.weights
-    offset <- object$offset
-    if (is.null(x)) {
+    if (is.null(x)) { # create model.matrix for maximum scope
         model <- Diff(object$player1, object$player2, new.form, object$id,
                       object$data, object$separate.effect, object$refcat)
         x <- model$X
         Z <- model$random
-        missing <- model$missing
+        mf <- cbind(Y, diffModel$X)
+        y <- object$y
+        wt <- object$prior.weights
+        offset <- object$offset
         if (sum(model$offset) > 0)
             warning("ignoring offset terms in scope")
     }
     else {
+        y <- object$y
+        wt <- object$prior.weights
+        offset <- object$offset
         Z <- object$random
-        missing <- object$missing
     }
+
+    if (is.null(object$random)){
+        object$formula <- formula(terms(object))
+        return(NextMethod())
+    }
+
 
     ## use original term labels: no sep effects or backticks (typically)
     oTerms <- attr(terms(lme4:::nobars(old.form)), "term.labels")
