@@ -176,7 +176,9 @@ baseballModel1 <- BTm(cbind(home.wins, away.wins), home.team, away.team,
 ##  Now incorporate the "home advantage" effect
 home.team <- with(baseball, data.frame(team = home.team, at.home = 1))
 away.team <- with(baseball, data.frame(team = away.team, at.home = 0))
-baseballModel2 <- update(baseballModel1, formula = ~ team + at.home)
+teams <- data.frame(team = levels(away.team$team), rating = 1:7)
+baseballModel2 <- update(baseballModel1, formula = ~ rating[team] +
+at.home + (1|team), data = list(baseball, teams))
 
 ##  Compare the fit of these two models:
 anova(baseballModel1, baseballModel2)

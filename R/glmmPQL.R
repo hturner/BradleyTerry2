@@ -21,12 +21,17 @@ glmmPQL <- function(fixed, random = NULL, family = binomial, data = NULL,
     modelData <- as.list(match.call(expand.dots = FALSE))
     argPos <- match(c("data", "subset", "na.action", "weights",
                       "offset"), names(modelData), 0)
-    modelData <- as.call(c(as.name("model.frame"), formula = modelTerms,
-                           modelData[argPos], drop.unused.levels = TRUE))
+    browser()
+    Z <- random
+    modelData <- as.call(c(model.frame,
+                           list(formula = update(modelTerms, . ~ . + Z),
+                                drop.unused.levels = TRUE),
+                           modelData[argPos]))
     modelData <- eval(modelData, parent.frame())
 
     nObs <- nrow(modelData)
     y <- model.response(modelData, "numeric")
+    Z <- modelData$Z
     if (is.null(y))
         y <- rep(0, nObs)
     weights <- as.vector(model.weights(modelData))
@@ -62,7 +67,6 @@ glmmPQL <- function(fixed, random = NULL, family = binomial, data = NULL,
         X <- model.matrix(fixed, data = modelData, contrasts)
     else
         X <- matrix(, nObs, 0)
-    Z <- random
     fit <- glmmPQL.fit(X = X, y = y, Z = Z, weight = weights, start = start,
                        etastart = etastart, mustart = mustart, offset = offset,
                        family = family, control = control, sigma = sigma,
@@ -72,8 +76,10 @@ glmmPQL <- function(fixed, random = NULL, family = binomial, data = NULL,
             y = y, weights = weights, offset = offset, family = family,
             control = control, intercept = TRUE)$deviance
     }
-    if (model)
+    if (model) {
+        modelData$Z <- NULL
         fit$model <- modelData
+    }
     fit$na.action <- attr(modelData, "na.action")
     if (x)
         fit$x <- X

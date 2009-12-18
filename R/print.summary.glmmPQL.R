@@ -2,7 +2,7 @@ print.summary.glmmPQL <- function(x, digits = max(3, getOption("digits") - 3),
                                    symbolic.cor = x$symbolic.cor,
                                    signif.stars = getOption("show.signif.stars"),
                                    ...)  {
-    cat("\nCall:\n", deparse(x$call), "\n", sep = "", fill = TRUE)
+    cat("\nCall:\n", deparse(x$call), sep = "", fill = TRUE)
     p <- length(x$aliased)
     if (p == 0) {
         cat("\nNo Fixed Effects\n")
@@ -30,6 +30,8 @@ print.summary.glmmPQL <- function(x, digits = max(3, getOption("digits") - 3),
     pars <- tidy.zeros(x$ranef)
     printCoefmat(pars, digits = digits, signif.stars = signif.stars,
             na.print = "NA", ...)
+    if (nzchar(mess <- naprint(x$na.action)))
+        cat("\n", mess, "\n", sep = "")
     cat("\nNumber of iterations: ", x$iter, "\n", sep = "")
     correl <- x$correlation
     if (!is.null(correl)) {

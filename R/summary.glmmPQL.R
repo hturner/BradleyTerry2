@@ -24,7 +24,7 @@ summary.glmmPQL <- function(object, dispersion = NULL, correlation = FALSE,
     pvalue <- 2 * pnorm(-abs(tvalue))
     ranef.table <- cbind(object$sigma, sterr, tvalue, pvalue)
     dimnames(ranef.table) <- list("Std. Dev.", dn)
-    ans <- c(object[c("call", "family", "iter", "rank")],
+    ans <- c(object[c("call", "family", "iter", "rank", "na.action")],
              list(fixef = fixef.table, ranef = ranef.table,
                   aliased = aliased, dispersion = 1,
                   cov.unscaled = cov.unscaled))

@@ -4,7 +4,7 @@ BTabilities <-  function (model)
         stop("model is not of class BTm")
 
     X0 <- model.matrix(model)
-    if (!(model$id %in% attr(terms(model$formula), "term.labels"))) {
+    if (!(model$id %in% model$term.labels)) {
         players <- model$player1[!duplicated(model$player1[, model$id]), ,
                                  drop = FALSE]
         extra <- match(setdiff(levels(model$player1[, model$id]),
@@ -32,7 +32,8 @@ BTabilities <-  function (model)
         predvars <- terms(~ . ,data = mf[, predvars, drop = FALSE])
         X <- model.matrix(predvars, mf)
         Xmiss <- is.na(rowSums(X)) |  players %in% model$separate.effect
-        X <- missToZero(X[, -1, drop = FALSE], Xmiss)
+        X[Xmiss, ] <- 0
+        X <- X[, -1, drop = FALSE]
         separate.effect <- unique(union(players[Xmiss],
                                         model$separate.effect))
         ns <- length(separate.effect)

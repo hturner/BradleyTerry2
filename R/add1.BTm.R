@@ -16,16 +16,33 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
     if (is.null(x)) { # create model.matrix for maximum scope
         model <- Diff(object$player1, object$player2, new.form, object$id,
                       object$data, object$separate.effect, object$refcat)
-        x <- model$X
-        Z <- model$random
-        mf <- cbind(Y, diffModel$X)
-        y <- object$y
-        wt <- object$prior.weights
-        offset <- object$offset
         if (sum(model$offset) > 0)
             warning("ignoring offset terms in scope")
+        x <- model$X
+        asgn <- attr(x, "assign")
+        ## add dummy term for any separate effects
+        oTerms <- c("sep"[0 %in% asgn], object$term.labels)
+        object$terms <- terms(reformulate(oTerms))
+        y <- object$y
+        dummy <- y ~ x - 1
+        if (!is.null(model$random)) {
+            dummy <- update(dummy, .~ . + Z)
+            Z <- model$random
+        }
+        argPos <- match(c("weights", "subset", "na.action"),
+                        names(object$call), 0)
+        mf <- as.call(c(model.frame, as.list(object$call)[argPos],
+                       list(formula = dummy, offset = object$offset)))
+        mf <- eval(mf, parent.frame())
+        x <- mf$x
+        y <- model.response(mf)
+        Z <- mf$Z
+        wt <- model.weights(mf)
+        if (is.null(wt)) wt <- rep.int(1, length(y))
+        offset <- model.offset(mf)
     }
     else {
+        asgn <- attr(x, "assign")
         y <- object$y
         wt <- object$prior.weights
         offset <- object$offset
@@ -33,15 +50,31 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
     }
 
     if (is.null(object$random)){
-        object$formula <- formula(terms(object))
-        return(NextMethod())
+        attr(x, "assign") <- asgn + 1
+        object$formula <- formula(object$terms)
+        object$x <- x
+        object$y <- y
+        object$random <- Z
+        object$prior.weights <- wt
+        object$offset <- offset
+        stat.table <- NextMethod(x = x)
+        rownames(stat.table)[-1] <- sapply(rownames(stat.table)[-1], as.name)
+        attr(stat.table, "heading")[3] <- deparse(old.form)
+        if (newsep <- sum(asgn == 0) - sum(object$assign ==0))
+            attr(stat.table, "heading") <- c(attr(stat.table, "heading"),
+                                             paste("\n", newsep,
+                                                   " separate effects added\n",
+                                                   sep = ""))
+        attr(stat.table, "separate.effects") <- colnames(x)[asgn == 0]
+
+        return(stat.table)
+
     }
 
 
     ## use original term labels: no sep effects or backticks (typically)
     oTerms <- attr(terms(lme4:::nobars(old.form)), "term.labels")
     Terms <- attr(terms(lme4:::nobars(new.form)), "term.labels")
-    asgn <- attr(x, "assign")
     ousex <- asgn %in% c(0, which(Terms %in% oTerms))
 
     sTerms <- sapply(strsplit(Terms, ":", fixed = TRUE),

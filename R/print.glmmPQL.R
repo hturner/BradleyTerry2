@@ -12,4 +12,6 @@ print.glmmPQL <- function (x, digits = max(3, getOption("digits") - 3), ...)
     }
     else cat("No fixed effects\n\n")
     cat("\nRandom Effects Std. Dev.:", x$sigma, "\n")
+    if (nzchar(mess <- naprint(x$na.action)))
+        cat("\n", mess, "\n", sep = "")
 }
