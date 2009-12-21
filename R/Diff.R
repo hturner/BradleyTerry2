@@ -1,5 +1,6 @@
 Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
-                 separate.effect = NULL, refcat = NULL, contrasts = NULL) {
+                 separate.effect = NULL, refcat = NULL, contrasts = NULL,
+                 subset = NULL) {
     player.one <- player1[[id]]
     player.two <- player2[[id]]
 

@@ -32,23 +32,29 @@ BTm <- function(outcome, player1, player2, formula = NULL,
     player1 <- withIfNecessary(substitute(player1), data)
     player2 <- withIfNecessary(substitute(player2), data)
     if (ncol(player1) == 1) colnames(player1) <- colnames(player2) <- id
+    weights <- withIfNecessary(substitute(weights), data)
+    subset1 <- withIfNecessary(substitute(subset), c(player1, data))
+    subset2 <- withIfNecessary(substitute(subset), c(player2, data))
+    if (is.logical(subset1)) subset <- subset1 | subset2
+    else subset <- c(subset1, subset2)
     if (is.null(formula)) formula <- reformulate(id)
-    diffModel <- Diff(player1, player2, formula, id, data, separate.effect, refcat,
-                      contrasts)
+    diffModel <- Diff(player1, player2, formula, id, data, separate.effect,
+                      refcat, contrasts)
     mf <- cbind(Y, diffModel$X)
     colnames(mf) <- gsub("`", "", colnames(mf))
     dummy <- as.formula(paste(deparse(substitute(outcome)), " ~ ",
                               paste(colnames(diffModel$X), collapse = "+"),
                               " - 1", sep = ""))
     fcall <- as.list(match.call(expand.dots = FALSE))
-    argPos <- match(c("weights", "subset", "na.action", "start", "etastart",
+    argPos <- match(c("na.action", "start", "etastart",
                       "mustart", "control", "model", "x"), names(fcall), 0)
     dotArgs <- fcall$"..."
     if (is.null(diffModel$random)) {
         method <- get(ifelse(br, "brglm", "glm"), mode = "function")
         fit <- as.call(c(method, fcall[argPos],
                          list(formula = dummy, family = family, data = mf,
-                              offset = diffModel$offset), dotArgs))
+                              offset = diffModel$offset, subset = subset,
+                              weights = weights), dotArgs))
         fit <- eval(fit, parent.frame())
     }
     else {
