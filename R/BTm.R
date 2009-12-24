@@ -32,11 +32,14 @@ BTm <- function(outcome, player1, player2, formula = NULL,
     player1 <- withIfNecessary(substitute(player1), data)
     player2 <- withIfNecessary(substitute(player2), data)
     if (ncol(player1) == 1) colnames(player1) <- colnames(player2) <- id
-    weights <- withIfNecessary(substitute(weights), data)
-    subset1 <- withIfNecessary(substitute(subset), c(player1, data))
-    subset2 <- withIfNecessary(substitute(subset), c(player2, data))
-    if (is.logical(subset1)) subset <- subset1 | subset2
-    else subset <- c(subset1, subset2)
+    if (!is.null(weights))
+        weight <- withIfNecessary(substitute(weights), data)
+    if (!is.null(subset)) {
+        subset1 <- withIfNecessary(substitute(subset), c(player1, data))
+        subset2 <- withIfNecessary(substitute(subset), c(player2, data))
+        if (is.logical(subset1)) subset <- subset1 | subset2
+        else subset <- c(subset1, subset2)
+    }
     if (is.null(formula)) formula <- reformulate(id)
     diffModel <- Diff(player1, player2, formula, id, data, separate.effect,
                       refcat, contrasts)

@@ -66,11 +66,8 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
                                                    " separate effects added\n",
                                                    sep = ""))
         attr(stat.table, "separate.effects") <- colnames(x)[asgn == 0]
-
         return(stat.table)
-
     }
-
 
     ## use original term labels: no sep effects or backticks (typically)
     oTerms <- attr(terms(lme4:::nobars(old.form)), "term.labels")
@@ -79,11 +76,6 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
 
     sTerms <- sapply(strsplit(Terms, ":", fixed = TRUE),
                      function(x) paste(sort(x), collapse = ":"))
-
-    #n <- nrow(x)
-    vars <- colnames(x)
-    predvars <- which(asgn != 0)
-    sep <- factor(vars[asgn == 0], levels(object$player1[, object$id]))
 
     method <- switch(object$method,
                      glmmPQL.fit)
@@ -97,26 +89,6 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
     for (i in seq(scope)) {
         stt <- paste(sort(strsplit(scope[i], ":")[[1]]), collapse = ":")
         usex <- match(asgn, match(stt, sTerms), 0) > 0 | ousex
-        if (length(missing)) {
-            X1 <- missing$X1[, usex[asgn > 0], drop = FALSE]
-            X1miss <- is.na(rowSums(X1))
-            X2 <- missing$X2[, usex[asgn > 0], drop = FALSE]
-            X2miss <- is.na(rowSums(X2))
-            new.sep <- unique(unlist(list(missing$player1[X1miss],
-                                          missing$player2[X2miss])))
-            usex <- usex | vars %in% paste(object$id, new.sep, sep = "")
-            if (!identical(new.sep, sep)) {
-                ## replace all vars according to *current* missingness
-                ## -- may be NA for unused vars
-                x[missing$cases, predvars] <- missToZero(missing$X1, X1miss) -
-                    missToZero(missing$X2, X2miss)
-                sep <- new.sep
-                fixed <- split(colnames(missing$Z),
-                               attr(missing$Z, "id") %in% sep)
-                Z[, fixed$`FALSE`] <- missing$Z[, fixed$`FALSE`]
-                Z[, fixed$`TRUE`] <- 0
-            }
-        }
         fit <- method(X = x[, usex, drop = FALSE], y = y, Z = Z, weights = wt,
                       offset = offset, family = object$family,
                       control = control,
@@ -169,6 +141,11 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
                        pf(Fvalue, abs(dfs), df.dispersion,
                           lower.tail = FALSE))
     }
-    structure(table, heading = c(title, topnote), class = c("anova",
-        "data.frame"))
+    if (newsep <- sum(asgn == 0) - sum(object$assign ==0))
+        heading <- c(heading, paste("\n", newsep,
+                                    " separate effects added\n",
+                                    sep = ""))
+    structure(table, heading = c(title, topnote),
+              class = c("anova", "data.frame"),
+              separate.effects = colnames(x)[asgn == 0])
 }

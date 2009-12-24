@@ -90,9 +90,9 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
                     X <- cbind(D[,-1], X[, keep])
                 else
                     X <- cbind(D[, -match(refcat, players)], X[, keep])
-                attr(X, "assign") <- c(seq(ncol(D) - 1),
+                attr(X, "assign") <- c(rep(0, ncol(D) - 1),
                                        attr(X1, "assign")[keep] + ncol(D) - 1)
-                term.labels <- c(colnames(D)[-1], term.labels[-drop])
+                term.labels <- c(id, term.labels[-drop])
                 return(list(X = X, offset = offset, term.labels = term.labels))
             }
             X <- X[, -1, drop = FALSE]
@@ -121,8 +121,8 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
     }
 
     if (is.null(refcat))
-        list(X = D[, -1])
+        list(X = D[, -1], term.labels = id)
     else
-        list(X = D[, -match(refcat, players)])
+        list(X = D[, -match(refcat, players)], term.labels = id)
 }
 
