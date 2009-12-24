@@ -32,7 +32,7 @@ BTm(outcome, player1, player2, formula = NULL, id = "..",
   \item{formula}{ An formula with no left-hand-side specifying the
     model for player ability. See details for more information. }
   \item{id}{ The name of the ID factor specifying either the first
-    player 
+    player ...}
   \item{family}{ A description of the error distribution and link
     function to be used in the model. Only the binomial family is
     implemented, with either "logit", "probit" , or "cauchit" link. (See
@@ -176,9 +176,7 @@ baseballModel1 <- BTm(cbind(home.wins, away.wins), home.team, away.team,
 ##  Now incorporate the "home advantage" effect
 home.team <- with(baseball, data.frame(team = home.team, at.home = 1))
 away.team <- with(baseball, data.frame(team = away.team, at.home = 0))
-teams <- data.frame(team = levels(away.team$team), rating = 1:7)
-baseballModel2 <- update(baseballModel1, formula = ~ rating[team] +
-at.home + (1|team), data = list(baseball, teams))
+baseballModel2 <- update(baseballModel1, formula = ~ team + at.home)
 
 ##  Compare the fit of these two models:
 anova(baseballModel1, baseballModel2)
