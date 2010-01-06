@@ -26,8 +26,8 @@ glmmPQL <- function(fixed, random = NULL, family = binomial, data = NULL,
                            modelCall[argPos]))
     modelData <- eval(modelData, parent.frame())
 
-    if (argPos[2])
-        Z <- random[eval(modelCall[[argPos[2]]], data, parent.frame()),]
+    if (!is.null(modelCall$subset))
+        Z <- random[eval(modelCall$subset, data, parent.frame()),]
     else Z <- random
 
     if (!is.null(attr(modelData, "na.action")))

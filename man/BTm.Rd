@@ -13,8 +13,7 @@ BTm(outcome, player1, player2, formula = NULL, id = "..",
     separate.effect = NULL, refcat = NULL, family = binomial, 
     data = NULL, weights = NULL, subset = NULL, na.action = NULL, 
     start = NULL, etastart = NULL, mustart = NULL, offset = NULL, 
-    br = FALSE, control = glmmPQL.control(...), model = TRUE, 
-    x = FALSE, y = TRUE, contrasts = NULL, ...) 
+    br = FALSE, model = TRUE, x = FALSE, y = TRUE, contrasts = NULL, ...) 
 }
 \arguments{
   \item{outcome}{ The binomial response: either a numeric vector, a
@@ -23,40 +22,51 @@ BTm(outcome, player1, player2, formula = NULL, id = "..",
     of successes and failures. }
   \item{player1}{ Either an ID factor specifying the first player in
     each contest, or a data.frame containing such a factor and possibly
-    other player-specific covariates. If given in a data.frame, the
-    factor must have the name given in the \code{id} argument. If a
-    factor is specified it will be used to create such a data.frame. }
+    other contest-level variables that are specific to the first player. If
+    given in a data.frame, the ID factor must have the name given in the
+    \code{id} argument. If a factor is specified it will be used to
+    create such a data.frame. } 
   \item{player2}{ An object corresponding to that given in
     \code{player1} for the second player in each contest, with identical
     structure -- in particular factors must have the same levels. }
   \item{formula}{ An formula with no left-hand-side specifying the
     model for player ability. See details for more information. }
-  \item{id}{ The name of the ID factor specifying either the first
-    player ...}
+  \item{id}{ The name of the ID factor. } 
+  \item{separate.effect}{ A character vector giving the names of
+    players whose abilities are to be modelled individually rather than
+    using the specification given by \code{formula}. }
+  \item{refcat}{(If \code{formula} includes the ID factor as a separate
+    term.) A character specifying which player to use as a
+    reference. Default is the first level of the ID factor.} 
   \item{family}{ A description of the error distribution and link
     function to be used in the model. Only the binomial family is
     implemented, with either "logit", "probit" , or "cauchit" link. (See
     \code{\link{family}} for details of family functions.)}
-  \item{data}{ A data frame, in which components of the formula can be
-    found. }
+  \item{data}{ A list of data frames, possibly including a data frame of
+    contest-level variables (with length the number of contests) and
+    a data frame of player covariates (with length the number of
+    players). Variables are searched for first in
+    \code{player1}/\code{player2}, then in the list of data frames in
+    the order given, then in the environment of \code{formula}.}
+  \item{weights}{
   \item{subset}{  An optional logical or numeric vector specifying a 
     subset of observations to be used in the fitting process. }
   \item{na.action}{ A function which indicates what should happen when
-    the data contain \code{NA}s. The default is first, any
-    \code{na.action} attribute of \code{data}; second, any
-    \code{na.action} setting of \code{options}, and third,
-    \code{na.fail}.} 
+    any contest-level variables contain \code{NA}s. The default is the
+    \code{na.action} setting of \code{options}. See details for the handling
+    of missing values in other variables. } 
   \item{start}{ A vector of starting values for the fixed effects.}
   \item{etastart}{ A vector of starting values for the linear
     predictor. }
   \item{mustart}{ A vector of starting values for the vector of means.}
   \item{offset}{ An optional offset term in the model. A vector of
-    length equal to the number of observations.}
+    length equal to the number of contests.}
   \item{br}{ Logical.  If \code{TRUE} fitting will be by penalized
     maximum likelihood as in Firth (1992, 1993), using
     \code{\link[brglm]{brglm}}, rather than maximum likelihood using
-    \code{\link{glm}}, when abilities are modelled exactly. Ignored when
-    abilities are modelled by covariates.  }
+    \code{\link{glm}}, when abilities are modelled exactly or when the
+    abilities are modelled by covariates and the standard error of the
+    random effects is estimated as zero. }
   \item{sigma}{ An optional starting value for the standard deviation of
     the random effects. Ignored when abilities are modelled exactly.}
   \item{sigma.fixed}{ Logical indicating whether the standard deviation
@@ -64,51 +74,61 @@ BTm(outcome, player1, player2, formula = NULL, id = "..",
     \code{sigma}. }
   \item{control}{ A list of parameters for controlling the fitting
     process. See the documentation for 'BTm.control' for details. }
-  \item{\dots}{Other arguments for fitting function (\code{glm} etc) }
+  \item{\dots}{Other arguments for fitting function (currently either
+    \code{\link{glm}}, \code{\link[brglm]{brglm}}, or \code{glmmPQL}) }
 }
 \details{
   In each comparison to be modelled there is a 'first player' and a
   'second player' and it is assumed that one player wins while the other
   loses (no allowance is made for tied comparisons).
-  
-  The response should either be specified as a binary vector (equal to 1
-  when the first player won, 0 otherwise) or a two-column matrix with
-  columns giving the number of wins and losses for the first player
-  against the second.
-
-  The RHS may include contest-specific variables, specified in the usual
-  symbolic manner, see \code{\link{formula}}. To specify a Bradley Terry
-  model (rather than an ordinary glm) the RHS must include variables
-  representing the difference between the players abilities, as
-  specified by the \code{\link{Diff}} function. Through the
-  \code{Diff} function, a model may be specified for the players'
-  abilities, or it may be specified that a separate ability should be
-  estimated for each player. If a model is specified using covariates
-  that are missing for a given player, then a separate ability will be
-  estimated for that player.
-
-  If the players' abilities are modelled by covariates, then it is
-  assumed that there are random player effects arising from a \eqn{N(0,
-    \sigma^2)}{N(0, sigma^2)} distribution and the appropriate
-  difference of these effects is added to the predictor. In this case
-  the parameters of the model, including \eqn{\sigma}{sigma} are
-  estimated using PQL (Breslow and Clayton, 1993).
 
   The \code{\link{countsToBinomial}} function is provided to convert a
   contingency table of wins into a data frame of wins and losses for
   each pair of players.
+
+  The \code{formula} argument specifies the model for player ability and
+  applies to both the first player and the second player in each
+  contest. If \code{NULL} a separate ability is estimated for each
+  player, equivalent to setting \code{formula = reformulate(id)}.
+
+  Contest-level variables can be specified in formula in the usual
+  manner, see \code{\link{formula}}. Player covariates should
+  be included as variables indexed by \code{id}, see examples. Thus
+  player covariates must be ordered according to the levels of the ID
+  factor.
+
+  If \code{formula} includes player covariates and there are players
+  with missing values over these covariates, then a separate ability
+  will be estimated for those players.
+
+  When player abilities are modelled by covariates, then random player
+  effects should be added to the model. These should be specified in the
+  formula using the vertical bar notation of \code{\link[lme4]{lmer}},
+  see examples.
+
+  When specified, it is assumed that random player effects arise from a \eqn{N(0,
+    \sigma^2)}{N(0, sigma^2)} distribution and model parameters,
+  including \eqn{\sigma}{sigma}, are estimated using PQL (Breslow and
+  Clayton, 1993) as implemented in the \code{\link{glmmPQL}} function.
 }
 \value{
   An object of class \code{c("BTm", "x")}, where \code{"x"} is the class
   of object returned by the model fitting function (e.g. \code{glm}).
   Components are as for objects of class \code{"x"}, with additionally
-  \item{method}{A character specifying the method used to fit the model
-    (currently one of "glm", "brglm", or "glmmPQL").}
-  \item{random}{For models with random effects, the term label of the
-    term specifying the random effects. }
+  \item{id}{The \code{id} argument.}
+  \item{separate.effect}{The \code{separate.effect} argument.}
+  \item{refcat}{The \code{refcat} argument.}
+  \item{player1}{A data.frame for the first player containing the ID
+    factor and any player-specific contest-level variables.}
+  \item{player2}{A data frame corresponding to that for \code{player1}.}
+  \item{assign}{A numeric vector indicating which coefficients
+    correspond to which terms in the model.}
+  \item{term.labels}{Labels for the model terms.}
+  \item{random}{For models with random effects, the design matrix for the
+   random effects. }
 }
 \seealso{
-  \code{\link{countsToBinomial}}, \code{\link{Diff}}
+  \code{\link{countsToBinomial}}, \code{\link{glmmPQL}}
   }
 \references{
 

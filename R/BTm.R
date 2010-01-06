@@ -2,8 +2,8 @@ BTm <- function(outcome, player1, player2, formula = NULL,
                 id = "..", separate.effect = NULL, refcat = NULL,
                 family = binomial, data = NULL, weights = NULL, subset = NULL,
                 na.action = NULL, start = NULL, etastart = NULL, mustart = NULL,
-                offset = NULL, br = FALSE, control = glmmPQL.control(...),
-                model = TRUE, x = FALSE, y = TRUE, contrasts = NULL, ...){
+                offset = NULL, br = FALSE, model = TRUE, x = FALSE, y = TRUE,
+                contrasts = NULL, ...){
     call <- match.call()
 
     if (is.character(family))
@@ -23,23 +23,27 @@ BTm <- function(outcome, player1, player2, formula = NULL,
     if (!is.data.frame(data))
         data <- unlist(data, recursive = FALSE) ##-- subset etc? apply to model.frame
     ## (will take first occurence of replicated names)
-    withIfNecessary <- function(x, data) {
+    withIfNecessary <- function(x, data, as.data.frame = TRUE) {
+        if (as.data.frame)
+           expr <- substitute(data.frame(x), list(x = x))
+        else expr <- x
         if (class(try(eval(x), silent = TRUE)) == "try-error")
-            eval(substitute(data.frame(x), list(x = x)), data)
-        else eval(substitute(data.frame(x), list(x = x)))
+            eval(expr, data)
+        else eval(expr)
     }
     Y <- withIfNecessary(substitute(outcome), data)
     player1 <- withIfNecessary(substitute(player1), data)
     player2 <- withIfNecessary(substitute(player2), data)
     if (ncol(player1) == 1) colnames(player1) <- colnames(player2) <- id
-    if (!is.null(weights))
-        weight <- withIfNecessary(substitute(weights), data)
-    if (!is.null(subset)) {
-        subset1 <- withIfNecessary(substitute(subset), c(player1, data))
-        subset2 <- withIfNecessary(substitute(subset), c(player2, data))
-        if (is.logical(subset1)) subset <- subset1 | subset2
-        else subset <- c(subset1, subset2)
-    }
+    weight <- withIfNecessary(substitute(weights), data, FALSE)
+    subset1 <- withIfNecessary(substitute(subset),
+                               c(player1 = list(player1),
+                                 player2 = list(player2), player1, data), FALSE)
+    subset2 <- withIfNecessary(substitute(subset),
+                               c(player1 = list(player1),
+                                 player2 = list(player2), player2, data), FALSE)
+    if (is.logical(subset1)) subset <- subset1 | subset2
+    else subset <- c(subset1, subset2)
     if (is.null(formula)) formula <- reformulate(id)
     diffModel <- Diff(player1, player2, formula, id, data, separate.effect,
                       refcat, contrasts)
@@ -64,7 +68,8 @@ BTm <- function(outcome, player1, player2, formula = NULL,
         method <- get("glmmPQL", mode = "function")
         fit <- as.call(c(method, fcall[argPos],
                          list(dummy, diffModel$random, family = family,
-                              data = mf, offset = diffModel$offset), dotArgs))
+                              data = mf, offset = diffModel$offset,
+                              subset = subset, weights = weights), dotArgs))
         fit <- eval(fit, parent.frame())
         if (br) {
             if (identical(fit$sigma, 0)){
@@ -89,7 +94,6 @@ BTm <- function(outcome, player1, player2, formula = NULL,
     fit$formula <- formula
     fit$player1 <- player1
     fit$player2 <- player2
-    fit$missing <- diffModel$missing
     fit$assign <- attr(diffModel$X, "assign")
     fit$term.labels <- diffModel$term.labels
     fit$data <- data

@@ -1,27 +1,30 @@
 \name{BTabilities}
 \alias{BTabilities}
-\title{ Estimated Abilities in a Bradley-Terry Model }
+\title{ Estimated Abilities from a Bradley-Terry Model }
 \description{
-   Extracts the \code{abilities} component from a model object of class \code{\link{BTm}}.
+   Computes the (baseline) ability of each player from a model object of
+   class \code{\link{BTm}}. 
 }
 \usage{
-BTabilities(model, formula = NULL)
+BTabilities(model)
 }
 \arguments{
   \item{model}{a model object for which \code{inherits(model, "BTm")} is
     \code{TRUE}}
-  \item{formula}{optional: a formula specifying the terms from the
-    model that should be used to compute the abilities. By default all
-    terms in \code{formula(object)} that are indexed by \code{object$id}
-    are included.}
 }
 \value{
   A two-column numeric matrix, with columns named "ability" and "se";
   one row for each player.
 
+  The player abilities are either directly estimated by the model, in
+  which case the appropriate parameter estimates are returned, otherwise
+  the abilities are computed from the terms of the fitted model that
+  involve player covariates only (those indexed by model$id in the model
+  formula). Thus parameters in any other terms are treated as zero.   
+
   If the abilities are structured according to a linear predictor, and
-  if there are players with missing predictor-variable values, the
-  abilities for those players are estimated as separate parameters.  In
+  if there are player covariates with missing values, the
+  abilities for the corresponding players are estimated as separate parameters.  In
   this event the resultant matrix has an attribute, named
   \code{"separate"}, which identifies those players whose ability was
   estimated separately.  For an example, see \code{\link{flatlizards}}. 
