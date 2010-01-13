@@ -2,7 +2,7 @@ BTm <- function(outcome, player1, player2, formula = NULL,
                 id = "..", separate.effect = NULL, refcat = NULL,
                 family = binomial, data = NULL, weights = NULL, subset = NULL,
                 na.action = NULL, start = NULL, etastart = NULL, mustart = NULL,
-                offset = NULL, br = FALSE, model = TRUE, x = FALSE, y = TRUE,
+                offset = NULL, br = FALSE, model = TRUE, x = FALSE,
                 contrasts = NULL, ...){
     call <- match.call()
 

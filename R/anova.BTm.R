@@ -58,7 +58,7 @@ anova.BTm <- function (object, ..., dispersion = NULL, test = NULL)
         ## Extension to further methods
         method <- object$method
         if (!is.function(method))
-            method <- get(method, mode = "function", envir = parent.frame())
+            method <- get(method, mode = "function")
         control <- object$control
         control$trace <- FALSE
         for (i in 1:(nvars - 1)) {

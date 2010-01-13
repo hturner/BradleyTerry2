@@ -13,14 +13,14 @@ BTabilities(model)
     \code{TRUE}}
 }
 \value{
-  A two-column numeric matrix, with columns named "ability" and "se";
+  A two-column numeric matrix, with columns named \dQuote{ability} and \dQuote{se};
   one row for each player.
 
   The player abilities are either directly estimated by the model, in
   which case the appropriate parameter estimates are returned, otherwise
   the abilities are computed from the terms of the fitted model that
-  involve player covariates only (those indexed by model$id in the model
-  formula). Thus parameters in any other terms are treated as zero.   
+  involve player covariates only (those indexed by \code{model$id} in the model
+  formula). Thus parameters in any other terms are assumed to be zero.   
 
   If the abilities are structured according to a linear predictor, and
   if there are player covariates with missing values, the
@@ -34,7 +34,7 @@ BTabilities(model)
 Firth, D. (2005)  Bradley-Terry models in R.  \emph{Journal of Statistical
 Software}, \emph{Journal of Statistical Software} \bold{12}(1), 1-12.  (\url{http://www.jstatsoft.org/v12/a01}).
 }
-\seealso{ \code{\link{BTm}}, \code{\link{BTresiduals}} }
+\seealso{ \code{\link{BTm}}, \code{\link{residuals.BTm}} }
 \examples{
 data(citations, package = "BradleyTerry2")
 

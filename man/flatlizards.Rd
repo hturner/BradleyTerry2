@@ -18,42 +18,42 @@
 
   The \code{flatlizards$contests} data frame has 100 observations on the following 2 variables:
   \describe{
-    \item{\code{winner}}{a factor with 77 levels \code{lizard003} ... \code{lizard189}}
-    \item{\code{loser}}{a factor with the same 77 levels \code{lizard003} ... \code{lizard189}}
+    \item{\code{winner}}{a factor with 77 levels \code{lizard003} ... \code{lizard189}.}
+    \item{\code{loser}}{a factor with the same 77 levels \code{lizard003} ... \code{lizard189}.}
   }
 
   The \code{flatlizards$predictors} data frame has 77 observations (one
   for each of the 77 lizards) on the following 18 variables:
   \describe{
-    \item{\code{id}}{factor with 77 levels (3 5 6 ... 189), the lizard identifiers}
+    \item{\code{id}}{factor with 77 levels (3 5 6 ... 189), the lizard identifiers.}
     \item{\code{throat.PC1}}{numeric, the first principal component of
-  the throat spectrum}
+  the throat spectrum.}
     \item{\code{throat.PC2}}{numeric, the second principal component of
-  the throat spectrum}
+  the throat spectrum.}
     \item{\code{throat.PC3}}{numeric, the third principal component of
-  the throat spectrum}
+  the throat spectrum.}
     \item{\code{frontleg.PC1}}{numeric, the first principal component of
-  the front-leg spectrum}
+  the front-leg spectrum.}
     \item{\code{frontleg.PC2}}{numeric, the second principal component of
-  the front-leg spectrum}
+  the front-leg spectrum.}
     \item{\code{frontleg.PC3}}{numeric, the third principal component of
-  the front-leg spectrum}
+  the front-leg spectrum.}
     \item{\code{badge.PC1}}{numeric, the first principal component of
-  the ventral colour patch spectrum}
+  the ventral colour patch spectrum.}
     \item{\code{badge.PC2}}{numeric, the second principal component of
-  the ventral colour patch spectrum}
+  the ventral colour patch spectrum.}
     \item{\code{badge.PC3}}{numeric, the third principal component of
-  the ventral colour patch spectrum}
+  the ventral colour patch spectrum.}
     \item{\code{badge.size}}{numeric, a measure of the area of the
-  ventral colour patch}
-    \item{\code{testosterone}}{numeric, a measure of blood testosterone concentration}
-    \item{\code{SVL}}{numeric, the snout-vent length of the lizard}
-    \item{\code{head.length}}{numeric, head length}
-    \item{\code{head.width}}{numeric, head width}
-    \item{\code{head.height}}{numeric, head height}
-    \item{\code{condition}}{numeric, a measure of body condition}
+  ventral colour patch.}
+    \item{\code{testosterone}}{numeric, a measure of blood testosterone concentration.}
+    \item{\code{SVL}}{numeric, the snout-vent length of the lizard.}
+    \item{\code{head.length}}{numeric, head length.}
+    \item{\code{head.width}}{numeric, head width.}
+    \item{\code{head.height}}{numeric, head height.}
+    \item{\code{condition}}{numeric, a measure of body condition.}
     \item{\code{repro.tactic}}{a factor indicating reproductive tactic; 
-  levels are \code{resident} and \code{floater}}
+  levels are \code{resident} and \code{floater}.}
   }
 }
 \details{
@@ -68,7 +68,7 @@
   on \code{SVL}.
 
   Values of some predictors are missing (\code{NA}) for some lizards,
-  `at random', because of instrument problems unconnected with the value of the
+  \sQuote{at random}, because of instrument problems unconnected with the value of the
   measurement being made.
 }
 \source{
@@ -81,6 +81,7 @@
  N.C. and Blomberg, S.P. (2006). Ultraviolet signals ultra-aggression in
   a lizard. \emph{Animal Behaviour} \bold{72}, 353-363. (\url{http://dx.doi.org/10.1016/j.anbehav.2005.10.018})
 }
+\seealso{\code{\link{BTm}}}
 \examples{
 data(flatlizards, package = "BradleyTerry2")
 ##

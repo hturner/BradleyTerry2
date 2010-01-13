@@ -13,69 +13,68 @@ BTm(outcome, player1, player2, formula = NULL, id = "..",
     separate.effect = NULL, refcat = NULL, family = binomial, 
     data = NULL, weights = NULL, subset = NULL, na.action = NULL, 
     start = NULL, etastart = NULL, mustart = NULL, offset = NULL, 
-    br = FALSE, model = TRUE, x = FALSE, y = TRUE, contrasts = NULL, ...) 
+    br = FALSE, model = TRUE, x = FALSE, contrasts = NULL, ...) 
 }
 \arguments{
-  \item{outcome}{ The binomial response: either a numeric vector, a
+  \item{outcome}{ the binomial response: either a numeric vector, a
     factor in which the first level denotes failure and all other
     success, or a two-column matrix with the columns giving the numbers
     of successes and failures. }
-  \item{player1}{ Either an ID factor specifying the first player in
+  \item{player1}{ either an ID factor specifying the first player in
     each contest, or a data.frame containing such a factor and possibly
     other contest-level variables that are specific to the first player. If
     given in a data.frame, the ID factor must have the name given in the
     \code{id} argument. If a factor is specified it will be used to
     create such a data.frame. } 
-  \item{player2}{ An object corresponding to that given in
+  \item{player2}{ an object corresponding to that given in
     \code{player1} for the second player in each contest, with identical
     structure -- in particular factors must have the same levels. }
-  \item{formula}{ An formula with no left-hand-side specifying the
+  \item{formula}{ a formula with no left-hand-side specifying the
     model for player ability. See details for more information. }
-  \item{id}{ The name of the ID factor. } 
-  \item{separate.effect}{ A character vector giving the names of
+  \item{id}{ the name of the ID factor. } 
+  \item{separate.effect}{(if \code{formula} does not include the ID
+    factor as a separate term) a character vector giving the names of
     players whose abilities are to be modelled individually rather than
     using the specification given by \code{formula}. }
-  \item{refcat}{(If \code{formula} includes the ID factor as a separate
-    term.) A character specifying which player to use as a
+  \item{refcat}{(if \code{formula} does include the ID factor as a separate
+    term) a character specifying which player to use as a
     reference. Default is the first level of the ID factor.} 
-  \item{family}{ A description of the error distribution and link
+  \item{family}{ a description of the error distribution and link
     function to be used in the model. Only the binomial family is
-    implemented, with either "logit", "probit" , or "cauchit" link. (See
+    implemented, with either\code{"logit"}, \code{"probit"} , or \code{"cauchit"} link. (See
     \code{\link{family}} for details of family functions.)}
-  \item{data}{ A list of data frames, possibly including a data frame of
+  \item{data}{ a list of data frames, possibly including a data frame of
     contest-level variables (with length the number of contests) and
     a data frame of player covariates (with length the number of
     players). Variables are searched for first in
-    \code{player1}/\code{player2}, then in the list of data frames in
+    \code{player1}/ \code{player2}, then in the list of data frames in
     the order given, then in the environment of \code{formula}.}
-  \item{weights}{
-  \item{subset}{  An optional logical or numeric vector specifying a 
+  \item{weights}{ an optional numeric vector of \sQuote{prior weights}.}
+  \item{subset}{  an optional logical or numeric vector specifying a 
     subset of observations to be used in the fitting process. }
-  \item{na.action}{ A function which indicates what should happen when
+  \item{na.action}{ a function which indicates what should happen when
     any contest-level variables contain \code{NA}s. The default is the
     \code{na.action} setting of \code{options}. See details for the handling
     of missing values in other variables. } 
-  \item{start}{ A vector of starting values for the fixed effects.}
-  \item{etastart}{ A vector of starting values for the linear
+  \item{start}{ a vector of starting values for the fixed effects.}
+  \item{etastart}{ a vector of starting values for the linear
     predictor. }
-  \item{mustart}{ A vector of starting values for the vector of means.}
-  \item{offset}{ An optional offset term in the model. A vector of
+  \item{mustart}{ a vector of starting values for the vector of means.}
+  \item{offset}{ an optional offset term in the model. A vector of
     length equal to the number of contests.}
-  \item{br}{ Logical.  If \code{TRUE} fitting will be by penalized
+  \item{br}{ logical.  If \code{TRUE} fitting will be by penalized
     maximum likelihood as in Firth (1992, 1993), using
     \code{\link[brglm]{brglm}}, rather than maximum likelihood using
     \code{\link{glm}}, when abilities are modelled exactly or when the
     abilities are modelled by covariates and the standard error of the
     random effects is estimated as zero. }
-  \item{sigma}{ An optional starting value for the standard deviation of
-    the random effects. Ignored when abilities are modelled exactly.}
-  \item{sigma.fixed}{ Logical indicating whether the standard deviation
-    of the random effects should be fixed at the value specified by
-    \code{sigma}. }
-  \item{control}{ A list of parameters for controlling the fitting
-    process. See the documentation for 'BTm.control' for details. }
-  \item{\dots}{Other arguments for fitting function (currently either
-    \code{\link{glm}}, \code{\link[brglm]{brglm}}, or \code{glmmPQL}) }
+  \item{model}{logical: whether or not to return the model frame.}
+  \item{x}{logical: whether or not to return the design matrix for
+    the fixed effects.}
+  \item{contrasts}{an optional list. See the \code{contrasts.arg} of
+    \code{\link{model.matrix}}.} 
+  \item{\dots}{other arguments for fitting function (currently either
+    \code{\link{glm}}, \code{\link[brglm]{brglm}}, or \code{\link{glmmPQL}}) }
 }
 \details{
   In each comparison to be modelled there is a 'first player' and a
@@ -115,29 +114,27 @@ BTm(outcome, player1, player2, formula = NULL, id = "..",
   An object of class \code{c("BTm", "x")}, where \code{"x"} is the class
   of object returned by the model fitting function (e.g. \code{glm}).
   Components are as for objects of class \code{"x"}, with additionally
-  \item{id}{The \code{id} argument.}
-  \item{separate.effect}{The \code{separate.effect} argument.}
-  \item{refcat}{The \code{refcat} argument.}
-  \item{player1}{A data.frame for the first player containing the ID
+  \item{id}{the \code{id} argument.}
+  \item{separate.effect}{the \code{separate.effect} argument.}
+  \item{refcat}{the \code{refcat} argument.}
+  \item{player1}{a data frame for the first player containing the ID
     factor and any player-specific contest-level variables.}
-  \item{player2}{A data frame corresponding to that for \code{player1}.}
-  \item{assign}{A numeric vector indicating which coefficients
+  \item{player2}{a data frame corresponding to that for \code{player1}.}
+  \item{assign}{a numeric vector indicating which coefficients
     correspond to which terms in the model.}
-  \item{term.labels}{Labels for the model terms.}
-  \item{random}{For models with random effects, the design matrix for the
+  \item{term.labels}{labels for the model terms.}
+  \item{random}{for models with random effects, the design matrix for the
    random effects. }
 }
 \seealso{
-  \code{\link{countsToBinomial}}, \code{\link{glmmPQL}}
+  \code{\link{countsToBinomial}}, \code{\link{glmmPQL}},
+    \code{\link{BTabilities}}, \code{\link{residuals.BTm}},
+    \code{\link{add1.BTm}}, \code{\link{anova.BTm}}
   }
 \references{
 
   Agresti, A (2002)  \emph{Categorical Data Analysis} (2nd ed).  New
   York: Wiley.
-  
-  Breslow, N. E. and Clayton, D. G. (1993) Approximate Inference
-  in Generalized Linear Mixed Models. \emph{JASA} \bold{88(421)},
-  9--25. 
   
   Firth, D. (1992)  Bias reduction, the Jeffreys prior and GLIM. In 
   \emph{Advances in GLIM and Statistical Modelling}, Eds. L Fahrmeir,
@@ -147,11 +144,7 @@ BTm(outcome, player1, player2, formula = NULL, id = "..",
   \emph{Biometrika} \bold{80}, 27--38.
   
   Firth, D. (2005)  Bradley-Terry models in R.  \emph{Journal of Statistical
-    Software}, \bold{12}(1).
-
-  Harville, D. A. (1977) Maximum Likelihood Approaches to Variance
-  Component Estimation and to Related Problems. \emph{JASA}
-  \bold{72(358)}, 320--338. 
+    Software}, \bold{12}(1). 
   
   Stigler, S. (1994)  Citation patterns in the journals of statistics 
   and probability.  \emph{Statistical Science} \bold{9}, 94--108.

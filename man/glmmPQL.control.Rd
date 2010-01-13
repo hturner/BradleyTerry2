@@ -8,13 +8,13 @@
 glmmPQL.control(maxiter = 50, IWLSiter = 10, tol = 1e-06, trace = FALSE)
 }
 \arguments{
-  \item{maxiter}{ The maximum number of outer iterations. }
-  \item{IWLSiter}{ The maximum number of iterated weighted least squares
+  \item{maxiter}{ the maximum number of outer iterations. }
+  \item{IWLSiter}{ the maximum number of iterated weighted least squares
   iterations used to estimate the fixed effects, given the standard
   deviation of the random effects. }
-  \item{tol}{ The tolerance used to determine convergence in the
+  \item{tol}{ the tolerance used to determine convergence in the
     IWLS iterations and over all (see details). }
-  \item{trace}{ Logical: whether or not to print the score for the
+  \item{trace}{ logical: whether or not to print the score for the
     random effects variance at the end of each iteration. } 
 }
 \details{
@@ -42,7 +42,7 @@ glmmPQL.control(maxiter = 50, IWLSiter = 10, tol = 1e-06, trace = FALSE)
   Generalized Linear Mixed Models. \emph{JASA} \bold{88(421)}, 9--25.
 }
 \author{ Heather Turner }
-\seealso{ \code{\link{BTm}} }
+\seealso{\code{\link{glmmPQL}}, \code{\link{BTm}} }
 \examples{
 ## Variation on example(flatlizards)
 data(flatlizards)

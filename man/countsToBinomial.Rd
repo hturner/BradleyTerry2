@@ -14,10 +14,10 @@ countsToBinomial(xtab)
 }
 \value{
   A data frame with four columns
-  \item{player1 }{ the first player in the contest }
-  \item{player2 }{ the second player in the contest }
-  \item{won }{ the number of times \code{player1} won }
-  \item{lost}{ the number of times \code{player1} lost }
+  \item{player1 }{ the first player in the contest. }
+  \item{player2 }{ the second player in the contest. }
+  \item{won }{ the number of times \code{player1} won. }
+  \item{lost}{ the number of times \code{player1} lost. }
 }
 \author{ Heather Turner }
 \seealso{ \code{\link{BTm}} }

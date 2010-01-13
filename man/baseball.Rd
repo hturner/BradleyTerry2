@@ -10,18 +10,18 @@
 \format{
   A data frame with 42 observations on the following 4 variables.
   \describe{
-    \item{\code{home.team}}{a factor with levels \code{Baltimore} \code{Boston}
-      \code{Cleveland} \code{Detroit}
-      \code{Milwaukee}  \code{New York} \code{Toronto}}
-    \item{\code{away.team}}{a factor with levels \code{Baltimore} \code{Boston}
-      \code{Cleveland} \code{Detroit}
-      \code{Milwaukee}  \code{New York} \code{Toronto}}
-    \item{\code{home.wins}}{a numeric vector}
-    \item{\code{away.wins}}{a numeric vector}
+    \item{\code{home.team}}{a factor with levels \code{Baltimore}, \code{Boston},
+      \code{Cleveland}, \code{Detroit},
+      \code{Milwaukee},  \code{New York}, \code{Toronto}.}
+    \item{\code{away.team}}{a factor with levels \code{Baltimore}, \code{Boston},
+      \code{Cleveland}, \code{Detroit},
+      \code{Milwaukee},  \code{New York}, \code{Toronto}.}
+    \item{\code{home.wins}}{a numeric vector.}
+    \item{\code{away.wins}}{a numeric vector.}
   }
 }
 \source{
-page 438 of Agresti, A (2002) \emph{Categorcal Data Analysis} (2nd Edn.).  
+Page 438 of Agresti, A (2002) \emph{Categorcal Data Analysis} (2nd Edn.).  
 Wiley, New York.
 }
 \references{

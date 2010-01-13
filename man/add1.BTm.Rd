@@ -4,52 +4,59 @@
 \title{ Add or Drop Single Terms to a Bradley Terry Model }
 \description{
   Add or drop single terms within the limit specified by the
-  \code{scope} argument, including any subterms of terms specified by
-  \code{Diff}. Computes the Wald statistic of the parameters that have
-  been added or dropped from the model.
+  \code{scope} argument. For models with no random effects, compute an
+  analysis of deviance table, otherwise compute the Wald statistic of
+  the parameters that have been added to or dropped from the model.
 }
 \usage{
 \method{add1}{BTm}(object, scope, scale = 0,
   test = c("none", "Chisq", "F"), x = NULL, ...)
 
-\method{drop1}{BTm}(object, scope, scale = 0, test = c("none", "Chisq", "F"), ...)
+\method{drop1}{BTm}(object, scope, scale = 0,
+  test = c("none", "Chisq", "F"), ...)
 }
 
 \arguments{
   \item{object}{ a fitted object of class inheriting from \code{"BTm"}. }
-  \item{scope}{ a formula. For \code{add1}, the model including all
-    candidate terms and for \code{drop1}, the model excluding all
-    candidate terms. }
-  \item{scale}{ a value for the dispersion. Not yet implemented. }
-  \item{test}{ should a p-value be returned? Only \code{"none"} or
-    \code{"Chisq"} implemented. }
+  \item{scope}{ a formula specifying the model including all terms to be
+    considered for adding or dropping. }
+  \item{scale}{ an estimate of the dispersion. Not implemented for
+    models with random effects.   }
+  \item{test}{ should a p-value be returned? The F test is only
+    appropriate for models with no random effects for which the
+    dispersion has been estimated. The Chisq test is a likelihood ratio
+    test for models with no random effects, otherwise a Wald test. }
   \item{x}{ a model matrix containing columns for all terms in the
     scope.  Useful if \code{add1} is to be called repeatedly.
     \bold{Warning:} no checks are done on its validity. }
-  \item{\dots}{ further arguments passed to or from other methods. }
+  \item{\dots}{ further arguments passed to \code{\link{add1.glm}}. }
 }
 \details{
   The hierarchy is respected when considering terms to be added or
   dropped: all main effects contained in a second-order interaction must
-  remain, and so on. 
+  remain, and so on.
 
-  For \code{drop1}, a missing \code{scope} is taken to be the
-  null model with no fixed effects and the same random effects structure
-  as the original model.
+  In a scope formula \samp{.} means \sQuote{what is already there}.
 
-  Any subterms of terms specified by \code{Diff} are treated as
-  individual terms, with corresponding \sQuote{separate effects} added
-  or dropped as necessary (see \code{\link{Diff}} for more detail). Thus
-  additions or deletions to \code{Diff} terms can be made by specifying
-  the \code{Diff} term in the scope with an extended or reduced
-  formula, see examples.
+  For \code{drop1}, a missing \code{scope} is taken to mean that all
+  terms in the model may be considered for dropping.
+
+  If \code{scope} includes player covariates and there are players
+  with missing values over these covariates, then a separate ability
+  will be estimated for these players in \emph{all} fitted
+  models. Similarly if there are missing values in any contest-level
+  variables in \code{scope}, the corresponding contests will be omitted
+  from all models.
+
+  If \code{formula} includes random effects, the same random effects
+  structure will apply to all models.
 }
 \value{
   An object of class \code{"anova"} summarizing the differences in fit
   between the models.
 }
 \author{ Heather Turner }
-\seealso{ \code{\link{BTm}}, \code{\link{Diff}}, \code{\link{anova.BTm}} }
+\seealso{ \code{\link{BTm}}, \code{\link{anova.BTm}} }
 \examples{
 data(flatlizards, package = "BradleyTerry2")
 

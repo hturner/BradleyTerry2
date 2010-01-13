@@ -1,5 +1,4 @@
-export(BTabilities, BTm, countsToBinomial, Diff, glmmPQL, glmmPQL.control,
-       glmmPQL.fit)
+export(BTabilities, BTm, countsToBinomial, glmmPQL, glmmPQL.control)
 
 importFrom(brglm, brglm)
 importFrom(gtools, combinations)
