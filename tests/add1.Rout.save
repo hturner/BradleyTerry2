@@ -1,0 +1,70 @@
+
+R version 2.10.0 (2009-10-26)
+Copyright (C) 2009 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(BradleyTerry2)
+> data(flatlizards, package = "BradleyTerry2")
+> 
+> attach(flatlizards)
+> result <- rep(1, nrow(contests))
+> BTmodel1 <- BTm(result, winner, loser,
++                 ~ throat.PC1[..] + throat.PC3[..] + (1|..),
++                 data = list(contests, predictors),
++                 tol = 1e-4, sigma = 2, trace = TRUE)
+Iteration 1. Score = 5.077924
+Iteration 2. Score = 1.087963
+Iteration 3. Score = 0.2062877
+Iteration 4. Score = 0.01989172
+Iteration 5. Score = 0.001411764
+Iteration 6. Score = 9.04485e-05
+> 
+> drop1(BTmodel1)
+Single term deletions
+
+Model: ~throat.PC1[..] + throat.PC3[..] + (1 | ..) 
+                 Statistic Df
+`throat.PC1[..]`    3.4143  1
+`throat.PC3[..]`    5.0560  1
+> 
+> add1(BTmodel1, ~ . + head.length[..] + SVL[..], test = "Chisq")
+Single term additions
+
+Model:  ~throat.PC1[..] + throat.PC3[..] + (1 | ..)  
+                  Statistic Df P(>|Chi|)  
+`head.length[..]`    4.4730  1   0.03443 *
+`SVL[..]`            2.6624  1   0.10275  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+> 
+> BTmodel2 <- update(BTmodel1, formula = ~ . + head.length[..])
+Iteration 1. Score = 4.513682
+Iteration 2. Score = 1.312929
+Iteration 3. Score = 0.2792263
+Iteration 4. Score = 0.0301132
+Iteration 5. Score = 0.002205424
+Iteration 6. Score = 0.0001348541
+> 
+> drop1(BTmodel2, test = "Chisq")
+Single term deletions
+
+Model: ~throat.PC1[..] + throat.PC3[..] + (1 | ..) + head.length[..] 
+                  Statistic Df P(>|Chi|)   
+`throat.PC1[..]`     4.0522  1   0.04411 * 
+`throat.PC3[..]`     7.2577  1   0.00706 **
+`head.length[..]`    4.4730  1   0.03443 * 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+> 

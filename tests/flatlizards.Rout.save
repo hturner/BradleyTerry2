@@ -1,0 +1,546 @@
+
+R version 2.10.0 (2009-10-26)
+Copyright (C) 2009 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(BradleyTerry2)
+> data(flatlizards, package = "BradleyTerry2")
+> ##
+> ##  Fit the standard Bradley-Terry model, using the bias-reduced
+> ##  maximum likelihood method:
+> ##
+> attach(flatlizards)
+> result <- rep(1, nrow(contests))
+> BTmodel <- BTm(result, winner, loser, br = TRUE, data = contests)
+> summary(BTmodel)
+
+Call:
+BTm(outcome = result, player1 = winner, player2 = loser, data = contests, 
+    br = TRUE)
+
+
+Coefficients: (3 not defined because of singularities)
+            Estimate Std. Error z value Pr(>|z|)
+..lizard005 -1.20504    4.64604  -0.259    0.795
+..lizard006 -2.87103    5.92260  -0.485    0.628
+..lizard009  0.07957    6.18265   0.013    0.990
+..lizard010 -1.93866    5.37451  -0.361    0.718
+..lizard011 -1.09861    2.30940  -0.476    0.634
+..lizard012 -0.63845    3.23535  -0.197    0.844
+..lizard013 -3.30572    5.59110  -0.591    0.554
+..lizard016  1.18331    2.81899   0.420    0.675
+..lizard018 -1.56565    2.23667  -0.700    0.484
+..lizard020 -0.16014    3.70684  -0.043    0.966
+..lizard023  0.88994    3.02459   0.294    0.769
+..lizard024 -1.09861    2.30940  -0.476    0.634
+..lizard025 -1.80638    5.91307  -0.305    0.760
+..lizard026 -2.19722    3.26599  -0.673    0.501
+..lizard028 -1.20504    3.30440  -0.365    0.715
+..lizard029 -1.25875    2.89954  -0.434    0.664
+..lizard030  0.46017    3.97502   0.116    0.908
+..lizard031 -2.81449    5.02733  -0.560    0.576
+..lizard032 -2.01124    3.72650  -0.540    0.589
+..lizard033 -1.77261    5.21192  -0.340    0.734
+..lizard037 -2.90499    5.44344  -0.534    0.594
+..lizard038 -0.06225    3.15354  -0.020    0.984
+..lizard040  0.40386    2.53760   0.159    0.874
+..lizard045 -0.87041    2.70991  -0.321    0.748
+..lizard047 -1.09861    2.30940  -0.476    0.634
+..lizard048 -1.77242    5.45379  -0.325    0.745
+..lizard050 -2.01124    3.72650  -0.540    0.589
+..lizard052 -0.91263    2.92463  -0.312    0.755
+..lizard053       NA         NA      NA       NA
+..lizard055 -1.06807    3.42732  -0.312    0.755
+..lizard058       NA         NA      NA       NA
+..lizard060       NA         NA      NA       NA
+..lizard061 -1.09708    1.99579  -0.550    0.583
+..lizard062 -2.30366    4.03142  -0.571    0.568
+..lizard063 -0.20867    3.80546  -0.055    0.956
+..lizard064 -0.17068    3.41077  -0.050    0.960
+..lizard065 -1.71587    5.53240  -0.310    0.756
+..lizard066  0.60941    3.38727   0.180    0.857
+..lizard069 -3.48951    5.11390  -0.682    0.495
+..lizard070  2.60120    4.26202   0.610    0.542
+..lizard071 -2.39090    5.61117  -0.426    0.670
+..lizard073 -0.88783    5.10580  -0.174    0.862
+..lizard074 -1.01904    5.73513  -0.178    0.859
+..lizard075 -2.30402    4.03795  -0.571    0.568
+..lizard077 -0.79510    2.69015  -0.296    0.768
+..lizard078 -1.20541    3.31235  -0.364    0.716
+..lizard081 -1.96902    3.56047  -0.553    0.580
+..lizard082 -2.74006    5.45022  -0.503    0.615
+..lizard083  0.49147    2.93949   0.167    0.867
+..lizard084 -1.77959    3.02373  -0.589    0.556
+..lizard086 -2.32338    5.03754  -0.461    0.645
+..lizard089 -3.87138    5.57733  -0.694    0.488
+..lizard091 -3.31612    5.34283  -0.621    0.535
+..lizard096 -0.74848    5.56137  -0.135    0.893
+..lizard099  0.40398    2.73827   0.148    0.883
+..lizard100 -1.98644    5.60380  -0.354    0.723
+..lizard102 -1.87039    5.46050  -0.343    0.732
+..lizard105 -0.64266    3.12023  -0.206    0.837
+..lizard155 -0.99809    3.10453  -0.321    0.748
+..lizard156 -0.51136    3.21642  -0.159    0.874
+..lizard162  0.08470    3.64418   0.023    0.981
+..lizard163 -0.69475    3.43114  -0.202    0.840
+..lizard165 -1.26930    4.11906  -0.308    0.758
+..lizard167 -1.20541    3.31235  -0.364    0.716
+..lizard170  0.58725    2.23875   0.262    0.793
+..lizard171  1.50259    4.84749   0.310    0.757
+..lizard173 -0.90491    2.56217  -0.353    0.724
+..lizard174  1.50259    3.58210   0.419    0.675
+..lizard176  0.46631    2.73577   0.170    0.865
+..lizard177  0.03054    2.53242   0.012    0.990
+..lizard178 -1.16087    3.90873  -0.297    0.766
+..lizard179 -0.48920    2.47796  -0.197    0.843
+..lizard180 -1.32131    2.10455  -0.628    0.530
+..lizard183 -1.06807    3.42732  -0.312    0.755
+..lizard188 -1.86502    3.18218  -0.586    0.558
+..lizard189 -1.93330    3.30198  -0.585    0.558
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 62.926  on 100  degrees of freedom
+Residual deviance: 50.212  on  27  degrees of freedom
+Penalized deviance: 147.5380 
+AIC:  196.21 
+
+> ##
+> ##  That's fairly useless, though, because of the rather small
+> ##  amount of data on each lizard.  And really the scientific
+> ##  interest is not in the abilities of these particular 77
+> ##  lizards, but in the relationship between ability and the
+> ##  measured predictor variables.
+> ##
+> ##  So next fit (by maximum likelihood) a "structured" B-T model in
+> ##  which abilities are determined by a linear predictor.
+> ##
+> ##  This reproduces results reported in Table 1 of Whiting et al. (2006):
+> ##
+> Whiting.model <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
++                      head.length[..] + SVL[..], family = binomial,
++                      data = list(contests, predictors))
+> summary(Whiting.model)
+
+Call:
+BTm(outcome = result, player1 = winner, player2 = loser, formula = ~throat.PC1[..] + 
+    throat.PC3[..] + head.length[..] + SVL[..], family = binomial, 
+    data = list(contests, predictors))
+
+Deviance Residuals: 
+      Min         1Q     Median         3Q        Max  
+0.0001311  0.4454835  0.7960895  1.1765166  1.9588354  
+
+Coefficients:
+                    Estimate Std. Error z value Pr(>|z|)   
+..lizard096         16.42446 1194.52027   0.014  0.98903   
+..lizard099          0.83581    1.15910   0.721  0.47086   
+`throat.PC1[..]`    -0.09261    0.02906  -3.187  0.00144 **
+`throat.PC3[..]`     0.34215    0.11088   3.086  0.00203 **
+`head.length[..]`   -1.12519    0.49438  -2.276  0.02285 * 
+`SVL[..]`            0.18826    0.09852   1.911  0.05602 . 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 138.629  on 100  degrees of freedom
+Residual deviance:  95.361  on  94  degrees of freedom
+AIC: 107.36
+
+Number of Fisher Scoring iterations: 15
+
+> ##
+> ##  Equivalently, fit the same model using glmmPQL:
+> ##
+> Whiting.model <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
++                      head.length[..] + SVL[..] + (1|..), sigma = 0,
++                      sigma.fixed = TRUE, data = list(contests, predictors))
+> summary(Whiting.model)
+PQL algorithm converged to fixed effects model
+
+Call:
+BTm(outcome = result, player1 = winner, player2 = loser, formula = ~throat.PC1[..] + 
+    throat.PC3[..] + head.length[..] + SVL[..] + (1 | ..), data = list(contests, 
+    predictors), sigma = 0, sigma.fixed = TRUE)
+
+Deviance Residuals: 
+      Min         1Q     Median         3Q        Max  
+6.528e-06  4.455e-01  7.961e-01  1.177e+00  1.959e+00  
+
+Coefficients:
+                    Estimate Std. Error z value Pr(>|z|)   
+..lizard096        2.242e+01  3.956e+04   0.001  0.99955   
+..lizard099        8.358e-01  1.159e+00   0.721  0.47086   
+`throat.PC1[..]`  -9.261e-02  2.906e-02  -3.187  0.00144 **
+`throat.PC3[..]`   3.422e-01  1.109e-01   3.086  0.00203 **
+`head.length[..]` -1.125e+00  4.944e-01  -2.276  0.02285 * 
+`SVL[..]`          1.883e-01  9.852e-02   1.911  0.05602 . 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 138.629  on 100  degrees of freedom
+Residual deviance:  95.361  on  94  degrees of freedom
+AIC: 107.36
+
+Number of Fisher Scoring iterations: NA
+
+> ##
+> ##  But that analysis assumes that the linear predictor formula for
+> ##  abilities is _perfect_, i.e., that there is no error in the linear
+> ##  predictor.  This will always be unrealistic.
+> ##
+> ##  So now fit the same predictor but with a normally distributed error
+> ##  term --- a generalized linear mixed model --- by using the BTm
+> ##  function instead of glm.
+> ##
+> Whiting.model2 <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
++                       head.length[..] + SVL[..] + (1|..),
++                       data = list(contests, predictors), trace = TRUE)
+Iteration 1. Score = 0.1423585
+Iteration 2. Score = 0.883593
+Iteration 3. Score = 0.3225548
+Iteration 4. Score = 0.00767132
+Iteration 5. Score = 0.0006436292
+Iteration 6. Score = 5.467083e-05
+Iteration 7. Score = 4.65766e-06
+Iteration 8. Score = 3.962323e-07
+> summary(Whiting.model2)
+
+Call:
+
+BTm(outcome = result, player1 = winner, player2 = loser, formula = ~throat.PC1[..] + 
+    throat.PC3[..] + head.length[..] + SVL[..] + (1 | ..), data = list(contests, 
+    predictors), trace = TRUE)
+
+Fixed Effects:
+                    Estimate Std. Error  z value Pr(>|z|)  
+..lizard096        3.668e+01  3.875e+07 9.47e-07   1.0000  
+..lizard099        9.531e-01  1.283e+00    0.743   0.4576  
+`throat.PC1[..]`  -8.689e-02  4.120e-02   -2.109   0.0349 *
+`throat.PC3[..]`   3.735e-01  1.527e-01    2.445   0.0145 *
+`head.length[..]` -1.382e+00  7.390e-01   -1.870   0.0614 .
+`SVL[..]`          1.722e-01  1.373e-01    1.254   0.2098  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+
+(Dispersion parameter for binomial family taken to be 1)
+
+Random Effects:
+          Estimate Std. Error z value Pr(>|z|)    
+Std. Dev.   1.1099     0.3223   3.443 0.000575 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+
+Number of iterations: 8
+
+> ##
+> ##  The estimated coefficients (of throat.PC1, throat.PC3,
+> ##  head.length and SVL are not changed substantially by
+> ##  the recognition of an error term in the model; but the estimated
+> ##  standard errors are larger, as expected.  The main conclusions from
+> ##  Whiting et al. (2006) are unaffected.
+> ##
+> ##  With the normally distributed random error included, it is perhaps
+> ##  at least as natural to use probit rather than logit as the link
+> ##  function:
+> ##
+> Whiting.model3 <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
++                       head.length[..] + SVL[..] + (1|..),
++                       family = binomial(link = "probit"),
++                       data = list(contests, predictors), trace = TRUE)
+Iteration 1. Score = 0.3606145
+Iteration 2. Score = 0.7990302
+Iteration 3. Score = 0.2862628
+Iteration 4. Score = 0.003823299
+Iteration 5. Score = 0.0001768978
+Iteration 6. Score = 9.279559e-06
+Iteration 7. Score = 6.79458e-07
+> summary(Whiting.model3)
+
+Call:
+
+BTm(outcome = result, player1 = winner, player2 = loser, formula = ~throat.PC1[..] + 
+    throat.PC3[..] + head.length[..] + SVL[..] + (1 | ..), family = binomial(link = "probit"), 
+    data = list(contests, predictors), trace = TRUE)
+
+Fixed Effects:
+                    Estimate Std. Error  z value Pr(>|z|)   
+..lizard096        2.046e+01  3.875e+07 5.28e-07   1.0000   
+..lizard099        5.977e-01  7.378e-01    0.810   0.4178   
+`throat.PC1[..]`  -5.362e-02  2.321e-02   -2.310   0.0209 * 
+`throat.PC3[..]`   2.276e-01  8.621e-02    2.640   0.0083 **
+`head.length[..]` -8.434e-01  4.206e-01   -2.005   0.0449 * 
+`SVL[..]`          1.054e-01  7.764e-02    1.358   0.1746   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+
+(Dispersion parameter for binomial family taken to be 1)
+
+Random Effects:
+          Estimate Std. Error z value Pr(>|z|)    
+Std. Dev.   0.6296     0.1863   3.379 0.000727 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+
+Number of iterations: 7
+
+> BTabilities(Whiting.model3)
+              ability         s.e.
+lizard003  0.63648384 2.738542e-01
+lizard005  0.49446344 3.945736e-01
+lizard006 -0.36856789 1.221965e-01
+lizard009  0.81455866 2.863294e-01
+lizard010 -0.10509038 2.741372e-01
+lizard011 -0.44364205 3.048866e-01
+lizard012  0.95355075 2.932794e-01
+lizard013 -0.03705874 3.022548e-01
+lizard016 -0.71500203 3.899429e-01
+lizard018  0.43601376 1.648772e-01
+lizard020  0.01696496 2.885505e-01
+lizard023  0.33638322 4.172039e-01
+lizard024  1.40641875 4.913669e-01
+lizard025  1.10973613 3.245170e-01
+lizard026  1.10664244 3.800020e-01
+lizard028  0.53816473 3.183244e-01
+lizard029  0.64226866 3.231860e-01
+lizard030 -0.47074319 2.661565e-01
+lizard031 -0.28461727 2.293348e-01
+lizard032 -0.08660012 1.703272e-01
+lizard033 -0.44521517 3.262015e-01
+lizard037  0.72347752 2.553473e-01
+lizard038 -0.54360825 4.181075e-01
+lizard040 20.46403120 3.874532e+07
+lizard045  0.59769876 7.377477e-01
+lizard047  0.80978832 2.314827e-01
+lizard048 -0.18453065 2.132248e-01
+lizard050 -0.17222601 2.207881e-01
+lizard052 -0.23843971 3.144767e-01
+lizard053 -0.67042627 3.511878e-01
+lizard055  0.73756952 3.665104e-01
+lizard058  0.53388339 2.975911e-01
+lizard060  0.14184707 3.459958e-01
+lizard061 -0.42883663 3.105347e-01
+lizard062  0.22102890 1.920338e-01
+lizard063 -0.41429216 1.308479e-01
+lizard064  0.43640313 4.175232e-01
+lizard065 -0.03278578 2.825714e-01
+lizard066  0.91544021 3.518823e-01
+lizard069  1.24275371 5.064841e-01
+lizard070  0.95006302 5.584368e-01
+lizard071 -0.14147284 3.377362e-01
+lizard073 -0.06161733 4.258373e-01
+lizard074 -1.84812181 6.110179e-01
+lizard075 -0.56995993 4.624439e-01
+lizard077 -0.75717081 3.324156e-01
+lizard078  0.88139138 2.869631e-01
+lizard081 -0.45027858 3.763042e-01
+lizard082 -0.25859623 2.434685e-01
+lizard083 -0.70113473 3.183384e-01
+lizard084 -0.60271096 1.899293e-01
+lizard086 -1.07832954 3.624107e-01
+lizard089  0.46849393 2.358166e-01
+lizard091  0.34632065 2.300632e-01
+lizard096  0.33596504 3.266810e-01
+lizard099 -1.33897398 3.664100e-01
+lizard100 -0.46101156 3.524790e-01
+lizard102 -1.25546081 4.185990e-01
+lizard105 -0.49810356 2.521297e-01
+lizard155  0.50977996 2.046704e-01
+lizard156 -0.37501960 2.736330e-01
+lizard162  0.46797083 2.034885e-01
+lizard163  0.76536589 2.617811e-01
+lizard165 -0.82767319 2.606270e-01
+lizard167 -1.23675244 3.976560e-01
+lizard170 -0.55742512 3.603632e-01
+lizard171 -0.38819181 2.065499e-01
+lizard173  0.01532308 1.011175e-01
+lizard174  0.39476262 1.746312e-01
+lizard176  0.16178157 3.076395e-01
+lizard177  0.65362526 2.984571e-01
+lizard178 -1.71445453 5.202880e-01
+lizard179  0.12928957 1.987218e-01
+lizard180  0.48147278 3.488789e-01
+lizard183 -1.33956287 4.095995e-01
+lizard188 -0.27796888 5.677383e-01
+lizard189  0.59486861 2.499807e-01
+attr(,"separate")
+[1] "lizard096" "lizard099"
+> residuals(Whiting.model3, "grouped")
+                     [,1]
+..lizard003  6.156011e-01
+..lizard005  6.933272e-01
+..lizard006 -6.309678e-01
+..lizard009  6.883637e-01
+..lizard010  6.039814e-01
+..lizard011 -7.168131e-01
+..lizard012 -4.018490e-01
+..lizard013 -3.720591e-01
+..lizard016  8.830801e-01
+..lizard018 -7.041554e-01
+..lizard020  4.061718e-01
+..lizard023  1.058851e+00
+..lizard024 -8.983673e-01
+..lizard025  4.726085e-01
+..lizard026 -1.439080e+00
+..lizard028  1.065776e-01
+..lizard029 -6.009113e-01
+..lizard030  3.318771e-01
+..lizard031 -4.842794e-01
+..lizard032 -9.096889e-01
+..lizard033  3.912941e-01
+..lizard037 -6.366059e-01
+..lizard038  2.845724e-01
+..lizard040  7.220761e-01
+..lizard045  4.415749e-01
+..lizard047 -1.671528e-01
+..lizard048  5.910569e-01
+..lizard050 -7.610793e-01
+..lizard052  3.784228e-01
+..lizard053  8.983673e-01
+..lizard055 -3.895089e-01
+..lizard058  1.884159e+00
+..lizard060  7.168131e-01
+..lizard061 -6.821761e-01
+..lizard062 -1.025410e+00
+..lizard063 -1.058769e+00
+..lizard064  7.003751e-01
+..lizard065  8.470411e-01
+..lizard066  6.191098e-01
+..lizard069 -5.736404e-01
+..lizard070  6.441196e-01
+..lizard071  5.267503e-01
+..lizard073  7.469184e-01
+..lizard074  5.512451e-01
+..lizard075 -7.051754e-01
+..lizard077 -4.524500e-01
+..lizard078 -5.893636e-01
+..lizard081 -1.395292e+00
+..lizard082  4.576744e-02
+..lizard083  6.289930e-01
+..lizard084 -6.531023e-01
+..lizard086 -1.663004e-01
+..lizard089 -9.757718e-01
+..lizard091 -1.058328e+00
+..lizard096  1.000000e+00
+..lizard099 -8.396993e-08
+..lizard100 -5.044538e-01
+..lizard102  3.175985e-01
+..lizard105 -4.231670e-01
+..lizard155 -4.510323e-01
+..lizard156 -5.075285e-01
+..lizard162 -5.469624e-01
+..lizard163 -7.967120e-01
+..lizard165 -7.719595e-01
+..lizard167 -4.289866e-01
+..lizard170  6.048034e-01
+..lizard171 -6.811508e-01
+..lizard173 -4.104346e-01
+..lizard174  7.924469e-01
+..lizard176  1.870786e-01
+..lizard177  2.405283e-02
+..lizard178 -8.897657e-01
+..lizard179 -5.000083e-02
+..lizard180 -6.808841e-01
+..lizard183 -3.574162e-01
+..lizard188 -7.392048e-01
+..lizard189 -1.100670e+00
+attr(,"weights")
+                    [,1]
+..lizard003 9.977637e-01
+..lizard005 1.306517e+00
+..lizard006 4.135577e-01
+..lizard009 4.685543e-01
+..lizard010 7.194850e-01
+..lizard011 4.917486e-01
+..lizard012 2.592919e-01
+..lizard013 1.214426e+00
+..lizard016 1.146930e+00
+..lizard018 6.742138e-01
+..lizard020 1.102753e-01
+..lizard023 1.582558e+00
+..lizard024 5.889286e-01
+..lizard025 2.058890e-01
+..lizard026 6.302203e-01
+..lizard028 1.572201e+00
+..lizard029 9.465399e-01
+..lizard030 3.082896e-02
+..lizard031 2.474387e+00
+..lizard032 5.926842e-01
+..lizard033 1.594516e+00
+..lizard037 9.638359e-01
+..lizard038 2.280180e+00
+..lizard040 3.002189e+00
+..lizard045 2.617359e+00
+..lizard047 1.219782e+00
+..lizard048 8.228221e-01
+..lizard050 5.229681e-01
+..lizard052 2.768970e+00
+..lizard053 5.889286e-01
+..lizard055 8.877221e-02
+..lizard058 5.895614e-01
+..lizard060 4.917486e-01
+..lizard061 9.240733e-01
+..lizard062 1.078638e+00
+..lizard063 6.252885e-01
+..lizard064 1.331618e+00
+..lizard065 5.690031e-01
+..lizard066 4.007603e-01
+..lizard069 1.286820e+00
+..lizard070 8.399311e-01
+..lizard071 2.845350e-01
+..lizard073 2.565485e+00
+..lizard074 1.696655e+00
+..lizard075 4.825705e-01
+..lizard077 4.335046e-01
+..lizard078 5.833662e-01
+..lizard081 6.326896e-01
+..lizard082 1.580920e+00
+..lizard083 8.115147e-01
+..lizard084 1.178956e+00
+..lizard086 1.806240e+00
+..lizard089 1.694372e+00
+..lizard091 1.231641e+00
+..lizard096 6.661338e-16
+..lizard099 2.203280e+00
+..lizard100 2.527213e-01
+..lizard102 1.614813e+00
+..lizard105 2.030679e-01
+..lizard155 3.411099e-01
+..lizard156 2.571701e-01
+..lizard162 3.123054e-01
+..lizard163 5.441991e-01
+..lizard165 5.297998e-01
+..lizard167 1.557287e+00
+..lizard170 1.198890e+00
+..lizard171 4.622589e-01
+..lizard173 2.375709e-01
+..lizard174 9.910997e-01
+..lizard176 2.012363e+00
+..lizard177 1.989861e+00
+..lizard178 5.859285e-01
+..lizard179 1.317708e+00
+..lizard180 1.359581e+00
+..lizard183 5.284492e-02
+..lizard188 9.479147e-01
+..lizard189 1.141645e+00
+> ##  Note the "separate" attribute here, identifying two lizards with
+> ##  missing values of at least one predictor variable
+> ##
+> ##  Modulo the usual scale change between logit and probit, the results
+> ##  are (as expected) very similar to Whiting.model2.
+> 
