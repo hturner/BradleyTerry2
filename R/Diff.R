@@ -52,11 +52,16 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
                 }
             }
 
+            idterm <- id %in% attr(mt, "term.labels")
             mf1 <- model.frame(mt, data = c(player1, data), na.action = na.pass)
             if (nrow(mf1) != nrow(D))
                 stop("Predictor variables are not of the correct length --",
                      "they probably need indexing in 'formula'.")
             mf2 <- model.frame(mt, data = c(player2, data), na.action = na.pass)
+            if (idterm && !missing(refcat)){
+                mf1[[id]] <- relevel(mf1[[id]], refcat)
+                mf2[[id]] <- relevel(mf2[[id]], refcat)
+            }
             offset <- model.offset(mf1)
             if (!is.null(offset)) offset <- offset - model.offset(mf2)
             else offset <- rep(0, nrow(mf2))
@@ -82,7 +87,7 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
             ## - however as only allowing (1|..) just consider player id for now
 
             if (qr(na.omit(X))$rank == qr(na.omit(cbind(D, X)))$rank &&
-                !(id %in% attr(mt, "term.labels"))) {
+                !idterm) {
                 message("Player ability saturated, replacing with separate effects.")
                 drop <- indexed[indices == id]
                 keep <- !attr(X1, "assign") %in% c(0, drop)
@@ -107,7 +112,7 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
                      "structure allowed.")
             random <- D
         }
-        else if (!(id %in% attr(mt, "term.labels")))
+        else if (!idterm)
             warning("Ability modelled by predictors but no random effects",
                     call. = FALSE)
 
