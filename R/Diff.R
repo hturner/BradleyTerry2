@@ -27,11 +27,12 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
             factors <- attr(mt, "factors")
             term.labels <- as.character(sapply(colnames(factors), as.name))
             vars <- rownames(factors)
-            indexed <- grep("[[]", vars)
+            indexed <- grep("[[][^],]+[],]", vars)
             sep <- list()
             if (length(indexed)) { #set NAs to zero
-                indices <- gsub("[^[]*[[]([^]]*)[]]", "\\1", vars[indexed])
-                vars <- gsub("([^[]*)[[][^]]*[]]", "\\1", vars[indexed])
+                indices <- gsub("[^[]*[[]([^],]+)[],].*", "\\1", vars[indexed])
+                vars <- gsub("([^[]*[[])[^],]+(,.*)", "\\1\\2", vars[indexed])
+                vars <- gsub("([^[]*)[[][^],]+.*", "\\1", vars)
                 ## assumes no overlap, e.g. no age[..]:judge.gender[judge]
                 grp <- split(vars, indices)
                 for (ind in names(grp)) {

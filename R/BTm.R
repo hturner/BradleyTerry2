@@ -19,9 +19,8 @@ BTm <- function(outcome, player1, player2, formula = NULL,
     if (!family$link %in% c("logit", "probit", "cauchit"))
         stop("link for binomial family must be one of \"logit\", \"probit\"",
              "or \"cauchit\"")
-
     if (!is.data.frame(data))
-        data <- unlist(data, recursive = FALSE) ##-- subset etc? apply to model.frame
+        data <- unlist(unname(data), recursive = FALSE) ##-- subset etc? apply to model.frame
     ## (will take first occurence of replicated names)
     withIfNecessary <- function(x, data, as.data.frame = TRUE) {
         if (as.data.frame)
