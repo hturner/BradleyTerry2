@@ -58,7 +58,7 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
                 stop("Predictor variables are not of the correct length --",
                      "they probably need indexing in 'formula'.")
             mf2 <- model.frame(mt, data = c(player2, data), na.action = na.pass)
-            if (idterm && !missing(refcat)){
+            if (idterm && !is.null(refcat)){
                 mf1[[id]] <- relevel(mf1[[id]], refcat)
                 mf2[[id]] <- relevel(mf2[[id]], refcat)
             }
