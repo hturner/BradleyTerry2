@@ -1,7 +1,7 @@
 \name{add1.BTm}
 \alias{add1.BTm}
 \alias{drop1.BTm}
-\title{ Add or Drop Single Terms to a Bradley Terry Model }
+\title{ Add or Drop Single Terms to/from a Bradley Terry Model }
 \description{
   Add or drop single terms within the limit specified by the
   \code{scope} argument. For models with no random effects, compute an

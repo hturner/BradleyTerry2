@@ -15,7 +15,7 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
 
     if (is.null(x)) { # create model.matrix for maximum scope
         model <- Diff(object$player1, object$player2, new.form, object$id,
-                      object$data, object$separate.effect, object$refcat)
+                      object$data, object$separate.ability, object$refcat)
         if (sum(model$offset) > 0)
             warning("ignoring offset terms in scope")
         x <- model$X
@@ -65,7 +65,7 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
                                              paste("\n", newsep,
                                                    " separate effects added\n",
                                                    sep = ""))
-        attr(stat.table, "separate.effects") <- colnames(x)[asgn == 0]
+        attr(stat.table, "separate.abilities") <- colnames(x)[asgn == 0]
         return(stat.table)
     }
 
@@ -147,5 +147,5 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
                                     sep = ""))
     structure(table, heading = c(title, topnote),
               class = c("anova", "data.frame"),
-              separate.effects = colnames(x)[asgn == 0])
+              separate.abilities = colnames(x)[asgn == 0])
 }

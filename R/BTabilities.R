@@ -31,15 +31,15 @@ BTabilities <-  function (model)
                             attr(attr(mf, "terms"), "offset"))
         predvars <- terms(~ . ,data = mf[, predvars, drop = FALSE])
         X <- model.matrix(predvars, mf)
-        Xmiss <- is.na(rowSums(X)) |  players %in% model$separate.effect
+        Xmiss <- is.na(rowSums(X)) |  players %in% model$separate.ability
         X[Xmiss, ] <- 0
         X <- X[, -1, drop = FALSE]
-        separate.effect <- unique(union(players[Xmiss],
-                                        model$separate.effect))
-        ns <- length(separate.effect)
+        separate.ability <- unique(union(players[Xmiss],
+                                        model$separate.ability))
+        ns <- length(separate.ability)
         if (ns) {
             S <- matrix(0, nrow = nrow(X), ncol = ns)
-            S[cbind(which(players %in% separate.effect), seq(ns))] <- 1
+            S[cbind(which(players %in% separate.ability), seq(ns))] <- 1
             X <- cbind(S, X)
         }
 
@@ -49,7 +49,7 @@ BTabilities <-  function (model)
         se <- sqrt(diag(crossprod(sqrt.vcov %*% t(X))))
         abilities <- cbind(X %*% coef(model)[kept] + offset, se)
         rownames(abilities) <- sapply(as.character(players), as.name)
-        attr(abilities, "separate") <- separate.effect
+        attr(abilities, "separate") <- separate.ability
     }
     else {
         asgn <- model$assign

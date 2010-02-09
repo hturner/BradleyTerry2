@@ -1,5 +1,5 @@
 Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
-                 separate.effect = NULL, refcat = NULL, contrasts = NULL,
+                 separate.ability = NULL, refcat = NULL, contrasts = NULL,
                  subset = NULL) {
     player.one <- player1[[id]]
     player.two <- player2[[id]]
@@ -38,7 +38,7 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
                     vars <- model.frame(terms(reformulate(grp[[ind]])),
                                         data = data, na.action = na.pass)
                     lev <- levels(eval(as.name(ind), c(player1, data)))
-                    as.sep <- rowSums(is.na(vars)) | lev %in% separate.effect
+                    as.sep <- rowSums(is.na(vars)) | lev %in% separate.ability
                     if (any(as.sep)) {
                         sep[[ind]] <- as.sep
                         vars[sep[[ind]], ] <- lapply(vars, function(x)

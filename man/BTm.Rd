@@ -5,19 +5,19 @@
   Fits Bradley-Terry models for pair comparison data, including
   models with structured scores, order effect and missing covariate data.  
   Fits by either maximum likelihood or maximum penalized likelihood
-  (with Jeffreys-prior penalty) when abilities are modelled exactly or
+  (with Jeffreys-prior penalty) when abilities are modelled exactly, or by
   penalized quasi-likelihood when abilities are modelled by covariates.
 }
 \usage{
 BTm(outcome, player1, player2, formula = NULL, id = "..", 
-    separate.effect = NULL, refcat = NULL, family = binomial, 
+    separate.ability = NULL, refcat = NULL, family = binomial, 
     data = NULL, weights = NULL, subset = NULL, na.action = NULL, 
     start = NULL, etastart = NULL, mustart = NULL, offset = NULL, 
     br = FALSE, model = TRUE, x = FALSE, contrasts = NULL, ...) 
 }
 \arguments{
   \item{outcome}{ the binomial response: either a numeric vector, a
-    factor in which the first level denotes failure and all other
+    factor in which the first level denotes failure and all others
     success, or a two-column matrix with the columns giving the numbers
     of successes and failures. }
   \item{player1}{ either an ID factor specifying the first player in
@@ -29,10 +29,10 @@ BTm(outcome, player1, player2, formula = NULL, id = "..",
   \item{player2}{ an object corresponding to that given in
     \code{player1} for the second player in each contest, with identical
     structure -- in particular factors must have the same levels. }
-  \item{formula}{ a formula with no left-hand-side specifying the
+  \item{formula}{ a formula with no left-hand-side, specifying the
     model for player ability. See details for more information. }
   \item{id}{ the name of the ID factor. } 
-  \item{separate.effect}{(if \code{formula} does not include the ID
+  \item{separate.ability}{(if \code{formula} does not include the ID
     factor as a separate term) a character vector giving the names of
     players whose abilities are to be modelled individually rather than
     using the specification given by \code{formula}. }
@@ -66,7 +66,7 @@ BTm(outcome, player1, player2, formula = NULL, id = "..",
     maximum likelihood as in Firth (1992, 1993), using
     \code{\link[brglm]{brglm}}, rather than maximum likelihood using
     \code{\link{glm}}, when abilities are modelled exactly or when the
-    abilities are modelled by covariates and the standard error of the
+    abilities are modelled by covariates and the variance of the
     random effects is estimated as zero. }
   \item{model}{logical: whether or not to return the model frame.}
   \item{x}{logical: whether or not to return the design matrix for
@@ -90,7 +90,7 @@ BTm(outcome, player1, player2, formula = NULL, id = "..",
   contest. If \code{NULL} a separate ability is estimated for each
   player, equivalent to setting \code{formula = reformulate(id)}.
 
-  Contest-level variables can be specified in formula in the usual
+  Contest-level variables can be specified in the formula in the usual
   manner, see \code{\link{formula}}. Player covariates should
   be included as variables indexed by \code{id}, see examples. Thus
   player covariates must be ordered according to the levels of the ID
@@ -115,7 +115,7 @@ BTm(outcome, player1, player2, formula = NULL, id = "..",
   of object returned by the model fitting function (e.g. \code{glm}).
   Components are as for objects of class \code{"x"}, with additionally
   \item{id}{the \code{id} argument.}
-  \item{separate.effect}{the \code{separate.effect} argument.}
+  \item{separate.ability}{the \code{separate.ability} argument.}
   \item{refcat}{the \code{refcat} argument.}
   \item{player1}{a data frame for the first player containing the ID
     factor and any player-specific contest-level variables.}
@@ -177,6 +177,11 @@ citeModel2 <- BTm(cbind(won, lost), player1, player2,
 is.na(journals$origin[2]) <- TRUE
 citeModel2 <- update(citeModel2, formula = ~ .)
 
+##
+## For a more interesting and realistic example of a model with 
+## player-level covariates, see help(flatlizards).
+##
+
 ##################################################################
 ##  Now an example with an order effect -- see Agresti (2002) p438
 ##################################################################
@@ -193,6 +198,11 @@ baseballModel2 <- update(baseballModel1, formula = ~ team + at.home)
 
 ##  Compare the fit of these two models:
 anova(baseballModel1, baseballModel2)
+
+##
+## For a more elaborate example with both player-level and contest-level
+## predictor variables, see help(chameleons).
+##
 
 }
 \keyword{ models }

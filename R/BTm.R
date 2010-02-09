@@ -1,5 +1,5 @@
 BTm <- function(outcome, player1, player2, formula = NULL,
-                id = "..", separate.effect = NULL, refcat = NULL,
+                id = "..", separate.ability = NULL, refcat = NULL,
                 family = binomial, data = NULL, weights = NULL, subset = NULL,
                 na.action = NULL, start = NULL, etastart = NULL, mustart = NULL,
                 offset = NULL, br = FALSE, model = TRUE, x = FALSE,
@@ -45,7 +45,7 @@ BTm <- function(outcome, player1, player2, formula = NULL,
     if (is.logical(subset1)) subset <- subset1 | subset2
     else subset <- c(subset1, subset2)
     if (is.null(formula)) formula <- reformulate(id)
-    diffModel <- Diff(player1, player2, formula, id, data, separate.effect,
+    diffModel <- Diff(player1, player2, formula, id, data, separate.ability,
                       refcat, contrasts)
     mf <- cbind(Y, diffModel$X)
     colnames(mf) <- gsub("`", "", colnames(mf))
@@ -89,7 +89,7 @@ BTm <- function(outcome, player1, player2, formula = NULL,
     }
     fit$call <- call
     fit$id <- id
-    fit$separate.effect <- separate.effect
+    fit$separate.ability <- separate.ability
     fit$refcat <- refcat
     fit$formula <- formula
     fit$player1 <- player1
