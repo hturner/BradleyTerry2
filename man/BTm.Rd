@@ -1,6 +1,6 @@
 \name{BTm}
 \alias{BTm}
-\title{ Bradley-Terry model and extensions }
+\title{ Bradley-Terry Model and Extensions }
 \description{
   Fits Bradley-Terry models for pair comparison data, including
   models with structured scores, order effect and missing covariate data.  

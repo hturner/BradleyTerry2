@@ -2,10 +2,13 @@
 \alias{springall}
 \docType{data}
 \title{
-Experiment to Assess the Effect of Gel and Flavour Concentration on Subjective Evaluation of Flavour Strength
+Springall (1973) Data on Subjective Evaluation of Flavour Strength
 }
 \description{
-Data from Section 7 of the paper by Springall (1973) on Bradley-Terry response surface modelling.
+Data from Section 7 of the paper by Springall (1973) on Bradley-Terry
+response surface modelling.  An experiment to assess the effects of gel
+and flavour concentrations on the subjective assessment of flavour strength
+by pair comparisons.
 }
 \usage{data(springall)}
 \format{

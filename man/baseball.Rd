@@ -1,7 +1,7 @@
 \name{baseball}
 \alias{baseball}
 \docType{data}
-\title{ Baseball data from Agresti (2002) }
+\title{ Baseball Data from Agresti (2002) }
 \description{
   Baseball results for games in the 1987 season between 7 teams
   in the Eastern Division of the American League.
