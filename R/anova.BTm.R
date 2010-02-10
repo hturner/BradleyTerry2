@@ -17,12 +17,20 @@ anova.BTm <- function (object, ..., dispersion = NULL, test = NULL)
     if (length(dotargs) > 0){
         fixed <- unlist(lapply(models, function(x) is.null(x$random)))
         if (all(fixed)) {
+            variables <- lapply(models, function(x) paste(deparse(formula(x)),
+                                                          collapse = "\n"))
             models <- lapply(models, function(x) {
                 x$formula <- formula(x$terms)
                 class(x) <- setdiff(class(x), "BTm")
                 x})
             call <- match.call()
-            return(do.call("anova", c(models, call$dispersion, call$test)))
+            anova.table <- do.call("anova", c(models, call$dispersion, call$test))
+            attr(anova.table, "heading") <-
+                c(paste("Analysis of Deviance Table\n\n",
+                        "Response: ", deparse(object$call$outcome, 500), "\n", sep = ""),
+                  paste("Model ", format(seq(models)), ": ", variables,
+                        sep = "", collapse = "\n"))
+            return(anova.table)
         }
         else
             return(anova.BTmlist(c(list(object), dotargs),
