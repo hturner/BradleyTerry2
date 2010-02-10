@@ -11,29 +11,36 @@ measurements made on 35 male Cape dwarf chameleons, and the results of
 }
 \usage{data(chameleons)}
 \format{
-  The format is:
-List of 3 data frames:
- $winner    :'data.frame':	106 obs. (contests), 4 variables:
-  ..$ID           : Factor w/ 35 levels
-  "C01","C02","C03",...,"C41", the identity of the winning lizard in
-  each contest
-  ..$prev.wins.1  : integer (values 0 or 1), did the winner of this
-  contest win in his previous contest (if there was one)?
-  ..$prev.wins.2  : integer (values 0, 1 or 2), how many of his (maximum)
-  previous 2 contests did this winner win?
-  ..$prev.wins.all: integer, how many previous contests has this
-  male won?
- $loser     :'data.frame':	106 obs. of  4 variables:   same
- structure as $winner, but variables now corresponding to the loser of
- the contest
- $ predictors:'data.frame':	35 obs. of  7 variables:
-  ..$ch.res    : numeric, residuals of casque height regression on SVL, i.e. relative height of the knobbly bony bit on the top of the chameleons' heads
-  ..$jl.res    : numeric, residuals of jaw length regression on SVL
-  ..$tl.res    : numeric, residuals of tail length regression on on SVL
-  ..$mass.res  : numeric, residuals of body mass regression on SVL (body condition)
-  ..$ SVL       : numeric, snout-vent length (body size)
-  ..$ prop.main : numeric, proportion (arcsin transformed) of area of the flank occupied by the main pink patch on the flank
-  ..$ prop.patch: numeric, proportion (arcsin transformed) of area of the flank occupied by the entire flank patch
+  A list containing three data frames: \code{chameleons$winner},
+  \code{chameleons$loser} and \code{chameleons$predictors}.
+
+  The \code{chameleons$winner} and \code{chameleons$loser} data frames
+  each have 106 observations (one per contest) on the following 4 variables:
+  \describe{
+    \item{\code{ID}}{a factor with 35 levels \code{C01}, \code{C02},
+  ... , \code{C43}, the identity of the winning (or losing)  male in
+  each contest}
+    \item{\code{prev.wins.1}}{integer (values 0 or 1), did the
+  winner/loser of this
+  contest win in an immediately previous contest?}
+   \item{\code{prev.wins.2}}{integer (values 0, 1 or 2), how many of his
+       (maximum) previous 2 contests did each male win?}
+   \item{\code{prev.wins.all}}{integer, how many previous contests has each
+     male won?}
+   }
+
+   The \code{chameleons$predictors} data frame has 35 observations, one
+   for each male involved in the contests, on the following 7 variables:
+   \describe{
+     \item{\code{ch.res}}{numeric, residuals of casque height regression on \code{SVL}, i.e. relative height of the bony part on the top of the chameleons' heads}
+     \item{\code{jl.res}}{numeric, residuals of jaw length regression on \code{SVL}}
+     \item{\code{tl.res}}{numeric, residuals of tail length regression on on \code{SVL}}
+     \item{\code{mass.res}}{numeric, residuals of body mass regression on \code{SVL} (body condition)}
+     \item{\code{SVL}}{numeric, snout-vent length (body size)}
+     \item{\code{prop.main}}{numeric, proportion (arcsin transformed) of area of the flank occupied by the main pink patch on the flank}
+     \item{\code{prop.patch}}{numeric, proportion (arcsin transformed)
+       of area of the flank occupied by the entire flank patch}
+     }
 }
 \details{
 The published paper mentions 107 contests, but only 106 contests are
@@ -52,9 +59,9 @@ data(chameleons)
 ##
 ## Reproduce Table 3 from page 1268 of the above paper:
 ##
-summary(chameleon.model <- BTm(rep(1, 106), winner, loser, formula = ~
-prev.wins.2 + ch.res[ID] + prop.main[ID] + (1|ID), id = "ID", data =
-chameleons))
+summary(chameleon.model <- BTm(rep(1, 106), chameleons$winner, chameleons$loser,
+  formula = ~ prev.wins.2 + ch.res[ID] + prop.main[ID] + (1|ID), id = "ID",
+  data = chameleons))
 ##
 ## Note that, although a per-chameleon random effect is specified as in the
 ## above [the term "+ (1|ID)"], the estimated variance for that random
@@ -66,7 +73,7 @@ chameleons))
 ##
 ## Test whether any of the other ID-specific predictors has an effect:
 ##
-add1(chameleon.model, ~ . + jl.res[ID] + tl.res[ID] + mass.res[ID] + SVL[ID]
-+ prop.patch[ID]) 
+add1(chameleon.model, ~ . + jl.res[ID] + tl.res[ID] + mass.res[ID] +
+  SVL[ID] + prop.patch[ID]) 
 }
 \keyword{datasets}
