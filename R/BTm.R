@@ -1,4 +1,4 @@
-BTm <- function(outcome, player1, player2, formula = NULL,
+BTm <- function(outcome = 1, player1, player2, formula = NULL,
                 id = "..", separate.ability = NULL, refcat = NULL,
                 family = binomial, data = NULL, weights = NULL, subset = NULL,
                 na.action = NULL, start = NULL, etastart = NULL, mustart = NULL,
@@ -23,17 +23,23 @@ BTm <- function(outcome, player1, player2, formula = NULL,
         data <- unlist(unname(data), recursive = FALSE) ##-- subset etc? apply to model.frame
     ## (will take first occurence of replicated names)
     withIfNecessary <- function(x, data, as.data.frame = TRUE) {
-        if (as.data.frame)
-           expr <- substitute(data.frame(x), list(x = x))
+        if (as.data.frame){
+            ##expr <- substitute({dat <- as.data.frame(matrix(, NROW(x), 0));
+            ##                    dat$var <- x;
+            ##                    names(dat) <- deparse(substitute(x), 500);
+            ##                    dat}, list(x = x))
+            expr <- substitute(data.frame(x), list(x = x))
+        }
         else expr <- x
         if (class(try(eval(x), silent = TRUE)) == "try-error")
             eval(expr, data)
         else eval(expr)
     }
-    Y <- withIfNecessary(substitute(outcome), data)
     player1 <- withIfNecessary(substitute(player1), data)
     player2 <- withIfNecessary(substitute(player2), data)
     if (ncol(player1) == 1) colnames(player1) <- colnames(player2) <- id
+    Y <- withIfNecessary(substitute(outcome), c(player1, player2, data))
+    Yname <- deparse(substitute(outcome), 500)
     weight <- withIfNecessary(substitute(weights), data, FALSE)
     subset1 <- withIfNecessary(substitute(subset),
                                c(player1 = list(player1),
@@ -46,9 +52,11 @@ BTm <- function(outcome, player1, player2, formula = NULL,
     if (is.null(formula)) formula <- reformulate(id)
     diffModel <- Diff(player1, player2, formula, id, data, separate.ability,
                       refcat, contrasts)
-    mf <- cbind(Y, diffModel$X)
+    mf <- as.data.frame(diffModel$X)
+    if (ncol(Y) == 2) mf[[Yname]] <- as.matrix(Y)
+    else mf[Yname] <- Y
     colnames(mf) <- gsub("`", "", colnames(mf))
-    dummy <- as.formula(paste(deparse(substitute(outcome)), " ~ ",
+    dummy <- as.formula(paste("`", Yname, "`", " ~ ",
                               paste(colnames(diffModel$X), collapse = "+"),
                               " - 1", sep = ""))
     fcall <- as.list(match.call(expand.dots = FALSE))
