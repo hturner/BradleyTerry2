@@ -82,6 +82,9 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
     control <- object$control
     control$trace <- FALSE
 
+    if (scale == 0) dispersion <- 1
+    else dispersion <- scale
+
     ns <- length(scope)
     stat <- df <- numeric(ns) # don't add in original as don't need for tests
     names(stat) <- names(df) <- as.character(sapply(scope, as.name))
@@ -97,7 +100,7 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
         class(fit) <- oldClass(object)
         ind <- (usex & !ousex)[usex]
         trystat <- try(t(coef(fit)[ind]) %*%
-            chol2inv(chol(vcov(fit, dispersion = scale)[ind, ind])) %*%
+            chol2inv(chol(vcov(fit, dispersion = dispersion)[ind, ind])) %*%
                 coef(fit)[ind], silent = TRUE) #vcov should deal with dispersion != 1
         if (inherits(trystat, "try-error")) {
             stat[i] <- df[i] <- NA

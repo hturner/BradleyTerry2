@@ -29,7 +29,7 @@ anova.BTmlist <- function (object, ..., dispersion = NULL, test = NULL) {
             stop("models are not nested")
         ind <- !(labels[[bigger]] %in% labels[[smaller]])
         stat[i] <- t(coef(object[[bigger]])[ind]) %*%
-            chol2inv(chol(vcov(object[[bigger]], dispersion = scale)[ind, ind])) %*%
+            chol2inv(chol(vcov(object[[bigger]], dispersion = dispersion)[ind, ind])) %*%
                 coef(object[[bigger]])[ind] #vcov should deal with dispersion != 1
     }
     stat[1] <- NA

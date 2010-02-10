@@ -19,17 +19,16 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
     if (!family$link %in% c("logit", "probit", "cauchit"))
         stop("link for binomial family must be one of \"logit\", \"probit\"",
              "or \"cauchit\"")
-    if (!is.data.frame(data))
-        data <- unlist(unname(data), recursive = FALSE) ##-- subset etc? apply to model.frame
+    if (!is.data.frame(data)){
+        keep <- names(data) %in% c(deparse(substitute(player1)),
+                                   deparse(substitute(player2)))
+        if (!length(keep)) keep <- FALSE
+        data <- c(data[keep], unlist(unname(data[!keep]), recursive = FALSE))
+    }
     ## (will take first occurence of replicated names)
     withIfNecessary <- function(x, data, as.data.frame = TRUE) {
-        if (as.data.frame){
-            ##expr <- substitute({dat <- as.data.frame(matrix(, NROW(x), 0));
-            ##                    dat$var <- x;
-            ##                    names(dat) <- deparse(substitute(x), 500);
-            ##                    dat}, list(x = x))
+        if (as.data.frame)
             expr <- substitute(data.frame(x), list(x = x))
-        }
         else expr <- x
         if (class(try(eval(x), silent = TRUE)) == "try-error")
             eval(expr, data)

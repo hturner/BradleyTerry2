@@ -31,7 +31,9 @@ drop1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
     asgn <- object$assign
 
     coefs <- coef(object)
-    vc <- vcov(object, dispersion = scale) #vcov should deal with dispersion != 1
+    if (scale == 0) dispersion <- 1
+    else dispersion <- scale
+    vc <- vcov(object, dispersion = dispersion) #vcov should deal with dispersion != 1
 
     sTerms <- sapply(strsplit(scope, ":", fixed = TRUE),
                      function(x) paste(sort(x), collapse = ":"))
