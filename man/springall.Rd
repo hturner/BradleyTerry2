@@ -29,7 +29,7 @@ The \code{predictors} data frame has 9 observations (one for each treatment) on 
   	\item{\code{flav.2}}{numeric, equal to \code{flav ^ 2}}
 	\item{\code{gel.2}}{numeric, equal to \code{gel ^ 2}}
         \item{\code{flav.gel}}{numeric, equal to \code{flav * gel}}
-}
+	}
 }
 \details{
 The variables \code{win.adj} and \code{loss.adj} are provided in order to allow a simple way of handling ties (in which a tie counts as half a win and half a loss), which is slightly different numerically from the Rao and Kupper (1967) model that Springall (1973) uses.
@@ -43,16 +43,18 @@ Rao, P V and Kupper, L L (1967)  Ties in paired-comparison experiments: a genera
 \examples{
 data(springall)
 ##
-## Fit the same response-surface model as in section 7 of Springall (1973):
+## Fit the same response-surface model as in section 7 of 
+## Springall (1973):
 ##
-summary(springall.model <- BTm(cbind(win.adj, loss.adj), springall$contests$col, springall$contests$row, ~ flav[..] + gel[..] + flav.2[..] + gel.2[..] + flav.gel[..] + (1 | ..), data = springall) )
+summary(springall.model <- BTm(cbind(win.adj, loss.adj), springall$contests$col, springall$contests$row, ~ flav[..] + gel[..] + 
+   flav.2[..] + gel.2[..] + flav.gel[..] + (1 | ..), data = springall))
 ##
 ## Differences from Springall's fit are minor, arising from the 
 ## different treatment of ties.
 ##
-## Springall's model does not include the random effect.  In this case,
-## however, that makes no difference: the random-effect variance is 
-## estimated as zero.
+## Springall's model in the paper does not include the random effect.  
+## In this case, however, that makes no difference: the random-effect 
+## variance is estimated as zero.
 ##
 }
 \keyword{datasets}
