@@ -44,9 +44,9 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
                         sep[[ind]] <- as.sep
                         vars[sep[[ind]], ] <- lapply(vars, function(x)
                                                      max(levels(x)[1], 0))
-                        colnames(vars) <- gsub(".*[[], *\"?([^\"]*).*", "\\1",
+                        colnames(vars) <- gsub(".*[$[],? ?\"?([^]\"]*).*", "\\1",
                                                grp[[ind]])
-                        labels <- gsub("([^[]*)[[].*", "\\1", grp[[ind]])
+                        labels <- gsub("([^[$]*)[[$].*", "\\1", grp[[ind]])
                         for (lab in intersect(labels, grp[[ind]]))
                             data[lab] <- vars[lab]
                         for (lab in setdiff(labels, grp[[ind]]))
