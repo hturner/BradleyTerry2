@@ -113,11 +113,18 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
 
         random <- lme4:::expandSlash(lme4:::findbars(formula[[2]]))
         if (!is.null(random)) {
-            if (length(random) > 1 ||
-                random[[1]] != parse(text = paste("1|", id, sep = ""))[[1]])
-                stop("Currently '(1 | ", id, ")' is the only random effects",
-                     "structure allowed.")
-            random <- D
+            if (length(random) > 1 || random[[1]][[2]] != quote(1))
+                stop("Currently only random intercepts supported.")
+            if (deparse(random[[1]][[3]]) == id)
+                random <- D
+            else {
+                rform <- eval(substitute(~ x - 1, list(x = random[[1]][[3]])))
+                if (length(attr(terms(rform), "factors")) > 1)
+                    stop("Random intercepts must be defined by a single factor.")
+                assign(deparse(random[[1]][[3]]),
+                       as.factor(with(data, eval(random[[1]][[3]]))))
+                random <- model.matrix(rform)
+            }
         }
         else if (!idterm)
             warning("Ability modelled by predictors but no random effects",

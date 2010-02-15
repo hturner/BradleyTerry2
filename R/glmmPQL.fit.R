@@ -16,7 +16,11 @@ glmmPQL.fit <- function(X, y, Z,  weights = rep(1, NROW(y)), start = NULL,
     R <- qr.R(QR)
     rank <- QR$rank
     p <- ncol(R)
-    if (rank < p) X <- X[, colnames(R)[seq(length = rank)]]
+    nm <- colnames(R)[seq(length = rank)]
+    if (rank < p) {
+        X0 <- X[,colnames(R)[-seq(length = rank)]]
+        X <- X[, nm]
+    }
     empty <- !length(X)
     if (empty) {
         alpha <- numeric(0)
@@ -193,26 +197,21 @@ glmmPQL.fit <- function(X, y, Z,  weights = rep(1, NROW(y)), start = NULL,
         else if (conv)
             break
     }
-    alpha <- c(alpha)
     if (!empty) varFix <- chol2inv(C)
     else varFix <- matrix(, 0, 0)
-    rownames(varFix) <- colnames(varFix) <- names(alpha) <- colnames(X)
+    rownames(varFix) <- colnames(varFix) <- colnames(X)
+    fit0$coef[nm] <- alpha
     if (!sigma.fixed)
         varSigma <- sigma^2/(4 * Info)
     else
         varSigma <- NA
     glm <- identical(sigma, 0)
     if (!empty) {
-        QR <- qr(wX)
+        if (rank < p) QR <- qr(cbind(wX, sqrt(w) * X0))
+        else QR <- qr(wX)
         R <- qr.R(QR)
     }
-    if (rank < p) {
-        tmp <- rep(NA, p)
-        names(tmp) <- colnames(R)
-        tmp[colnames(R)[seq(length = rank)]] <- alpha
-        alpha <- tmp
-    }
-    list(coefficients = alpha,
+    list(coefficients = fit0$coef,
          residuals = residuals,
          fitted.values = mu,
          #effect = ?
