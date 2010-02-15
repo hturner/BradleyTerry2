@@ -30,8 +30,8 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
         if (as.data.frame)
             expr <- substitute(data.frame(x), list(x = x))
         else expr <- x
-        if (class(try(eval(x), silent = TRUE)) == "try-error")
-            eval(expr, data)
+        if (!is.null(data))
+            with(data, eval(expr))
         else eval(expr)
     }
     player1 <- withIfNecessary(substitute(player1), data)
