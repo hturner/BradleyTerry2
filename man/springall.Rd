@@ -43,21 +43,26 @@ Springall, A (1973)  Response surface fitting using a generalization of the Brad
 \references{
 Rao, P V and Kupper, L L (1967)  Ties in paired-comparison experiments: a generalization of the Bradley-Terry model.  \emph{Journal of the American Statistical Association}, \bold{63}, 194--204.
 }
+\author{David Firth}
 \examples{
 data(springall)
 ##
 ## Fit the same response-surface model as in section 7 of 
-## Springall (1973):
-##
-summary(springall.model <- BTm(cbind(win.adj, loss.adj), springall$contests$col, springall$contests$row, ~ flav[..] + gel[..] + 
-   flav.2[..] + gel.2[..] + flav.gel[..] + (1 | ..), data = springall))
+## Springall (1973).
 ##
 ## Differences from Springall's fit are minor, arising from the 
 ## different treatment of ties.
 ##
 ## Springall's model in the paper does not include the random effect.  
-## In this case, however, that makes no difference: the random-effect 
+## In this instance, however, that makes no difference: the random-effect 
 ## variance is estimated as zero.
 ##
+summary(springall.model <- BTm(cbind(win.adj, loss.adj),
+                               springall$contests$col,
+                               springall$contests$row, 
+                               ~ flav[..] + gel[..] + 
+                                 flav.2[..] + gel.2[..] + flav.gel[..] +
+                                 (1 | ..),
+                               data = springall))
 }
 \keyword{datasets}

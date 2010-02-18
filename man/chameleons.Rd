@@ -54,14 +54,16 @@ involving that lizard, so it is uninformative).
 
 Stuart-Fox, D M, Firth, D, Moussalli, A and Whiting, M J (2006) Multiple signals in chameleon contests: designing and analysing animal contests as a tournament. \emph{Animal Behaviour} \bold{71}, 1263--1271.
 }
+\author{David Firth}
 \examples{
 data(chameleons)
+attach(chameleons)
 ##
 ## Reproduce Table 3 from page 1268 of the above paper:
 ##
-summary(chameleon.model <- BTm(rep(1, 106), chameleons$winner, chameleons$loser,
+summary(chameleon.model <- BTm(player1 = winner, player2 = loser,
   formula = ~ prev.wins.2 + ch.res[ID] + prop.main[ID] + (1|ID), id = "ID",
-  data = chameleons))
+  data = predictors))
 ##
 ## Note that, although a per-chameleon random effect is specified as in the
 ## above [the term "+ (1|ID)"], the estimated variance for that random
