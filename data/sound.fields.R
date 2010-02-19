@@ -52,9 +52,13 @@ structure(list(comparisons = structure(list(field1 = structure(c(8L,
 "field2", "win1", "tie", "win2", "win1.adj", "win2.adj", "instrument"
 ), class = "data.frame", row.names = c(NA, -84L)), design = structure(list(
     a = structure(c(1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L), .Label = c("0", 
-    "1"), class = "factor"), b = structure(c(1L, 1L, 2L, 2L, 
-    1L, 1L, 2L, 2L), .Label = c("0", "1"), class = "factor"), 
+    "1"), class = "factor", contrasts = structure(c(-1, 1), .Dim = c(2L, 
+    1L), .Dimnames = list(c("0", "1"), NULL))), b = structure(c(1L, 
+    1L, 2L, 2L, 1L, 1L, 2L, 2L), .Label = c("0", "1"), class = "factor", contrasts = structure(c(-1, 
+    1), .Dim = c(2L, 1L), .Dimnames = list(c("0", "1"), NULL))), 
     c = structure(c(1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L), .Label = c("0", 
-    "1"), class = "factor")), .Names = c("a", "b", "c"), row.names = c("000", 
-"001", "010", "011", "100", "101", "110", "111"), class = "data.frame")), .Names = c("comparisons", 
+    "1"), class = "factor", contrasts = structure(c(-1, 1), .Dim = c(2L, 
+    1L), .Dimnames = list(c("0", "1"), NULL)))), .Names = c("a", 
+"b", "c"), row.names = c("000", "001", "010", "011", "100", "101", 
+"110", "111"), class = "data.frame")), .Names = c("comparisons", 
 "design"))

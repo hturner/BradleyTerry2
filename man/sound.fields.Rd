@@ -39,13 +39,13 @@ on the following 3 variables:
 \describe{
    \item{\code{a}}{a factor with levels \code{c("0",
        "1")}, the \emph{direct sound} factor (0 for \emph{obstructed
-       sight line}, 1 for \emph{free sight line})}
+       sight line}, 1 for \emph{free sight line}); contrasts are sum contrasts}
    \item{\code{b}}{a factor with levels \code{c("0",
        "1")}, the \emph{reflection} factor (0 for \emph{-26dB},
-     1 for \emph{-20dB})}
+     1 for \emph{-20dB}); contrasts are sum contrasts}
    \item{\code{c}}{a factor with levels \code{c("0",
        "1")}, the \emph{reverberation} factor (0 for \emph{-24dB},
-     1 for \emph{-20dB})}
+     1 for \emph{-20dB}); contrasts are sum contrasts}
  }
  }
 \details{
@@ -72,10 +72,27 @@ data(sound.fields)
 ##  Fit the Bradley-Terry model to data for flutes, using the simple 'add 0.5'
 ##  method to handle ties:
 ##
-\dontrun{
-flutes.model <- BTm(cbind(win1.adj, win2.adj), field1, field2, ~ ..,
+flutes.model <- BTm(cbind(win1.adj, win2.adj), field1, field2, ~ field,
+                    id = "field",
                     subset = (instrument == "flute"),
                     data = sound.fields)
 }
+##
+##  This agrees (after re-scaling) quite closely with the estimates given
+##  in Table 3 of Kousgaard (1984):
+##
+table3.flutes <- c(-0.581, -1.039, 0.347, 0.205, 0.276, 0.347, 0.311, 0.135)
+plot(c(0, coef(flutes.model)), table3.flutes)
+abline(lm(table3.flutes ~ c(0, coef(flutes.model))))
+##
+##  Now re-parameterise that model in terms of the factorial effects, as
+##  in Table 5 of Kousgaard (1984):
+##
+flutes.model.reparam <- update(flutes.model,
+                               formula = ~ a[field] * b[field] * c[field]
+			       )
+table5.flutes <- c(.267, .250, -.088, -.294, .062, .009, -0.070)
+plot(coef(flutes.model.reparam), table5.flutes)
+abline(lm(table5.flutes ~ coef(flutes.model.reparam)))
 }
 \keyword{datasets}
