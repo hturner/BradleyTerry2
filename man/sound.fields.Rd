@@ -76,7 +76,6 @@ flutes.model <- BTm(cbind(win1.adj, win2.adj), field1, field2, ~ field,
                     id = "field",
                     subset = (instrument == "flute"),
                     data = sound.fields)
-}
 ##
 ##  This agrees (after re-scaling) quite closely with the estimates given
 ##  in Table 3 of Kousgaard (1984):
