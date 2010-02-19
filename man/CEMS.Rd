@@ -1,0 +1,162 @@
+\name{CEMS}
+\alias{CEMS}
+\docType{data}
+\title{
+Dittrich, Hatzinger and Katzenbeisser (1998, 2001) Data on Management School Preference in Europe
+}
+\description{
+\emph{Community of European management schools} (CEMS) data as used in the paper by Dittrich et al. (1998, 2001), re-formatted for use with \code{\link{BTm}}
+}
+\usage{data(CEMS)}
+\format{
+A list containing three data frames, \code{CEMS$preferences},
+\code{CEMS$students} and \code{CEMS$schools}.
+
+The \code{CEMS$preferences} data frame has \code{303 * 15 = 4505} observations (15 possible comparisons, for each of 303 students) on the following 8 variables:
+ \describe{
+	\item{\code{student}}{a factor with levels \code{1:303}}
+        \item{\code{school1}}{a factor with levels \code{c("Barcelona",
+ "London", "Milano", "Paris", "St.Gallen", "Stockholm")}; the first management school in a comparison}
+        \item{\code{school2}}{a factor with the same levels as \code{school1}; the second management school in a comparison}
+        \item{\code{win1}}{integer (value 0 or 1) indicating whether
+	  \code{school1} was preferred to \code{school2}}
+	\item{\code{win2}}{integer (value 0 or 1) indicating whether
+ \code{school2} was preferred to \code{school1}}
+        \item{\code{tied}}{integer (value 0 or 1) indicating whether no
+ preference was expressed}
+        \item{\code{win1.adj}}{numeric, equal to \code{win1 + tied/2}}
+        \item{\code{win2.adj}}{numeric, equal to \code{win2 + tied/2}}
+	}
+
+The \code{CEMS$students} data frame has 303 observations (one for each student) on the following 8 variables:
+\describe{
+   \item{\code{STUD}}{a factor with levels \code{c("other",
+       "commerce")}, the student's main discipline of study}
+   \item{\code{ENG}}{a factor with levels \code{c("good, poor")},
+     indicating the student's knowledge of English}
+   \item{\code{FRA}}{a factor with levels \code{c("good, poor")},
+     indicating the student's knowledge of French}
+   \item{\code{SPA}}{a factor with levels \code{c("good, poor")},
+     indicating the student's knowledge of Spanish}
+   \item{\code{ITA}}{a factor with levels \code{c("good, poor")},
+     indicating the student's knowledge of Italian}
+   \item{\code{WOR}}{a factor with levels \code{c("no", "yes")},
+     whether the student was in full-time employment while studying}
+   \item{\code{DEG}}{a factor with levels \code{c("no", "yes")}, whether
+     the student intended to take an international degree}
+   \item{\code{SEX}}{a factor with levels \code{c("female", "male")}
+   }
+ }
+
+The \code{CEMS$schools} data frame has 6 observations (one for each
+management school) on the following 7 variables:
+\describe{
+  \item{\code{Barcelona}}{numeric (value 0 or 1)}
+  \item{\code{London}}{numeric (value 0 or 1)}
+  \item{\code{Milano}}{numeric (value 0 or 1)}
+  \item{\code{Paris}}{numeric (value 0 or 1)}
+  \item{\code{St.Gallen}}{numeric (value 0 or 1)}
+  \item{\code{Stockholm}}{numeric (value 0 or 1)}
+  \item{\code{LAT}}{numeric (value 0 or 1) indicating a 'Latin' city}
+}
+}
+\details{
+The variables \code{win1.adj} and \code{win2.adj} are provided in order
+ to allow a simple way of handling ties (in which a tie counts as half a
+ win and half a loss), which is slightly different numerically from the
+ Davidson (1970) method that is used by Dittrich et al. (1998): see the
+ examples.
+}
+\source{
+Royal statistical Society datasets website, at
+\url{http://www.blackwellpublishing.com/rss/Readmefiles/dittrich.htm}.
+ }
+
+
+\references{
+Davidson, R R (1970)  Extending the Bradley-Terry model to accommodate
+ ties in paired comparison experiments.  \emph{Journal of the American
+   Statistical Association} \bold{65}, 317--328.
+
+Dittrich, R, Hatzinger, R and Katzenbeisser, W (1998)  Modelling the
+ effect of subject-specific covariates in paired comparison studies with
+ an application to university rankings.  \emph{Applied Statistics}
+ \bold{47}, 511--525.
+
+Dittrich, R, Hatzinger, R and Katzenbeisser, W (2001)  Corrigendum:
+Modelling the effect of subject-specific covariates in paired comparison
+studies with an application to university rankings. \emph{Applied
+  statistics} \bold{50}, 247--249. 
+}
+\author{David Firth}
+\examples{
+data(CEMS)
+##
+##  Fit the standard Bradley-Terry model, using the simple 'add 0.5'
+##  method to handle ties:
+##
+table3.model <-  BTm(outcome = cbind(win1.adj, win2.adj),
+                     player1 = school1, player2 = school2,
+                     formula = ~.. , refcat = "Stockholm",
+                     data = CEMS)
+##  The results in Table 3 of Dittrich et al (2001) are reproduced
+##  approximately by a simple re-scaling of the estimates:
+table3 <- summary(table3.model)$coef[, 1:2]/1.75
+print(table3)
+##
+##  Now fit the 'final model' from Table 6 of Dittrich et al.:
+##
+table6.model <-  BTm(outcome = cbind(win1.adj, win2.adj),
+                     player1 = school1, player2 = school2,
+                     formula = ~ .. +
+                         WOR[student] * Paris[..] +
+                         WOR[student] * Milano[..] +
+                         WOR[student] * Barcelona[..] +
+                         DEG[student] * St.Gallen[..] +
+                         STUD[student] * Paris[..] +
+                         STUD[student] * St.Gallen[..] +
+                         ENG[student] * St.Gallen[..] +
+                         FRA[student] * London[..] +
+                         FRA[student] * Paris[..] +
+                         SPA[student] * Barcelona[..] +
+                         ITA[student] * London[..] +
+                         ITA[student] * Milano[..] +
+                         SEX[student] * Milano[..],
+                     refcat = "Stockholm",
+                     data = CEMS)
+##
+##  Again re-scale to reproduce approximately Table 6 of Dittrich et
+##  al. (2001):
+##
+table6 <- summary(table6.model)$coef[, 1:2]/1.75
+print(table6)
+##
+##  Now the slightly simplified model of Table 8 of Dittrich et al. (2001):
+##
+table8.model <-  BTm(outcome = cbind(win1.adj, win2.adj),
+                     player1 = school1, player2 = school2,
+                     formula = ~ .. +
+                         WOR[student] * LAT[..] +
+                         DEG[student] * St.Gallen[..] +
+                         STUD[student] * Paris[..] +
+                         STUD[student] * St.Gallen[..] +
+                         ENG[student] * St.Gallen[..] +
+                         FRA[student] * London[..] +
+                         FRA[student] * Paris[..] +
+                         SPA[student] * Barcelona[..] +
+                         ITA[student] * London[..] +
+                         ITA[student] * Milano[..] +
+                         SEX[student] * Milano[..],
+                     refcat = "Stockholm",
+                     data = CEMS)
+table8 <- summary(table8.model)$coef[, 1:2]/1.75
+##
+##  Notice some larger than expected discrepancies here (the coefficients
+##  named "..Barcelona", "..Milano" and "..Paris") from the results in
+##  Dittrich et al. (2001).  Apparently a mistake was made in Table 8 of
+##  the published Corrigendum note (R. Dittrich personal communication,
+##  February 2010).
+##
+print(table8)
+}
+\keyword{datasets}
