@@ -32,12 +32,18 @@ measurements made on 35 male Cape dwarf chameleons, and the results of
    The \code{chameleons$predictors} data frame has 35 observations, one
    for each male involved in the contests, on the following 7 variables:
    \describe{
-     \item{\code{ch.res}}{numeric, residuals of casque height regression on \code{SVL}, i.e. relative height of the bony part on the top of the chameleons' heads}
-     \item{\code{jl.res}}{numeric, residuals of jaw length regression on \code{SVL}}
-     \item{\code{tl.res}}{numeric, residuals of tail length regression on on \code{SVL}}
-     \item{\code{mass.res}}{numeric, residuals of body mass regression on \code{SVL} (body condition)}
+     \item{\code{ch.res}}{numeric, residuals of casque height regression
+       on \code{SVL}, i.e. relative height of the bony part on the top
+       of the chameleons' heads}
+     \item{\code{jl.res}}{numeric, residuals of jaw length regression
+       on \code{SVL}}
+     \item{\code{tl.res}}{numeric, residuals of tail length regression
+       on \code{SVL}}
+     \item{\code{mass.res}}{numeric, residuals of body mass regression
+       on \code{SVL} (body condition)}
      \item{\code{SVL}}{numeric, snout-vent length (body size)}
-     \item{\code{prop.main}}{numeric, proportion (arcsin transformed) of area of the flank occupied by the main pink patch on the flank}
+     \item{\code{prop.main}}{numeric, proportion (arcsin transformed)
+       of area of the flank occupied by the main pink patch on the flank}
      \item{\code{prop.patch}}{numeric, proportion (arcsin transformed)
        of area of the flank occupied by the entire flank patch}
      }
@@ -52,18 +58,19 @@ involving that lizard, so it is uninformative).
 \source{
   Dr Devi Stuart-Fox.  These are the same data that were used in
 
-Stuart-Fox, D M, Firth, D, Moussalli, A and Whiting, M J (2006) Multiple signals in chameleon contests: designing and analysing animal contests as a tournament. \emph{Animal Behaviour} \bold{71}, 1263--1271.
+  Stuart-Fox, D M, Firth, D, Moussalli, A and Whiting, M J (2006) Multiple
+  signals in chameleon contests: designing and analysing animal contests
+  as a tournament. \emph{Animal Behaviour} \bold{71}, 1263--1271.
 }
 \author{David Firth}
 \examples{
 data(chameleons)
-attach(chameleons)
 ##
 ## Reproduce Table 3 from page 1268 of the above paper:
 ##
 summary(chameleon.model <- BTm(player1 = winner, player2 = loser,
   formula = ~ prev.wins.2 + ch.res[ID] + prop.main[ID] + (1|ID), id = "ID",
-  data = predictors))
+  data = chameleons))
 ##
 ## Note that, although a per-chameleon random effect is specified as in the
 ## above [the term "+ (1|ID)"], the estimated variance for that random
