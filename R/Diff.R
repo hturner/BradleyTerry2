@@ -69,7 +69,6 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
         }
         offset <- model.offset(mf1)
         if (!is.null(offset)) offset <- offset - model.offset(mf2)
-        else offset <- rep(0, nrow(mf2))
 
         if (length(sep)){ #create separate effect factor
             recode <- function(x, keep){

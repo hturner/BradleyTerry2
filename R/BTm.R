@@ -42,8 +42,7 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
     if (ncol(player1) == 1) colnames(player1) <- colnames(player2) <- id
     Y <- withIfNecessary(substitute(outcome), c(player1, player2, data),
                          as.data.frame = FALSE)
-    Yname <- deparse(substitute(outcome), 500)
-    weight <- withIfNecessary(substitute(weights), data, FALSE)
+    weights <- withIfNecessary(substitute(weights), data, FALSE)
     subset1 <- withIfNecessary(substitute(subset),
                                c(player1 = list(player1),
                                  player2 = list(player2), player1, data), FALSE)
@@ -82,7 +81,7 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
                 argPos <- match(c("weights", "subset", "na.action", "model", "x"),
                                 names(fcall), 0)
                 fit <- as.call(c(as.name("brglm"), fcall[argPos],
-                                 list(dummy, family = family, data = mf,
+                                 list(Y ~ X - 1, family = family, data = mf,
                                       offset = diffModel$offset,
                                       etastart = fit$linear.predictors)))
                 fit <- eval(fit, parent.frame())
