@@ -7,9 +7,7 @@ drop1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
         object$x <- x
         attr(object$x, "assign") <- object$assign
         object$terms <- terms(object$formula)
-        stat.table <- NextMethod()
-        rownames(stat.table)[-1] <- sapply(rownames(stat.table)[-1], as.name)
-        return(stat.table)
+        return(NextMethod())
     }
 
     form <- formula(object)

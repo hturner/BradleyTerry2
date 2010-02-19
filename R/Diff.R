@@ -16,14 +16,14 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
     D <- matrix(nrow = ncontests, ncol = nplayers)
     D <- col(D) == as.numeric(player.one)
     D <- D - (col(D) == as.numeric(player.two))
-    colnames(D) <- sapply(paste(id, players, sep = ""), as.name)
+    colnames(D) <- paste(id, players, sep = "")
 
     fixed <- lme4:::nobars(formula)
     offset <- missing <- NULL
     if (!is.null(fixed)) {
         mt <- terms(fixed)
         factors <- attr(mt, "factors")
-        term.labels <- as.character(sapply(colnames(factors), as.name))
+        term.labels <- as.character(colnames(factors))
         vars <- rownames(factors)
         indexed <- grep("[[][^],]+[],]", vars)
         sep <- list()
@@ -87,11 +87,10 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
         X1 <- model.matrix(fixed, mf1, contrasts = contrasts)
         X2 <- model.matrix(fixed, mf2, contrasts = contrasts)
         X <- X1 - X2
-        colnames(X) <- sapply(colnames(X), as.name)
         ## will need to check for saturation in each set of indexed var
         ## - however as only allowing (1|..) just consider player id for now
 
-        if (qr(na.omit(X))$rank == qr(na.omit(cbind(D, X)))$rank &&
+        if (saturated <- qr(na.omit(X))$rank == qr(na.omit(cbind(D, X)))$rank &&
             !idterm) {
             warning("Player ability saturated - equivalent to ",
                     "fitting separate abilities.")
@@ -108,7 +107,7 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
                  "structure allowed.")
         random <- D
     }
-    else if (!idterm)
+    else if (!idterm & !saturated)
         warning("Ability modelled by predictors but no random effects",
                 call. = FALSE)
 

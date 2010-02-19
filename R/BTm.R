@@ -40,7 +40,8 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
     player1 <- withIfNecessary(substitute(player1), data)
     player2 <- withIfNecessary(substitute(player2), data)
     if (ncol(player1) == 1) colnames(player1) <- colnames(player2) <- id
-    Y <- withIfNecessary(substitute(outcome), c(player1, player2, data))
+    Y <- withIfNecessary(substitute(outcome), c(player1, player2, data),
+                         as.data.frame = FALSE)
     Yname <- deparse(substitute(outcome), 500)
     weight <- withIfNecessary(substitute(weights), data, FALSE)
     subset1 <- withIfNecessary(substitute(subset),
@@ -54,13 +55,9 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
     if (is.null(formula)) formula <- reformulate(id)
     diffModel <- Diff(player1, player2, formula, id, data, separate.ability,
                       refcat, contrasts)
-    mf <- as.data.frame(diffModel$X)
-    if (ncol(Y) == 2) mf[[Yname]] <- as.matrix(Y)
-    else mf[Yname] <- Y
-    colnames(mf) <- gsub("`", "", colnames(mf))
-    dummy <- as.formula(paste("`", Yname, "`", " ~ ",
-                              paste(colnames(diffModel$X), collapse = "+"),
-                              " - 1", sep = ""))
+    mf <- data.frame(X = diffModel$X[,1])
+    mf$X <- diffModel$X
+    mf$Y <- Y
     fcall <- as.list(match.call(expand.dots = FALSE))
     argPos <- match(c("na.action", "start", "etastart",
                       "mustart", "control", "model", "x"), names(fcall), 0)
@@ -68,7 +65,7 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
     if (is.null(diffModel$random)) {
         method <- get(ifelse(br, "brglm", "glm"), mode = "function")
         fit <- as.call(c(method, fcall[argPos],
-                         list(formula = dummy, family = family, data = mf,
+                         list(formula = Y ~ X - 1, family = family, data = mf,
                               offset = diffModel$offset, subset = subset,
                               weights = weights), dotArgs))
         fit <- eval(fit, parent.frame())
@@ -76,7 +73,7 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
     else {
         method <- get("glmmPQL", mode = "function")
         fit <- as.call(c(method, fcall[argPos],
-                         list(dummy, diffModel$random, family = family,
+                         list(Y ~ X - 1, diffModel$random, family = family,
                               data = mf, offset = diffModel$offset,
                               subset = subset, weights = weights), dotArgs))
         fit <- eval(fit, parent.frame())
@@ -96,6 +93,7 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
                         call. = FALSE)
         }
     }
+    names(fit$coefficients) <- substring(names(fit$coefficients), 2)
     fit$call <- call
     fit$id <- id
     fit$separate.ability <- separate.ability

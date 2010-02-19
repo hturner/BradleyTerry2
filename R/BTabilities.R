@@ -48,7 +48,7 @@ BTabilities <-  function (model)
         sqrt.vcov <- chol(vcov(model)[kept, kept])
         se <- sqrt(diag(crossprod(sqrt.vcov %*% t(X))))
         abilities <- cbind(X %*% coef(model)[kept] + offset, se)
-        rownames(abilities) <- sapply(as.character(players), as.name)
+        rownames(abilities) <- as.character(players)
         attr(abilities, "separate") <- separate.ability
     }
     else {

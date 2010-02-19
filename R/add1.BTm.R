@@ -58,7 +58,6 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
         object$prior.weights <- wt
         object$offset <- offset
         stat.table <- NextMethod(x = x)
-        rownames(stat.table)[-1] <- sapply(rownames(stat.table)[-1], as.name)
         attr(stat.table, "heading")[3] <- deparse(old.form)
         if (newsep <- sum(asgn == 0) - sum(object$assign ==0))
             attr(stat.table, "heading") <- c(attr(stat.table, "heading"),
@@ -87,7 +86,7 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
 
     ns <- length(scope)
     stat <- df <- numeric(ns) # don't add in original as don't need for tests
-    names(stat) <- names(df) <- as.character(sapply(scope, as.name))
+    names(stat) <- names(df) <- as.character(scope)
     tryerror <- FALSE
     for (i in seq(scope)) {
         stt <- paste(sort(strsplit(scope[i], ":")[[1]]), collapse = ":")
