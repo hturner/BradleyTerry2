@@ -24,6 +24,9 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
                                    deparse(substitute(player2)))
         if (!length(keep)) keep <- FALSE
         data <- c(data[keep], unlist(unname(data[!keep]), recursive = FALSE))
+        if (any(dup <- duplicated(names(data))))
+            warning("'data' argument specifies duplicate variable names: ",
+                    paste(names(data)[dup], collapse = " "))
     }
     ## (will take first occurence of replicated names)
     withIfNecessary <- function(x, data, as.data.frame = TRUE) {
