@@ -19,70 +19,41 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
     if (!family$link %in% c("logit", "probit", "cauchit"))
         stop("link for binomial family must be one of \"logit\", \"probit\"",
              "or \"cauchit\"")
-    if (!is.data.frame(data)){
-        keep <- names(data) %in% c(deparse(substitute(player1)),
-                                   deparse(substitute(player2)))
-        if (!length(keep)) keep <- FALSE
-        data <- c(data[keep], unlist(unname(data[!keep]), recursive = FALSE))
-        if (any(dup <- duplicated(names(data))))
-            warning("'data' argument specifies duplicate variable names: ",
-                    paste(names(data)[dup], collapse = " "))
-    }
-    ## (will take first occurence of replicated names)
-    withIfNecessary <- function(x, data, as.data.frame = TRUE) {
-        if (as.data.frame)
-            expr <- substitute(data.frame(x), list(x = x))
-        else expr <- x
-        if (!is.null(data))
-            with(data, eval(expr))
-        else eval(expr)
-    }
-    player1 <- withIfNecessary(substitute(player1), data)
-    player2 <- withIfNecessary(substitute(player2), data)
-    if (ncol(player1) == 1) colnames(player1) <- colnames(player2) <- id
-    Y <- withIfNecessary(substitute(outcome), c(player1, player2, data),
-                         as.data.frame = FALSE)
-    weights <- withIfNecessary(substitute(weights), data, FALSE)
-    subset1 <- withIfNecessary(substitute(subset),
-                               c(player1 = list(player1),
-                                 player2 = list(player2), player1, data), FALSE)
-    subset2 <- withIfNecessary(substitute(subset),
-                               c(player1 = list(player1),
-                                 player2 = list(player2), player2, data), FALSE)
-    if (is.logical(subset1)) subset <- subset1 | subset2
-    else subset <- c(subset1, subset2)
-    if (is.null(formula)) formula <- reformulate(id)
-    diffModel <- Diff(player1, player2, formula, id, data, separate.ability,
-                      refcat, contrasts)
-    mf <- data.frame(X = diffModel$X[,1])
-    mf$X <- diffModel$X
-    mf$Y <- Y
     fcall <- as.list(match.call(expand.dots = FALSE))
+    setup <- match(c("outcome", "player1", "player2", "formula", "id",
+                        "separate.ability", "refcat", "data", "weights",
+                        "subset", "offset", "contrasts"), names(fcall), 0L)
+    setup <- do.call("BTm.setup", fcall[setup])
+    mf <- data.frame(X = setup$X[,1])
+    mf$X <- setup$X
+    mf$Y <- setup$Y
     argPos <- match(c("na.action", "start", "etastart",
                       "mustart", "control", "model", "x"), names(fcall), 0)
     dotArgs <- fcall$"..."
-    if (is.null(diffModel$random)) {
+    if (is.null(setup$random)) {
         method <- get(ifelse(br, "brglm", "glm"), mode = "function")
         fit <- as.call(c(method, fcall[argPos],
                          list(formula = Y ~ X - 1, family = family, data = mf,
-                              offset = diffModel$offset, subset = subset,
-                              weights = weights), dotArgs))
+                              offset = setup$offset, subset = setup$subset,
+                              weights = setup$weights), dotArgs))
         fit <- eval(fit, parent.frame())
     }
     else {
         method <- get("glmmPQL", mode = "function")
         fit <- as.call(c(method, fcall[argPos],
-                         list(Y ~ X - 1, diffModel$random, family = family,
-                              data = mf, offset = diffModel$offset,
-                              subset = subset, weights = weights), dotArgs))
+                         list(Y ~ X - 1, setup$random, family = family,
+                              data = mf, offset = setup$offset,
+                              subset = setup$subset, weights = setup$weights), dotArgs))
         fit <- eval(fit, parent.frame())
         if (br) {
             if (identical(fit$sigma, 0)){
-                argPos <- match(c("weights", "subset", "na.action", "model", "x"),
-                                names(fcall), 0)
-                fit <- as.call(c(as.name("brglm"), fcall[argPos],
+                argPos <- match(c("na.action", "model", "x"), names(fcall), 0)
+                method <- get("brglm", mode = "function")
+                fit <- as.call(c(method, fcall[argPos],
                                  list(Y ~ X - 1, family = family, data = mf,
-                                      offset = diffModel$offset,
+                                      offset = setup$offset,
+                                      subset = setup$subset,
+                                      weights = setup$weights,
                                       etastart = fit$linear.predictors)))
                 fit <- eval(fit, parent.frame())
                 fit$class <- c("glmmPQL", class(fit))
@@ -92,18 +63,21 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
                         call. = FALSE)
         }
     }
-    names(fit$coefficients) <- substring(names(fit$coefficients), 2)
+    if (ncol(setup$X) > 1)
+        names(fit$coefficients) <- substring(names(fit$coefficients), 2)
+    else
+        names(fit$coefficients) <- colnames(setup$X)
     fit$call <- call
     fit$id <- id
     fit$separate.ability <- separate.ability
     fit$refcat <- refcat
-    fit$formula <- formula
-    fit$player1 <- player1
-    fit$player2 <- player2
-    fit$assign <- attr(diffModel$X, "assign")
-    fit$term.labels <- diffModel$term.labels
-    fit$data <- data
-    fit$random <- diffModel$random
+    fit$formula <- setup$formula
+    fit$player1 <- setup$player1
+    fit$player2 <- setup$player2
+    fit$assign <- attr(setup$X, "assign")
+    fit$term.labels <- setup$term.labels
+    fit$data <- setup$data
+    fit$random <- setup$random
     class(fit) <- c("BTm", class(fit))
     fit
 }

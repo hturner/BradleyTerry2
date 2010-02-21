@@ -8,20 +8,20 @@ model.frame.BTm <- function (formula, ...)
                          names(dots), 0L)]
     if (length(nargs) || is.null(formula$model)) {
         fcall <- formula$call
-        fcall[[1L]] <- as.name("BTm.model.frame")
+        fcall[[1L]] <- as.name("BTm.setup")
         fcall[names(nargs)] <- nargs
         env <- environment(formula$terms)
         if (is.null(env))
             env <- parent.frame()
-        diffArgs <- eval(fcall, env)
-        mf <- data.frame(X = diffArgs$X[,1])
-        mf$X <- diffArgs$X
-        mf$Y <- diffArgs$Y
+        setup <- eval(fcall, env)
+        mf <- data.frame(X = setup$X[,1])
+        mf$X <- setup$X
+        mf$Y <- setup$Y
         mf <- as.call(c(model.frame, mfArgs,
                          list(formula = Y ~ X - 1, data = mf,
-                              offset = diffArgs$offset,
-                              subset = diffArgs$subset,
-                              weights = diffArgs$weights)))
+                              offset = setup$offset,
+                              subset = setup$subset,
+                              weights = setup$weights)))
         eval(mf, parent.frame())
     }
     else formula$model
