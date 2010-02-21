@@ -18,15 +18,15 @@ measurements made on 35 male Cape dwarf chameleons, and the results of
   each have 106 observations (one per contest) on the following 4 variables:
   \describe{
     \item{\code{ID}}{a factor with 35 levels \code{C01}, \code{C02},
-  ... , \code{C43}, the identity of the winning (or losing)  male in
-  each contest}
+      ... , \code{C43}, the identity of the winning (or losing) male in
+      each contest}
     \item{\code{prev.wins.1}}{integer (values 0 or 1), did the
-  winner/loser of this
-  contest win in an immediately previous contest?}
-   \item{\code{prev.wins.2}}{integer (values 0, 1 or 2), how many of his
-       (maximum) previous 2 contests did each male win?}
-   \item{\code{prev.wins.all}}{integer, how many previous contests has each
-     male won?}
+      winner/loser of this
+      contest win in an immediately previous contest?}
+    \item{\code{prev.wins.2}}{integer (values 0, 1 or 2), how many of his
+      (maximum) previous 2 contests did each male win?}
+    \item{\code{prev.wins.all}}{integer, how many previous contests has
+      each male won?}
    }
 
    The \code{chameleons$predictors} data frame has 35 observations, one
@@ -56,12 +56,17 @@ whose predictor-variables were incomplete (and it was the only contest
 involving that lizard, so it is uninformative).
 }
 \source{
-  Dr Devi Stuart-Fox.  These are the same data that were used in
+  The data were obtained by Dr Devi Stuart-Fox,
+  \url{http://www.zoology.unimelb.edu.au/research/groups/animal/labs/stuart-fox/index.php},
+   and they are reproduced here with her kind permission.
+
+  These are the same data that were used in
 
   Stuart-Fox, D M, Firth, D, Moussalli, A and Whiting, M J (2006) Multiple
   signals in chameleon contests: designing and analysing animal contests
   as a tournament. \emph{Animal Behaviour} \bold{71}, 1263--1271.
-}
+  (\url{http://dx.doi.org/10.1016/j.anbehav.2005.07.028})
+}}
 \author{David Firth}
 \examples{
 data(chameleons)

@@ -159,28 +159,14 @@ BTm(outcome, player1, player2, formula = NULL, id = "..",
 data(citations, package = "BradleyTerry2")
 
 ## Convert frequencies to success/failure data
-results <- countsToBinomial(xtabs(Freq ~ winner + loser, data = citations))
+citations.sf <- countsToBinomial(citations)
+names(citations.sf)[1:2] <- c("journal1", "journal2")
 
 ##  First fit the "standard" Bradley-Terry model
-citeModel <- BTm(cbind(won, lost), player1, player2, data = results)
+citeModel <- BTm(cbind(win1, win2), journal1, journal2, data = citations.sf)
 
 ##  Now the same thing with a different "reference" journal
 update(citeModel, refcat = "JASA")
-
-##  Is the "citeability" of a journal predicted by its country of origin?
-journals <- data.frame(row.names = levels(results$player1),
-    origin = factor(c("UK", "USA", "USA", "UK")))
-citeModel2 <- BTm(cbind(won, lost), player1, player2,
-                  ~ origin[..] + (1|..),
-                  data = list(journals, results))
-##  Hmm... not so sure about the origin of "Comm Statist" ...
-is.na(journals$origin[2]) <- TRUE
-citeModel2 <- update(citeModel2, formula = ~ .)
-
-##
-## For a more interesting and realistic example of a model with 
-## player-level covariates, see help(flatlizards).
-##
 
 ##################################################################
 ##  Now an example with an order effect -- see Agresti (2002) p438

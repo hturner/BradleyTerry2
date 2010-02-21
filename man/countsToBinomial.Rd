@@ -16,8 +16,8 @@ countsToBinomial(xtab)
   A data frame with four columns
   \item{player1 }{ the first player in the contest. }
   \item{player2 }{ the second player in the contest. }
-  \item{won }{ the number of times \code{player1} won. }
-  \item{lost}{ the number of times \code{player1} lost. }
+  \item{win1 }{ the number of times \code{player1} won. }
+  \item{win2 }{ the number of times \code{player2} won. }
 }
 \author{ Heather Turner }
 \seealso{ \code{\link{BTm}} }
@@ -30,8 +30,8 @@ data(citations, package = "BradleyTerry2")
 citations
 
 ## Convert frequencies to success/failure data
-results <- countsToBinomial(xtabs(Freq ~ winner + loser,
-    data = citations))
-results
+citations.sf <- countsToBinomial(citations)
+names(citations.sf)[1:2] <- c("journal1", "journal2")
+citations.sf
 }
 \keyword{ models }
