@@ -45,13 +45,13 @@
 
 \setlength{\itemindent}{1cm}
 
-\title{Bradley-Terry models in R}
+\title{Bradley-Terry models in R: The \BT\ package}
 
 \author{David Firth and Heather Turner\\{\it University of Warwick, UK}\\
 \\
 \url{http://www.warwick.ac.uk/go/dfirth}}
 
-\date{For \Rpackage{BradleyTerry} version \Sexpr{packageDescription("BradleyTerry")[["Version"]]}, \Sexpr{Sys.Date()}}
+\date{For \Rpackage{BradleyTerry2} version \Sexpr{packageDescription("BradleyTerry2")[["Version"]]}, \Sexpr{Sys.Date()}}
 
 \begin{document}
 
@@ -59,24 +59,26 @@
 
 \abstract{\small
 
-This paper describes the \R\ add-on package \BT, which facilitates the
-specification and fitting of Bradley-Terry logit models to pair-comparison data.
+This is a short overview of the \R\ add-on package \BT, which facilitates the
+specification and fitting of Bradley-Terry logit, probit or cauchit
+models to pair-comparison data.
 Included are the standard `unstructured' Bradley-Terry model, structured
 versions in which the parameters are related through a linear predictor to
 explanatory variables, and the possibility of an order or `home advantage'
-effect.  Model fitting is either by maximum likelihood or by bias-reduced
+effect or other `contest-specific' effects.
+Model fitting is either by maximum likelihood, by penalised
+quasi-likelihood (for models which involve a random effect), or by bias-reduced
 maximum likelihood in which the first-order asymptotic bias of parameter
 estimates is eliminated.  Also  provided are a simple and efficient approach to
 handling missing covariate data, and suitably-defined residuals for diagnostic
-checking of the linear predictor; these are new methodological contributions
-which will be discussed in greater detail elsewhere.
+checking of the linear predictor.
 }
 
 \bigskip
 \noindent
 {\small
 \textbf{Key words}:
-generalized linear model, logistic regression, Jeffreys prior, ranking, tournament analysis, working residuals}
+generalized linear model, logistic regression, Jeffreys prior, penalised quasi-likelihood, ranking, tournament analysis, working residuals}
 
 \section{Bradley-Terry model}
 
@@ -96,14 +98,15 @@ alternatively be expressed in the logit-linear form
 \logit[\pr(i\ \mathrm{beats}\ j)]=\lambda_i-\lambda_j,
 \end{equation}
 where $\lambda_i=\log\alpha_i$ for all $i$.  Thus, assuming independence of all
-contests, the parameters $\lambda_i$, $\lambda_j$, etc., can be estimated by
+contests, the parameters $\{\lambda_i\}$ can be estimated by
 maximum likelihood using standard software for generalized linear models, with a
 suitably specified model matrix.  The primary purpose of the \BT\ package,
 implemented in the \R\ statistical computing environment \citep{ihak:gent:96,
   R}, is to facilitate the specification and fitting of such models, including
 special cases in which the ability parameters are related to available
 explanatory variables through a linear predictor of the form
-$\lambda_i=\sum_{r=1}^p\beta_rx_{ir}$.
+$\lambda_i=\sum_{r=1}^p\beta_rx_{ir} + U_i$.  The logit link can be replaced,
+if required, by a different symmetric link function (probit or cauchit).
 
 
 
@@ -119,8 +122,7 @@ library(BradleyTerry2)
 data(citations)
 citations
 @ %def
-Here `winner' means the cited journal, `loser' the journal in which the citation
-appears; thus, for example, \emph{Biometrika} was cited 498 times by papers in
+Thus, for example, \emph{Biometrika} was cited 498 times by papers in
 \emph{JASA} during the period under study.  In order to fit a Bradley-Terry
 model to these data using \Rfunction{BTm} from the \BT\ package, the data must
 first be converted to binomial frequencies. That is, the data need to be
@@ -131,58 +133,63 @@ frequencies of wins and losses for \Robject{player1} against
 wins to the format just described:
 @
 <<countsToBinomial>>=
-results <- countsToBinomial(xtabs(Freq ~ winner + loser, data = citations))
-attach(results)
-results
+citations.sf <- countsToBinomial(citations)
+names(citations.sf)[1:2] <- c("journal1", "journal2")
+citations.sf
 @ %def
 
 The binomial response can then be modelled by the difference in player abilities
 as follows:
 @
 <<citeModel>>=
-citeModel <- BTm(cbind(won, lost), player1, player2, data = results)
+citeModel <- BTm(cbind(win1, win2), journal1, journal2, ~ journal, id = "journal", data = citations.sf)
 citeModel
 @ %def
 The coefficients here are maximum likelihood estimates of $\lambda_2, \lambda_3,
 \lambda_4$, with $\lambda_1$ (the log-ability for \emph{Biometrika}) set to zero
 as an identifying convention.
 
-Note the use of the special function \Rfunction{Diff} in the right-hand-side of the
-formula, used here to specify the linear predictor $\lambda_i-\lambda_j$ of the
-standard Bradley-Terry model.
+The \Rfunarg{id} argument here gives a name to be used for the factor that identified the `players' (here the four journals).  The (necessarily one-sided)
+model formula
+\begin{verbatim}
+      ~ journal
+\end{verbatim}
+ here specifies that there is a separate
+parameter (or `ability') for each level of that factor.
 
 If a different `reference' journal is required, this can be achieved using the
-optional \Rfunarg{refcat} argument of the \Rfunction{Diff} function: for
+optional \Rfunarg{refcat} argument: for
 example, making use of \Rfunction{update} to avoid re-specifying the whole model,
 @
 <<citeModelupdate>>=
 update(citeModel, refcat = "JASA")
-detach(results)
 @ %def
 --- the same model in a different parameterization.
 
-The use of the standard Bradley-Terry model for this application is of course
-rather questionable --- for example, citations within a published paper can
+The use of the standard Bradley-Terry model for this application might perhaps
+seem rather questionable --- for example, citations within a published paper can
 hardly be considered independent, and the model discards potentially important
 information on self-citation.  \citet{stig:94} provides arguments to defend the
 model's use despite such concerns.
 
 \section{Abilities predicted by explanatory variables}
 
+\subsection{`Player-specific' predictor variables}
+
 In some application contexts there may be `player-specific' explanatory
 variables available, and it is then natural to consider model simplification of
 the form
 \begin{equation}
-\lambda_i=\sum_{r=1}^p\beta_rx_{ir},
+\lambda_i=\sum_{r=1}^p\beta_rx_{ir} + U_i,
 \end{equation}
 in which ability of each player $i$ is related to explanatory variables
 $x_{i1},\ldots,x_{ip}$ through a linear predictor with coefficients
-$\beta_1,\ldots,\beta_p$.  See, for example, \citet{spring:73}. Dependence of
+$\beta_1,\ldots,\beta_p$; the $\{U_i\}$ are independent errors.
+See, for example, \citet{spri:73} (but note that the error term $U_i$ is
+omitted there). Dependence of
 the player abilities on explanatory variables can be specified via the
-\Rfunarg{formula} argument to \Rfunction{Diff}, using the standard \S-language
-model formulae. Since the player abilities will no longer be modelled exactly,
-\Rfunction{Diff} adds random effects for each player, to allow for
-variability between players. Thus the difference in the abilities of player $i$
+\Rfunarg{formula} argument, using the standard \emph{S}-language
+model formulae.  The difference in the abilities of player $i$
 and player $j$ is modelled by
 \begin{equation}
 \sum_{r=1}^p\beta_rx_{ir} - \sum_{r=1}^p\beta_rx_{jr} + U_i - U_j,
@@ -191,41 +198,39 @@ where $U_i \sim N(0, \sigma^2)$ for all $i$. The Bradley-Terry model is then a
 generalized linear mixed model, which the \Rfunction{BTm} function currently
 fits using the penalized quasi-likelihood algorithm of \citet{bres:93}.
 
-As a very simple illustration with just one predictor, consider the citations
-model above but with ability determined by the journal's country of origin:
+As a simple illustration, consider the
+response-surface model studied by \citet{spri:73}:
 @
-<<citeModel2>>=
-journals <- data.frame(row.names = levels(results$player1),
-         origin = factor(c("UK", "USA", "USA", "UK")))
-citeModel2 <- BTm(cbind(won, lost), player1, player2,
-                  ~origin[..] + (1|..), data = list(journals, results))
-citeModel2
+<<springall>>=
+data(springall)
+summary(springall.model <- BTm(cbind(win.adj, loss.adj),
+                               springall$contests$col,
+                               springall$contests$row,
+                               ~ flav[..] + gel[..] +
+                                 flav.2[..] + gel.2[..] + flav.gel[..] +
+                                 (1 | ..),
+                               data = springall))
 @ %def
-Note that the categorical variable \Robject{origin} is passed to the
-\Rfunarg{data} argument of \Rfunction{Diff} in the data frame \Robject{journals}
-with rows labelled by the player names. Alternatively the \Rfunarg{player.names}
-argument of \Rfunction{Diff} could be used to specify the player names
-corresponding to elements of variables specified in the \Rfunction{Diff} formula
-that are not passed directly to the function.
+Differences from the fit reported in \cite{spri:73} are minor, arising from
+the different treatment of ties: here we have simply treated a tie as half a
+`win' for each `player', rather than using the \cite{rao:kupp:67} model as
+\cite{spri:73} did.
 
-The UK journals have an estimated advantage in (log) ability of $1.273$ over the
-USA journals.  This model saves two parameters, but at the expense of severe
-lack of fit: clearly journals' ability to be cited varies significantly within
-at least one of the two countries of origin.
+In \cite{spri:73}, the random effect (specified here via the term
+\Rcode{(1|..)}) was omitted: that is, the quadratic response
+surface was assumed to predict `ability' without error.  In general such a
+zero-error assumption will be unrealistic.  In this instance, though,
+including the random
+term turns out to make no difference to the results: the variance of the errors $\{U_i\}$ is
+estimated as zero.
 
-%The `standard' Bradley-Terry model from \S1.2 above could have been specified in the same way:
-%@
-%<<saturated_model>>=
-%journal <- as.factor(levels(results$player1))
-%citeModel2 <- BTm(cbind(won, lost) ~ -1 +
-%                  Diff(player1, player2, ~journal, player.names = journal),
-%                  data = results)
-%citeModel2
-%@ %def
-%Since the model is saturated no random effects are necessary, hence the
-%standard deviation of the random effects is missing (\Robject{NA}). %$
+The special name \Rcode{``..''} appears here as the default identifier for
+players, in the absence of a user-specified \Rfunarg{id} argument.  The
+predictor variables in this case are taken from the
+\Robject{springall\$predictors} data frame, whose rows are indexed by the
+levels of \Rcode{``..''}.
 
-\section{Missing values}
+\subsection{Missing values}
 
 The contest data may include all possible pairs of players and hence rows of
 missing data corresponding to players paired with themselves. Such rows
@@ -233,46 +238,29 @@ contribute no information to the Bradley-Terry model and are simply discarded by
 \Rfunction{BTm}.
 
 Where there are missing values in player-specific \emph{predictor} (or
-\emph{explanatory}) variables which appear in the \Rfunction{Diff} formula, it
+\emph{explanatory}) variables which appear in the formula, it
 will typically be very wasteful to discard all contests involving players for
 which some values are missing. Instead, such cases are accommodated by the
 inclusion of one or more parameters in the model.  If, for example, player $1$
 has one or more of its predictor values $x_{11},\ldots,x_{1p}$ missing, then the
 combination of (1) and (3) above yields
 \[
-\logit[\pr(1\ \mathrm{beats}\ j)]=\lambda_1 - \sum_{r=1}^p\beta_rx_{jr} - U_j,
+\logit[\pr(1\ \mathrm{beats}\ j)]=\lambda_1 - \left(\sum_{r=1}^p\beta_rx_{jr} + U_j\right),
 \]
 for all other players $j$.  This results in the inclusion of a `direct' ability
 parameter for each player having missing predictor values, in addition to the
 common coefficients $\beta_1,\ldots,\beta_p$ --- an approach which will be
 appropriate when the missingness mechanism is unrelated to contest success.  The
-same device can be used also to accommodate specified departures from a
+same device can be used also to accommodate any user-specified departures from a
 structured Bradley-Terry model, whereby some players have their abilities
 determined by the linear predictor but others do not.
 
-As a simple illustration, consider the previous citations model in which country
-of origin is unknown for one of the journals (say, \emph{Communications in
-  Statistics}):
-@
-<<citeModel2update>>=
-update(citeModel2, ~ .)
-@ %def
-%% ?? no longer have deviance!
-The fit of this model --- which in effect allows distinct abilities for
-\emph{JASA} and \emph{Communications in Statistics}, is better (as evidenced by
-the much-reduced deviance) than the previous model, but is still unacceptable.
-The two UK journals differ significantly in ability, as may be seen from a
-summary of the original three-parameter fit:
-@
-<<summary_citeModel>>=
-summary(citeModel)
-@ %def
-The estimated difference of 0.269 between \emph{JRSS-B} and the `reference'
-journal \emph{Biometrika} is highly significant (although the correlations
-likely in this dataset have probably caused the significance of all such
-comparisons to be overstated in these results).
+For an illustration of this device in action, see \Rcode{example(flatlizards)}:
+two of the lizards in that study (\Robject{lizard096} and \Robject{lizard099})
+have some missing covariate data, and those two lizards therefore have their
+abilities estimated by separate coefficients.
 
-\section{Order effect}
+\subsection{Order effect}
 
 In certain types of application some or all contests have an associated `bias',
 related to the order in which items are presented to a judge or with the
@@ -294,10 +282,11 @@ head(baseball)
 The dataset records the home wins and losses for each baseball team against each
 of the 6 other teams in the dataset. The \Rfunction{head} function is used to
 show the first 6 records, which are the Milwaukee home games. We see for
-example that Milwaukee played 7 home ggames against Detroit and won 4 of them.
+example that Milwaukee played 7 home games against Detroit and won 4 of them.
 The `standard' Bradley-Terry model without a home-advantage parameter is fitted as before:
 @
 <<baseballModel>>=
+data(baseball)
 baseballModel1 <- BTm(cbind(home.wins, away.wins), home.team, away.team,
                       data = baseball, id = "team")
 summary(baseballModel1)
@@ -305,18 +294,62 @@ summary(baseballModel1)
 The reference team is Baltimore, estimated to be the weakest of these seven,
 with Milwaukee and Detroit the strongest.
 
-Since the data is organised so that the home team is always the first player, a
-home-advantage effect can be included simply by adding an intercept to the model
-above:
+To estimate the home-advantage effect, some re-organisation of the data is
+needed.  The \Rcode{at.home} variable is needed for both the home team and
+away team, so that it can be differenced as appropriate in the linear
+predictor.
 @
 <<baseballModelupdate>>=
-home.team <- with(baseball, data.frame(team = home.team, at.home = 1))
-away.team <- with(baseball, data.frame(team = away.team, at.home = 0))
+baseball$home.team <- with(baseball, data.frame(team = home.team, at.home = 1))
+baseball$away.team <- with(baseball, data.frame(team = away.team, at.home = 0))
 baseballModel2 <- update(baseballModel1, formula = ~ team + at.home)
 summary(baseballModel2)
 @ %def
 This reproduces the results given on page 438 of \citet{agre:02}: the home team
 has an estimated odds-multiplier of $\exp(0.3023) = 1.35$ in its favour.
+
+\subsection{More general (contest-specific) predictors}
+
+The `home advantage' effect is an simple
+example of a contest-specific predictor.  Such predictors are necessarily
+interaction terms, between aspects of the contest and (aspects of) the two
+`players' involved.
+
+For more elaborate examples of such effects, see \Rcode{?chameleons} and
+\Rcode{?CEMS}.  The former includes an `experience' effect, which changes
+through time, on the fighting ability of male chameleons.  The latter
+illustrates a common situation in psychometric applications of the
+Bradley-Terry model, where \emph{subjects} express preference for one of two
+\emph{objects} (the `players'), and it is the influence on the results of
+subject attributes that is of primary interest.
+
+As an illustration of the way in which such effects are specified, consider
+the following model specification taken from the examples in \Rcode{?CEMS}:
+@
+<<CEMSmodel>>=
+data(CEMS)
+table8.model <-  BTm(outcome = cbind(win1.adj, win2.adj),
+                     player1 = school1, player2 = school2,
+                     formula = ~ .. +
+                         WOR[student] * LAT[..] +
+                         DEG[student] * St.Gallen[..] +
+                         STUD[student] * Paris[..] +
+                         STUD[student] * St.Gallen[..] +
+                         ENG[student] * St.Gallen[..] +
+                         FRA[student] * London[..] +
+                         FRA[student] * Paris[..] +
+                         SPA[student] * Barcelona[..] +
+                         ITA[student] * London[..] +
+                         ITA[student] * Milano[..] +
+                         SEX[student] * Milano[..],
+                     refcat = "Stockholm",
+                     data = CEMS)
+@ %def
+Here the subjects are students, and the objects
+(six European management schools) are referenced by \Rcode{``..''}.  The
+subject-specific variables \Robject{WOR}, \Robject{DEG}, etc., are found in the  data frame \Robject{CEMS\$students} which contains student-specific
+variables; the variable \Robject{LAT}, for example, is in the data frame \Robject{CEMS\$schools} which contains school-specific variables.
+
 
 \section{Ability scores}
 
@@ -327,16 +360,21 @@ one or more missing predictor values, or `model-based' estimates of the form
 $\hat\lambda_i=\sum_{r=1}^p\hat\beta_rx_{ir}$ for players whose ability is
 predicted by explanatory variables.
 
-As a simple illustration, estimates in the origin-predicts-ability model for
-journal citation data are obtained by:
+As a simple illustration, team ability estimates in the
+home-advantage model for the \Robject{baseball} data are obtained by:
 @
 <<BTabilities>>=
-journals$origin[2] <- "USA" # temporary fix!
-BTabilities(citeModel2)
+BTabilities(baseballModel2)
 @ %def
-%% ?? s.e's much bigger with random effects...
-Here precision is of course overstated (the reported standard errors are too
-small), since this particular model was a poor fit to the data.
+This gives, for each team, the estimated ability when the team
+enjoys no home advantage.
+
+Similarly, ability estimates (for the nine experimental settings found in \Robject{springall.predictors}) can be obtained for the response-surface model of
+\cite{spri:73}:
+@
+<<BTabilities2>>=
+BTabilities(springall.model)
+@ %def
 
 \section{Residuals}
 
@@ -345,26 +383,26 @@ There are two main types of residuals available for a Bradley-Terry model object
 First, there are residuals obtained by the standard methods for models of class
 \Robject{"glm"}.  These all deliver one residual for each contest or type of
 contest.  For example, Pearson residuals for the model
-\texttt{\color{black} citeModel2} can be obtained simply by
+\Robject{springall.model} can be obtained simply by
 @
 <<residuals>>=
-cbind(results[,1:2], residuals(citeModel2))
+res.pearson <- round(residuals(springall.model), 3)
+head(cbind(springall$contests, res.pearson))
 @ %def
-%% ?? not so much now
---- from which the lack of fit is immediately apparent!
 
 More useful for diagnostics on the linear predictor $\sum\beta_rx_{ir}$ are
-`player'-level residuals, obtained by using the function \Rfunction{BTresiduals}:
+`player'-level residuals, obtained by using the function \Rfunction{residuals}
+with argument \Rfunarg{type = "grouped"}.  These residuals can then be
+plotted against other player-specific variables.
 @
 <<BTresiduals>>=
-residuals(citeModel2, type = "grouped")
+res <- residuals(springall.model, type = "grouped")
+#  with(springall$predictors, plot(flav, res))
+#  with(springall$predictors, plot(gel, res))
 @ %def
 These residuals estimate the error in the linear predictor; they are obtained by
-suitable aggregation of the so-called `working' residuals from the PQL fit.
-From these residuals it is evident, for example, that the
-origin-predicts-ability model understates the ability of \emph{JASA} and
-overstates the ability of \emph{Communications of Statistics} (and similarly for
-\emph{JRSS-B} versus \emph{Biometrika}).  The \Robject{weights} attribute
+suitable aggregation of the so-called `working' residuals from the model fit.
+The \Robject{weights} attribute
 indicates the relative information in these residuals --- weight is roughly
 inversely proportional to variance --- which may be useful for plotting and/or
 interpretation; for example, a large residual may be of no real concern if based
@@ -372,18 +410,18 @@ on very little information. Weighted least-squares regression of these residuals
 on any variable already in the model is null.  For example:
 @
 <<residualWLS>>=
-resids <- residuals(citeModel2, type = "grouped")
-journals$origin[2] <- "USA"  ## ie the previous value is restored
-lm(resids ~ origin, weights = attr(resids, "weights"),
-   data = journals)
+lm(res ~ flav, weights = attr(res, "weights"), data = springall$predictors)
+lm(res ~ gel, weights = attr(res, "weights"), data = springall$predictors)
 @ %def %$
 
 \section{Bias-reduced estimates}
 
-Estimation of the standard Bradley-Terry model in \Rpackage{BTm} is by default
+Estimation of the Bradley-Terry model in \Rpackage{BTm} is by default
+(when there are no random effects in the model)
 computed by maximum likelihood, using an internal call to the
-\Rfunction{glm} function.  An alternative is to fit by bias-reduced
-maximum likelihood \citep{firt:93}: this requires additionally the \Rpackage{brglm}
+\Rfunction{glm} function.  An alternative  is to fit by bias-reduced
+maximum likelihood \citep{firt:93}: this requires additionally the
+\Rpackage{brglm}
 package, and is specified by the optional argument \Rfunarg{br = TRUE}.  The
 resultant effect, namely removal of first-order asymptotic bias in
 the estimated coefficients, is often quite small.  One notable feature of
@@ -394,9 +432,11 @@ infinite values \citep{hein:sche:02}.
 \section{Model search}
 
 In addition to \Rfunction{update()} as illustrated above, methods for the
-generic functions \Rfunction{add1()} and \Rfunction{drop1()} are provided. These
+generic functions \Rfunction{add1()}, \Rfunction{drop1()} and
+\Rfunction{anova()} are provided. These
 can be used to investigate the effect of adding or removing a variable, whether
-that variable is contest-specific, such as an order effect, or player-specific.
+that variable is contest-specific, such as an order effect, or player-specific;
+and to compare the fit of nested models.
 
 %These can be used in the standard way for model elaboration or specialization,
 %and their availability also allows the use of \texttt{\color{black} step()} for
@@ -406,17 +446,23 @@ that variable is contest-specific, such as an order effect, or player-specific.
 
 \subsection{Contest-specific data}
 
-The left-hand side of the model formula supplied to \Rfunction{BTm} represents a
+The \Rfunarg{outcome} argument of \Rfunction{BTm} represents a
 binomial response and can be supplied in any of the formats allowed by the
 \Rfunction{glm} function. That is, either a two-column matrix with the columns
-giving the number of wins and losses, a factor where the first level denotes a
+giving the number of wins and losses (for \Rfunarg{player1}), a factor where
+the first level denotes a
 loss and all other levels denote a win, or a binary variable where 0 denotes a
 loss and 1 denotes a win. Each row represents either a single contest or a set
 of contests between the same two players.
 
-Any contest-specific variables, i.e. variables specified in the model formula
-outside of \Rfunction{Diff} terms including any offset temr, should be of the
-same length as the binomial response. An offset in the model can be specified
+Any \emph{contest-specific} variables should be of the
+same length as the variables specified in the \Rfunarg{outcome},
+\Rfunarg{player1} and \Rfunarg{player2} arguments.  Sometimes this is
+achieved most economically by appropriate indexing: see, for example,
+\Rcode{?CEMS}, where student-specific variables are stored in a data frame
+with one row per student rather than one row per `contest'.
+
+An offset in the model can be specified
 using the \Rfunarg{offset} argument to \Rfunction{BTm}.
 
 To use only certain rows of the data in the analysis, the \Rfunarg{subset}
@@ -426,21 +472,22 @@ containing the indices of rows to be used.
 
 \subsection{Player-specific data}
 
-Variables which appear in the \Rfunction{Diff} formula are `player'-level
-predictor variables.  The safest approach is to put all potential predictor
-(explanatory) variables  ---including factors and any offset term --- into a
-data frame like \Robject{journals} above, with one row per (potential) player,
+Variables indexed by the levels of \Rfunarg{player1} and \Rfunarg{player2},
+i.e., indexed by \Rfunarg{id}, are said to be `player-specific'.
+The safest approach is to put all potential predictor
+(explanatory) variables  --- including factors and any offset term --- into a
+data frame with one row per (potential) player,
 and with row names the names of players exactly as used in variables passed to
-the \Rfunarg{player1} and \Rfunarg{player2} arguments of \Rfunction{Diff},
-i.e. the player lists corresponding to the contest results. This data frame
-should then be passed to the \Rfunarg{data} argument of \Rfunction{Diff} to
-specify where predictors (and any offset) can be found.
+the \Rfunarg{player1} and \Rfunarg{player2} arguments of \Rfunction{BTm}.
+Such data frame
+should then be included in the list specified as the \Rfunarg{data} argument
+of \Rfunction{BTm} to specify where predictors (and any offset) can be found.
 
-\section[A list of the functions provided in BradleyTerry]{A list of the functions provided in \BT}
+\section[A list of the functions provided in BradleyTerry2]{A list of the functions provided in \BT}
 
 The standard \R\ help files provide the definitive reference.  Here we simply
-list all of the packaged functions and their arguments, as a convenient
-overview:
+list the main user-level functions and their arguments, as a
+convenient overview:
 @
 <<functions, echo = FALSE>>=
 ## cf. prompt
@@ -465,40 +512,25 @@ for (fn in getNamespaceExports("BradleyTerry2")) {
 }
 @ %def
 
-\section[What is not in the Bradley-Terry package?]{What is {\sl not} in the \BT\ package?}
+\section[A note on the treatment of ties]{A note on the treatment of ties}
 
-The \BT\ package does not provide:
-\begin{itemize}
-\item
-any methods for dealing with ties, i.e., contests in which neither player wins.
-\item
-any facilities either for handling contest-specific (as opposed to
-player-specific) predictor variables, except for the possibility of an order
-effect as described above.
-\end{itemize}
-These extensions to the Bradley-Terry model can be achieved in \R\ (or
-elsewhere) by fitting suitably constructed log-linear models --- see, for
-example, \citet{crit:flig:91} and \citet{ditt:hatz:katz:98}.  They are outside
-the scope of the \BT\ package, whose purpose is to simplify the specification
-and fitting of Bradley-Terry models with \emph{player-specific} predictors
-(including of course the `saturated' case of the standard Bradley-Terry model
-(1)).
+The present version of \BT\ provides no sophisticated facilities for handling
+tied contests/comparisons; the well-known models of \cite{rao:kupp:67}
+and \cite{davi:70} are not implemented here.  At present the \Rfunction{BTm}
+function requires a binary or binomial response variable, the third (`tied')
+category of response is not allowed.
 
-A useful extension of the \BT\ package would be to allow the inclusion of a
-player-specific random effect, as in
-\[
-\lambda_i = \sum_{r=1}^p\beta_rx_{ir} + U_i,
-\]
-with the $\{U_i\}$ distributed independently as $N(0,\sigma_U)$ for example, to
-allow for imperfect representation of ability by the linear predictor
-$\sum\beta_rx_{ir}$.  Work on this is in progress.
+In several of the data examples (e.g., \Rcode{?CEMS}, \Rcode{?springall},
+\Rcode{?sound.fields}),
+ties are handled by the crude but simple device of adding half of a `win' to
+the tally for each player involved; in each of the examples where this has been done it is found that the result is very similar, after a simple re-scaling, to the more sophisticated analyses that have appeared in the literature.
+
+It is likely that a future version of \BT\ will have a more general method for handling ties.
 
 \section*{Acknowledgment}
 
-The author is grateful to Simon Blomberg of the Australian National University
-who asked a question which motivated this work, and to two anonymous referees
-for thorough and constructive comments which greatly improved both the paper and
-the software.
+This work was supported by the UK Engineering and Physical Sciences Research
+Council.
 
 
 \bibliography{BradleyTerry}
