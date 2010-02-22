@@ -66,7 +66,7 @@ involving that lizard, so it is uninformative).
   signals in chameleon contests: designing and analysing animal contests
   as a tournament. \emph{Animal Behaviour} \bold{71}, 1263--1271.
   (\url{http://dx.doi.org/10.1016/j.anbehav.2005.07.028})
-}}
+}
 \author{David Firth}
 \examples{
 data(chameleons)

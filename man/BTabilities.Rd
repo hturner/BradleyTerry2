@@ -37,6 +37,7 @@ Firth, D. (2005)  Bradley-Terry models in R.  \emph{Journal of Statistical
 }
 \seealso{ \code{\link{BTm}}, \code{\link{residuals.BTm}} }
 \examples{
+#########
 data(citations, package = "BradleyTerry2")
 
 ## Convert frequencies to success/failure data
@@ -46,5 +47,16 @@ names(citations.sf)[1:2] <- c("journal1", "journal2")
 ##  Fit the "standard" Bradley-Terry model
 citeModel <- BTm(cbind(win1, win2), journal1, journal2, data = citations.sf)
 BTabilities(citeModel)
+
+######### 
+data(baseball, package = "BradleyTerry2")
+baseball$home.team <- with(baseball, data.frame(team = home.team, at.home = 1))
+baseball$away.team <- with(baseball, data.frame(team = away.team, at.home = 0))
+baseballModel2 <- BTm(cbind(home.wins, away.wins), home.team, away.team,
+                      formula = ~ team + at.home, id = "team",
+                      data = baseball)
+##  Estimated abilities for each team, relative to Baltimore, when
+##  playing away from home:  
+BTabilities(baseballModel2)
 }
 \keyword{ models }

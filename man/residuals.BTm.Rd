@@ -43,20 +43,23 @@ Software} \bold{12}(1), 1--12.
 }
 \seealso{ \code{\link{BTm}}, \code{\link{BTabilities}} }
 \examples{
-data(citations, package = "BradleyTerry2")
+data(springall)
 ##
-##  Convert frequencies to success/failure data
+##  See ?springall
 ##
-results <- countsToBinomial(xtabs(Freq ~ winner + loser, data = citations))
-##
-##  Get journal residuals for the model in which country of origin predicts
-##  ability
-##
-journals <- data.frame(row.names = levels(results$player1),
-    origin = factor(c("UK", "USA", "USA", "UK")))
-citeModel2 <- BTm(cbind(won, lost), player1, player2,
-                  ~ origin[..] + (1|..),
-                  data = list(journals, results))
-residuals(citeModel2, type = "grouped")
+springall.model <- BTm(cbind(win.adj, loss.adj),
+                       col, row, 
+                       ~ flav[..] + gel[..] + 
+                       flav.2[..] + gel.2[..] + flav.gel[..] + (1 | ..),
+                       data = springall)
+res <- residuals(springall.model, type = "grouped")
+with(springall$predictors, plot(flav, res))
+with(springall$predictors, plot(gel, res))
+##  Weighted least-squares regression of these residuals on any variable
+##  already included in the model yields slope coefficient zero:
+lm(res ~ flav, weights = attr(res, "weights"),
+   data = springall$predictors)
+lm(res ~ gel, weights = attr(res, "weights"),
+   data = springall$predictors)
 }
 \keyword{ models }
