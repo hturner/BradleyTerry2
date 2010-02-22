@@ -5,7 +5,7 @@ note <- sprintf("R package version %s", meta$Version)
 url <- sprintf("http://CRAN.R-project.org/package=BradleyTerry", meta$Version) 
 
 citEntry(entry="Manual",
-    title = {"Bradley-Terry models in R"},
+    title = {"Bradley-Terry models in R: The BradleyTerry2 package"},
     author = personList(as.person("Heather Turner"),
                         as.person("David Firth")),
     year = year,
@@ -13,7 +13,7 @@ citEntry(entry="Manual",
     url = url,
     textVersion = paste(
       "Heather Turner and David Firth", sprintf("(%s).", year),
-      "Bradley-Terry models in R.",
+      "Bradley-Terry models in R: The BradleyTerry2 package",
       sprintf("(%s).", note), sprintf("(%s).", url))
 )
 
