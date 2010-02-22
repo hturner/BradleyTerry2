@@ -1,7 +1,7 @@
 print.glmmPQL <- function (x, digits = max(3, getOption("digits") - 3), ...)
 {
     if (identical(x$sigma, 0)){
-        message("PQL algorithm converged to fixed effects model")
+        cat("PQL algorithm converged to fixed effects model\n")
         return(NextMethod())
     }
     cat("\nCall: ", deparse(x$call), "\n", sep = "", fill = TRUE)

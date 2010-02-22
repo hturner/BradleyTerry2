@@ -46,7 +46,7 @@ BTabilities <-  function (model)
         V <- crossprod(sqrt.vcov %*% t(X))
         se <- sqrt(diag(V))
         abilities <- cbind(X %*% coef(model)[kept] + offset, se)
-        attr(abilities, "separate") <- separate.ability
+        if (length(separate.ability)) attr(abilities, "separate") <- separate.ability
     }
     else {
         asgn <- model$assign

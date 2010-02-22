@@ -1,7 +1,7 @@
 summary.glmmPQL <- function(object, dispersion = NULL, correlation = FALSE,
                             symbolic.cor = FALSE, ...) {
     if (identical(object$sigma, 0)){
-        message("PQL algorithm converged to fixed effects model")
+        cat("PQL algorithm converged to fixed effects model\n")
         return(NextMethod("summary"))
     }
     aliased <- is.na(coef(object))

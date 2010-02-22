@@ -1,5 +1,5 @@
 
-R version 2.10.0 (2009-10-26)
+R version 2.10.1 (2009-12-14)
 Copyright (C) 2009 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 
@@ -19,14 +19,13 @@ Type 'q()' to quit R.
 > data(citations, package = "BradleyTerry2")
 > 
 > ## Convert frequencies to success/failure data
-> results <- countsToBinomial(xtabs(Freq ~ winner + loser,
-+     data = citations))
+> results <- countsToBinomial(citations)
 > results
-       player1      player2 won lost
-1   Biometrika Comm Statist 730   33
-2   Biometrika         JASA 498  320
-3   Biometrika       JRSS-B 221  284
-4 Comm Statist         JASA  68  813
-5 Comm Statist       JRSS-B  17  276
-6         JASA       JRSS-B 142  325
+       player1      player2 win1 win2
+1   Biometrika Comm Statist  730   33
+2   Biometrika         JASA  498  320
+3   Biometrika       JRSS-B  221  284
+4 Comm Statist         JASA   68  813
+5 Comm Statist       JRSS-B   17  276
+6         JASA       JRSS-B  142  325
 > 

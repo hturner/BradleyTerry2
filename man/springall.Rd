@@ -57,9 +57,7 @@ data(springall)
 ## In this instance, however, that makes no difference: the random-effect 
 ## variance is estimated as zero.
 ##
-summary(springall.model <- BTm(cbind(win.adj, loss.adj),
-                               springall$contests$col,
-                               springall$contests$row, 
+summary(springall.model <- BTm(cbind(win.adj, loss.adj), col, row, 
                                ~ flav[..] + gel[..] + 
                                  flav.2[..] + gel.2[..] + flav.gel[..] +
                                  (1 | ..),
