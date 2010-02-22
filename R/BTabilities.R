@@ -4,13 +4,10 @@ BTabilities <-  function (model)
         stop("model is not of class BTm")
 
     X0 <- model.matrix(model)
+    player.names <- levels(model$player1[, model$id])
     if (!(model$id %in% model$term.labels)) {
-        players <- model$player1[!duplicated(model$player1[, model$id]), ,
-                                 drop = FALSE]
-        extra <- match(setdiff(levels(model$player1[, model$id]),
-                               players[, model$id]),
-                       model$player2[, model$id], 0)
-        players <- rbind(players, model$player2[extra,, drop = FALSE])
+        players <- data.frame(factor(seq(player.names), labels = player.names))
+        names(players) <- model$id
         ## assume player covariates indexed by id
         fixed <- lme4:::nobars(model$formula)
         factors <- attr(terms(fixed), "factors")
@@ -46,9 +43,9 @@ BTabilities <-  function (model)
         kept <- model$assign %in% c(0, which(keep))
 
         sqrt.vcov <- chol(vcov(model)[kept, kept])
-        se <- sqrt(diag(crossprod(sqrt.vcov %*% t(X))))
+        V <- crossprod(sqrt.vcov %*% t(X))
+        se <- sqrt(diag(V))
         abilities <- cbind(X %*% coef(model)[kept] + offset, se)
-        rownames(abilities) <- as.character(players)
         attr(abilities, "separate") <- separate.ability
     }
     else {
@@ -61,6 +58,6 @@ BTabilities <-  function (model)
         abilities <- cbind(c(0, summ[, 1]), c(0, summ[, 2]))
     }
     colnames(abilities) <- c("ability", "s.e.")
-    rownames(abilities) <- levels(model$player1[, model$id])
+    rownames(abilities) <- player.names
     abilities
 }
