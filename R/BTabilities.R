@@ -46,18 +46,45 @@ BTabilities <-  function (model)
         V <- crossprod(sqrt.vcov %*% t(X))
         se <- sqrt(diag(V))
         abilities <- cbind(X %*% coef(model)[kept] + offset, se)
-        if (length(separate.ability)) attr(abilities, "separate") <- separate.ability
+        attr(abilities, "vcov") <- V
+        if (length(separate.ability)) {
+            attr(abilities, "separate") <- separate.ability
+        }
     }
     else {
         asgn <- model$assign
         if (is.null(asgn))
             abilities <- TRUE
-        else
-            abilities <- asgn == which(attr(terms(model$formula), "term.labels") == model$id)
-        summ <- coef(summary(model))[abilities ,]
+        else {
+            coefs.to.include <- asgn == which(attr(terms(model$formula),
+                                "term.labels") == model$id)
+        }
+        summ <- coef(summary(model))[coefs.to.include, , drop = FALSE]
         abilities <- cbind(c(0, summ[, 1]), c(0, summ[, 2]))
+        vc <- vcov(model)[coefs.to.include, coefs.to.include,
+                          drop = FALSE]
+        vc <- rbind(0, cbind(0, vc))
+        rownames(vc) <- colnames(vc) <- player.names
+        attr(abilities, "vcov") <- vc
     }
     colnames(abilities) <- c("ability", "s.e.")
     rownames(abilities) <- player.names
+    attr(abilities, "modelcall") <- model$call
+    attr(abilities, "factorname") <- model$id
+    class(abilities) <- c("BTabilities", "matrix")
     abilities
+}
+
+print.BTabilities <- function(x, ...) {
+    attr(x, "vcov") <- attr(x, "modelcall") <- attr(x, "factorname") <- NULL
+    class(x) <- "matrix"
+    print(x)      ## ie, print without showing the messy attributes
+}
+
+vcov.BTabilities <- function(object, ...) {
+    attr(object, "vcov")
+}
+
+coef.BTabilities <- function(object, ...) {
+    object[, "ability"]
 }
