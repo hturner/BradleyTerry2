@@ -47,9 +47,9 @@
 
 \title{Bradley-Terry models in R: The \BT\ package}
 
-\author{David Firth and Heather Turner\\{\it University of Warwick, UK}\\
+\author{Heather Turner and David Firth\\{\it University of Warwick, UK}\\
 \\
-\url{http://www.warwick.ac.uk/go/dfirth}}
+\url{http://go.warwick.ac.uk/heatherturner}}
 
 \date{For \Rpackage{BradleyTerry2} version \Sexpr{packageDescription("BradleyTerry2")[["Version"]]}, \Sexpr{Sys.Date()}}
 
@@ -120,6 +120,10 @@ journals of statistics and are included the \BT\ package as the dataset
 <<CitationData>>=
 library(BradleyTerry2)
 data(citations)
+@
+\newpage
+@
+<<CitationData2>>=
 citations
 @ %def
 Thus, for example, \emph{Biometrika} was cited 498 times by papers in

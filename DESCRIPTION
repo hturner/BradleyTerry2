@@ -1,11 +1,11 @@
 Package: BradleyTerry2
 Version: 0.9-1
-Date: 2008-07-11
+Date: 2010-02-23
 Title: Bradley-Terry models
-Author: David Firth and Heather Turner
-Maintainer: David Firth <d.firth@warwick.ac.uk>
-URL: http://go.warwick.ac.uk/dfirth
+Author: Heather Turner and David Firth
+Maintainer: Heather Turner <heather.turner@warwick.ac.uk>
+URL: http://go.warwick.ac.uk/heatherturner
 Description: Specify and fit the Bradley-Terry model and structured versions
 Depends: R (>= 1.8.0)
-Imports: MASS, nlme, brglm, gtools, lme4
+Imports: MASS, nlme, brglm, gtools, lme4, qvcalc (>= 0.8-5)
 License: GPL (>= 2)
