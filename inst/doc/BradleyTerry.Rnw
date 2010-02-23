@@ -206,6 +206,7 @@ As a simple illustration, consider the
 response-surface model studied by \citet{spri:73}:
 @
 <<springall>>=
+options(show.signif.stars = FALSE)
 data(springall)
 summary(springall.model <- BTm(cbind(win.adj, loss.adj), col, row,
                                ~ flav[..] + gel[..] +
@@ -378,13 +379,12 @@ Similarly, ability estimates (for the nine experimental settings found in \Robje
 BTabilities(springall.model)
 @ %def
 
-The ability estimates in an un-structured Bradley-Terry model are particularly well suited to presentation using the device of \emph{quasi variances} \citep{firt:04}.  The \Rpackage{qvcalc} package contains a function of the same name which does the necessary work:
-@
-<<qvcalc>>=
-library(qvcalc)
-baseball.qv <- qvcalc(BTabilities(baseballModel2))
-plot(baseball.qv, levelNames = c("Bal", "Bos", "Cle", "Det", "Mil", "NY", "Tor"))
-@
+The ability estimates in an un-structured Bradley-Terry model are particularly well suited to presentation using the device of \emph{quasi variances} \citep{firt:04}.  The \Rpackage{qvcalc} package (version 0.8-5 or later) contains a function of the same name which does the necessary work:
+\begin{Sinput}
+> library(qvcalc)
+> baseball.qv <- qvcalc(BTabilities(baseballModel2))
+> plot(baseball.qv, levelNames = c("Bal", "Bos", "Cle", "Det", "Mil", "NY", "Tor"))
+\end{Sinput}
 \begin{figure}[!tbph]
     \begin{center}
         \includegraphics{baseball-qvplot.pdf}

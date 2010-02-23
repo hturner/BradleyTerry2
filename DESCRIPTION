@@ -7,5 +7,5 @@ Maintainer: Heather Turner <heather.turner@warwick.ac.uk>
 URL: http://go.warwick.ac.uk/heatherturner
 Description: Specify and fit the Bradley-Terry model and structured versions
 Depends: R (>= 1.8.0)
-Imports: MASS, nlme, brglm, gtools, lme4, qvcalc (>= 0.8-5)
+Imports: MASS, nlme, brglm, gtools, lme4
 License: GPL (>= 2)
