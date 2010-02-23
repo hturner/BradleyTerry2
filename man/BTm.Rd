@@ -43,12 +43,13 @@ BTm(outcome, player1, player2, formula = NULL, id = "..",
     function to be used in the model. Only the binomial family is
     implemented, with either\code{"logit"}, \code{"probit"} , or \code{"cauchit"} link. (See
     \code{\link{family}} for details of family functions.)}
-  \item{data}{ a list of data frames, possibly including a data frame of
-    contest-level variables (with length the number of contests) and
-    a data frame of player covariates (with length the number of
-    players). Variables are searched for first in
-    \code{player1}/ \code{player2}, then in the list of data frames in
-    the order given, then in the environment of \code{formula}.}
+  \item{data}{ a list of data frames. This may include named data frames
+    for \code{player1} and \code{player2}, otherwise data frames of
+    objects that are required to fit the model. The rows of these data
+    frames should either correspond to the contests or the levels
+    of a factor used for indexing. Objects are searched for first in the
+    list of data frames in the order given, then in the environment of
+    \code{formula}.} 
   \item{weights}{ an optional numeric vector of \sQuote{prior weights}.}
   \item{subset}{  an optional logical or numeric vector specifying a 
     subset of observations to be used in the fitting process. }

@@ -4,7 +4,7 @@ BTabilities <-  function (model)
         stop("model is not of class BTm")
 
     X0 <- model.matrix(model)
-    player.names <- levels(model$player1[, model$id])
+    player.names <- levels(relevel(model$player1[, model$id], model$refcat))
     if (!(model$id %in% model$term.labels)) {
         players <- data.frame(factor(seq(player.names), labels = player.names))
         names(players) <- model$id
