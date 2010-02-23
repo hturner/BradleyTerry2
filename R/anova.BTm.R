@@ -48,6 +48,12 @@ anova.BTm <- function (object, ..., dispersion = NULL, test = NULL)
         attr(object$x, "assign") <- object$assign + sep
         attr(object$terms, "term.labels") <- c("[sep]"[sep], object$term.labels)
         anova.table <- NextMethod()
+        attr(anova.table, "heading") <-
+            paste("Analysis of Deviance Table", "\n\nModel: ",
+                  object$family$family, ", link: ", object$family$link,
+                  "\n\nResponse: ", deparse(object$call$outcome, 500),
+                  "\n\nTerms added sequentially (first to last)\n\n",
+                  sep = "")
         if (sep) {
             anova.table <- anova.table[-1,]
             rownames(anova.table)[1] <- "NULL"
@@ -106,7 +112,7 @@ anova.BTm <- function (object, ..., dispersion = NULL, test = NULL)
     dimnames(table) <- list(c("NULL", object$term.labels), c("Statistic", "Df"))
     title <- paste("Sequential Wald Tests", "\n\nModel: ",
                    object$family$family, ", link: ", object$family$link,
-                   "\n\nResponse: ", formula(terms(object))[[2]],
+                   "\n\nResponse: ", deparse(object$call$outcome, 500),
                    "\n\nPredictor: ", paste(formula(object), collapse = ""),
                    "\n\nTerms added sequentially (first to last)",
                    if (tryerror)
