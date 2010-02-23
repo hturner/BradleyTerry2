@@ -4,7 +4,8 @@ BTabilities <-  function (model)
         stop("model is not of class BTm")
 
     X0 <- model.matrix(model)
-    player.names <- levels(relevel(model$player1[, model$id], model$refcat))
+    player1 <- model$player1[, model$id]
+    player.names <- levels(player1)
     if (!(model$id %in% model$term.labels)) {
         players <- data.frame(factor(seq(player.names), labels = player.names))
         names(players) <- model$id
@@ -64,6 +65,13 @@ BTabilities <-  function (model)
         vc <- vcov(model)[coefs.to.include, coefs.to.include,
                           drop = FALSE]
         vc <- rbind(0, cbind(0, vc))
+        refcat <- model$refcat
+        if (!is.null(refcat)) {
+            perm <- order(match(levels(relevel(player1, refcat)),
+                                player.names))
+            abilities <- abilities[perm, ]
+            vc <- vc[perm, perm]
+        }
         rownames(vc) <- colnames(vc) <- player.names
         attr(abilities, "vcov") <- vc
     }
