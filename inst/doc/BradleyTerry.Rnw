@@ -374,6 +374,21 @@ Similarly, ability estimates (for the nine experimental settings found in \Robje
 BTabilities(springall.model)
 @ %def
 
+The ability estimates in an un-structured Bradley-Terry model are particularly well suited to presentation using the device of \emph{quasi variances} \citep{firt:04}.  The \Rpackage{qvcalc} package contains a function of the same name which does the necessary work:
+@
+<<qvcalc>>=
+library(qvcalc)
+baseball.qv <- qvcalc(BTabilities(baseballModel2))
+plot(baseball.qv, levelNames = c("Bal", "Bos", "Cle", "Det", "Mil", "NY", "Tor"))
+@
+\begin{figure}[!tbph]
+    \begin{center}
+        \includegraphics{baseball-qvplot.pdf}
+    \end{center}
+    \caption{Estimated relative abilities of baseball teams}
+    \label{fig:qvplot}
+\end{figure}
+
 \section{Residuals}
 
 There are two main types of residuals available for a Bradley-Terry model object.
