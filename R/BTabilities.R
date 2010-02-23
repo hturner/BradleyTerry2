@@ -6,7 +6,8 @@ BTabilities <-  function (model)
     X0 <- model.matrix(model)
     player1 <- model$player1[, model$id]
     player.names <- levels(player1)
-    if (!(model$id %in% model$term.labels)) {
+    factors <- attr(terms(model$formula), "factors")
+    if (!(model$id %in% rownames(factors))) {
         players <- data.frame(factor(seq(player.names), labels = player.names))
         names(players) <- model$id
         ## assume player covariates indexed by id
@@ -57,7 +58,10 @@ BTabilities <-  function (model)
         if (is.null(asgn))
             abilities <- TRUE
         else {
-            coefs.to.include <- asgn == which(attr(terms(model$formula),
+            idterm <- attr(terms(model$formula), "term.labels") == model$id
+            if (!any(idterm))
+               stop("abilities not uniquely defined for this parameterization")
+            coefs.to.include <- asgn[!is.na(coef(model))] == which(attr(terms(model$formula),
                                 "term.labels") == model$id)
         }
         summ <- coef(summary(model))[coefs.to.include, , drop = FALSE]
