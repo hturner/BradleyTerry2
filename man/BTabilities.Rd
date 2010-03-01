@@ -1,5 +1,8 @@
 \name{BTabilities}
 \alias{BTabilities}
+\alias{print.BTabilities}
+\alias{coef.BTabilities}
+\alias{vcov.BTabilities}
 \title{ Estimated Abilities from a Bradley-Terry Model }
 \description{
    Computes the (baseline) ability of each player from a model object of
@@ -13,8 +16,12 @@ BTabilities(model)
     \code{TRUE}}
 }
 \value{
-  A two-column numeric matrix, with columns named \dQuote{ability}
-  and \dQuote{se}; one row for each player.
+  A two-column numeric matrix (of class \code{c("BTabilities",
+    "matrix")}, with columns named \dQuote{ability} and \dQuote{se}; has
+  one row for each player; has attributes named \code{"vcov"},
+  \code{"modelcall"}, \code{"factorname"} and (sometimes --- see below)
+  \code{"separate"}.  The first three attributes are not printed
+  by the method \code{print.BTabilities}.
 
   The player abilities are either directly estimated by the model, in
   which case the appropriate parameter estimates are returned, otherwise
