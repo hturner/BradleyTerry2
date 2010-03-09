@@ -111,6 +111,7 @@ if required, by a different symmetric link function (probit or cauchit).
 
 
 \subsection{Example: analysis of journal citations}
+\label{citations}
 
 The following comes from page 448 of \citet{agre:02}, extracted from the larger
 table of \citet{stig:94}.  The data are counts of citations among four prominent
@@ -479,7 +480,7 @@ achieved most economically by appropriate indexing: see, for example,
 \Rcode{?CEMS}, where student-specific variables are stored in a data frame
 with one row per student rather than one row per `contest'.
 
-An offset in the model can be specified
+An offset in the model can be specified by
 using the \Rfunarg{offset} argument to \Rfunction{BTm}.
 
 To use only certain rows of the data in the analysis, the \Rfunarg{subset}
@@ -499,6 +500,19 @@ the \Rfunarg{player1} and \Rfunarg{player2} arguments of \Rfunction{BTm}.
 Such data frame
 should then be included in the list specified as the \Rfunarg{data} argument
 of \Rfunction{BTm} to specify where predictors (and any offset) can be found.
+
+\subsection{Converting data from the format required by the earlier \Rpackage{BradleyTerry} package}
+
+The \Rpackage{BradleyTerry} package described in \citet{firt:05} required contest/comparison results to be in a data frame with columns named \Robject{winner}, \Robject{loser} and \Robject{Freq}.  The following example shows how \Rfunction{xtabs} and \Rfunction{countsToBinomial} can be used to convert such data for use with the \Rfunction{BTm} function in \Rpackage{BradleyTerry2}:
+\begin{Sinput}
+> library(BradleyTerry)  ## the /old/ BradleyTerry package
+> data(citations, package = "BradleyTerry")  ## data frame with columns "winner", "loser", "Freq"
+> citations <- xtabs(Freq ~ winner + loser, citations)  ## convert to 2-way table of counts
+> citations.sf <- countsToBinomial(citations)  ## convert to a data frame of binomial observations
+\end{Sinput}
+The \Robject{citations.sf} data frame can then be used with \Rfunction{BTm} as shown in Section \ref{citations}.
+
+
 
 \section[A list of the functions provided in BradleyTerry2]{A list of the functions provided in \BT}
 
