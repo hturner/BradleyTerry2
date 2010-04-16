@@ -63,9 +63,13 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
             stop("Predictor variables are not of the correct length --",
                  "they probably need indexing in 'formula'.")
         mf2 <- model.frame(mt, data = c(player2, data), na.action = na.pass)
-        if (idterm && !is.null(refcat)){
-            mf1[[id]] <- relevel(mf1[[id]], refcat)
-            mf2[[id]] <- relevel(mf2[[id]], refcat)
+        if (idterm){
+            if (!is.null(refcat)) {
+                mf1[[id]] <- relevel(mf1[[id]], refcat)
+                mf2[[id]] <- relevel(mf2[[id]], refcat)
+            }
+            else
+                refcat <- levels(mf1[[id]])[1]
         }
         offset <- model.offset(mf1)
         if (!is.null(offset)) offset <- offset - model.offset(mf2)
@@ -116,6 +120,6 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
             random <- D[,!sep[[id]]]
     }
     list(X = X, random = random, offset = offset,
-         term.labels = term.labels)
+         term.labels = term.labels, refcat = refcat)
 }
 

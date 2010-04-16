@@ -70,7 +70,7 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
     fit$call <- call
     fit$id <- id
     fit$separate.ability <- separate.ability
-    fit$refcat <- refcat
+    fit$refcat <- setup$refcat
     fit$formula <- setup$formula
     fit$player1 <- setup$player1
     fit$player2 <- setup$player2
