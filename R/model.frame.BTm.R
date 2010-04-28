@@ -8,7 +8,7 @@ model.frame.BTm <- function (formula, ...)
                          names(dots), 0L)]
     if (length(nargs) || is.null(formula$model)) {
         fcall <- formula$call
-        fcall[[1L]] <- as.name("BTm.setup")
+        fcall[[1L]] <- as.name("BradleyTerry2:::BTm.setup")
         fcall[names(nargs)] <- nargs
         env <- environment(formula$terms)
         if (is.null(env))

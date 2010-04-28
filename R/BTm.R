@@ -23,7 +23,8 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
     setup <- match(c("outcome", "player1", "player2", "formula", "id",
                         "separate.ability", "refcat", "data", "weights",
                         "subset", "offset", "contrasts"), names(fcall), 0L)
-    setup <- do.call("BTm.setup", fcall[setup])
+    setup <- as.call(c(quote(BradleyTerry2:::BTm.setup), fcall[setup]))
+    setup <- eval(setup, environment(formula))
     mf <- data.frame(X = setup$X[,1])
     mf$X <- setup$X
     mf$Y <- setup$Y
