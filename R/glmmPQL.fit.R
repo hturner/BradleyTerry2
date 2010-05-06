@@ -211,7 +211,7 @@ glmmPQL.fit <- function(X, y, Z,  weights = rep(1, NROW(y)), start = NULL,
         else QR <- qr(wX)
         R <- qr.R(QR)
     }
-    list(coefficients = fit0$coef,
+    list(coefficients = structure(fit0$coef, random = beta),
          residuals = residuals,
          fitted.values = mu,
          #effect = ?
