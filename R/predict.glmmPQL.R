@@ -1,55 +1,90 @@
-predict.glmmPQL <- function (object, newdata = NULL, type = c("link", "response",
-    "terms"), se.fit = FALSE, dispersion = NULL, terms = NULL,
-    na.action = na.pass, ...) {
-    if (object$sigma == 0) return(NextMethod())
+predict.glmmPQL <- function (object, newdata = NULL, newrandom = NULL, level = 1,
+                             type = c("link", "response", "terms"),
+                             se.fit = FALSE, dispersion = NULL, terms = NULL,
+                             na.action = na.pass, ...) {
+    if (object$sigma == 0 || level == 0) return(NextMethod())
+    type <- match.arg(type)
     if (!is.null(newdata)) {
-        ## need to define Y and X so will work with model terms
-        setup <- match(c("outcome", "player1", "player2", "formula", "id",
-                        "separate.ability", "refcat", "weights",
-                        "subset", "offset", "contrasts"), names(object$call), 0L)
-        setup <- as.call(c(quote(BradleyTerry2:::BTm.setup),
-                           as.list(object$call)[setup],
-                           list(data = newdata)))
-        setup <- eval(setup, environment(object$formula))
-        newdata <- data.frame(X = setup$X[,1])
-        newdata$X <- setup$X
-        newdata$Y <- setup$Y
-        return(NextMethod())
-    }
-    else {
-        ## fitted values from model plus standard errors
-        na.act <- object$na.action
-        fit <- napredict(na.act, fitted(object))
-        absorb <- function(D, c, n) {
-            e1 <- D[n, ]
-            e2 <- e1/c[n]
-            if (n > 1) tcrossprod(e1, e2) + Recall(D, c, n - 1)
-            else tcrossprod(e1, e2)
-        }
-        coef <- c(fixef(object), ranef(object)) ## need functions and ranef here
-        X <- model.matrix(object)
-        Z <- object$random
-        D <- cbind(X, Z)
-        pred <- c(D %*% coef)
-        type <- match.arg(type)
+        ## newdata should give variables in model formula
+        ## newrandom should give new design matrix for random effects
+        tt <- terms(object)
+        Terms <- delete.response(tt)
+        m <- model.frame(Terms, newdata, na.action = na.action,
+                         xlev = object$xlevels)
+        if (!is.null(cl <- attr(Terms, "dataClasses")))
+            .checkMFClasses(cl, m)
+        D <- model.matrix(Terms, m, contrasts.arg = object$contrasts)
+        np <- nrow(D) # n predictions
+        offset <- rep(0, np)
+        if (!is.null(off.num <- attr(tt, "offset")))
+            for (i in off.num) offset <- offset + eval(attr(tt,
+                "variables")[[i + 1]], newdata)
+        if (!is.null(object$call$offset))
+            offset <- offset + eval(object$call$offset, newdata)
+        if (is.null(newrandom) || dim(newrandom) != c(np, ncol(object$random)))
+            stop("newrandom should have ", np, " rows and ",
+                 ncol(object$random), " columns")
+        D <- cbind(D, newrandom)
+        coef <- c(fixef(object), ranef(object))
+        pred <- napredict(na.action, c(D %*% coef) + offset)
         pred <- switch(type,
                        "link" = pred,
                        "response" = family(object)$linkinv(pred),
                        "terms") ## need to fix
+
         if (se.fit == TRUE) {
+            absorb <- function(D, c, n) {
+                if (n > 1) unname(D[, n]^2/c[n]) + Recall(D, c, n - 1)
+                else  unname(D[, n]^2/c[n])
+            }
             sigma <- object$sigma
+            X <- model.matrix(object)
+            Z <- object$random
             w <- object$weights
             c <- colSums(w * X^2)
             c <- c(c, colSums(w * Z^2) + 1/sigma^2)
-            browser()
-            ## absorb -> D %*% chol2inv(chol(C)) %*% t(D) = -var(eta)
-            se.pred <- sqrt(diag(absorb(t(D), c, length(c))))
+            ## absorb -> diag(D %*% chol2inv(chol(C)) %*% t(D)) = var(eta)
+            se.pred <- sqrt(absorb(D[,ord], c[ord], length(c)))
             se.pred <- switch(type,
                               "link" = se.pred,
                               "response" = se.pred * abs(family(object)$mu.eta(pred)),
                               "terms")
             return(list(fit = pred, se.fit = se.pred))
         }
+
+        return(pred)
+    }
+    else {
+        ## fitted values from model plus standard errors
+        ## D %*% coef + object$offset
+        na.act <- object$na.action
+        pred <- napredict(na.act, object$linear.predictors)
+        pred <- switch(type,
+                       "link" = pred,
+                       "response" = family(object)$linkinv(pred),
+                       "terms") ## need to fix
+
+        if (se.fit == TRUE) {
+            absorb <- function(D, c, n) {
+                if (n > 1) D[, n]^2/c[n] + Recall(D, c, n - 1)
+                else  D[, n]^2/c[n]
+            }
+            X <- model.matrix(object)
+            Z <- object$random
+            D <- cbind(X, Z)
+            sigma <- object$sigma
+            w <- object$weights
+            c <- colSums(w * X^2)
+            c <- c(c, colSums(w * Z^2) + 1/sigma^2)
+            ## absorb -> diag(D %*% chol2inv(chol(C)) %*% t(D)) = var(eta)
+            se.pred <- sqrt(absorb(D, c, length(c)))
+            se.pred <- switch(type,
+                              "link" = se.pred,
+                              "response" = se.pred * abs(family(object)$mu.eta(pred)),
+                              "terms")
+            return(list(fit = pred, se.fit = se.pred))
+        }
+
         return(pred)
     }
 }
