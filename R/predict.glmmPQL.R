@@ -34,8 +34,10 @@ predict.glmmPQL <- function (object, newdata = NULL, newrandom = NULL, level = 1
 
         if (se.fit == TRUE) {
             absorb <- function(D, c, n) {
-                if (n > 1) unname(D[, n]^2/c[n]) + Recall(D, c, n - 1)
-                else  unname(D[, n]^2/c[n])
+                e1 <- D[n, ]
+                e2 <- e1/c[n]
+                if (n > 1) tcrossprod(e1, e2) + Recall(D, c, n - 1)
+                else tcrossprod(e1, e2)
             }
             sigma <- object$sigma
             X <- model.matrix(object)
@@ -44,7 +46,7 @@ predict.glmmPQL <- function (object, newdata = NULL, newrandom = NULL, level = 1
             c <- colSums(w * X^2)
             c <- c(c, colSums(w * Z^2) + 1/sigma^2)
             ## absorb -> diag(D %*% chol2inv(chol(C)) %*% t(D)) = var(eta)
-            se.pred <- sqrt(absorb(D[,ord], c[ord], length(c)))
+            se.pred <- sqrt(absorb(D, length(c)))
             se.pred <- switch(type,
                               "link" = se.pred,
                               "response" = se.pred * abs(family(object)$mu.eta(pred)),
@@ -65,9 +67,13 @@ predict.glmmPQL <- function (object, newdata = NULL, newrandom = NULL, level = 1
                        "terms") ## need to fix
 
         if (se.fit == TRUE) {
-            absorb <- function(D, c, n) {
-                if (n > 1) D[, n]^2/c[n] + Recall(D, c, n - 1)
-                else  D[, n]^2/c[n]
+            absorb <- function(C, n, p) {
+                N <- n + p
+                f <- C[N, N]
+                e <- C[N, -N]
+                C <- C[-N,-N] - tcrossprod(e)/f
+                if (n > 1) Recall(C, n - 1, p)
+                else  C
             }
             X <- model.matrix(object)
             Z <- object$random
@@ -76,8 +82,19 @@ predict.glmmPQL <- function (object, newdata = NULL, newrandom = NULL, level = 1
             w <- object$weights
             c <- colSums(w * X^2)
             c <- c(c, colSums(w * Z^2) + 1/sigma^2)
+              wX <- sqrt(w) * X
+            wZ <- sqrt(w) * Z
+            XWX <- crossprod(wX)
+            XWZ <- crossprod(wX, wZ)
+            ZWZ <- crossprod(wZ, wZ)
+            diag(ZWZ) <- diag(ZWZ) + 1/sigma^2
+            C <- cbind(XWX, XWZ)
+            C <- rbind(C, cbind(t(XWZ), ZWZ))
+            O <- matrix(0, nrow(D), nrow(D))
+            B <- rbind(cbind(O, D), cbind(t(D), C))
+            browser()
             ## absorb -> diag(D %*% chol2inv(chol(C)) %*% t(D)) = var(eta)
-            se.pred <- sqrt(absorb(D, c, length(c)))
+            se.pred <- sqrt(absorb(B, length(c), nrow(D)))
             se.pred <- switch(type,
                               "link" = se.pred,
                               "response" = se.pred * abs(family(object)$mu.eta(pred)),
