@@ -67,13 +67,14 @@ predict.glmmPQL <- function (object, newdata = NULL, newrandom = NULL, level = 1
                        "terms") ## need to fix
 
         if (se.fit == TRUE) {
-            absorb <- function(C, n, p) {
-                N <- n + p
-                f <- C[N, N]
-                e <- C[N, -N]
-                C <- C[-N,-N] - tcrossprod(e)/f
-                if (n > 1) Recall(C, n - 1, p)
-                else  C
+            absorb <- function(D, C, n) {
+                f <- C[n, n]
+                e <- C[n, -n]
+                d <- D[n, ]
+                D <- D[-n, ] - tcrossprod(e/f, d)
+                C <- C[-n, -n] - tcrossprod(e/f, e)
+                if (n > 1) d^2/f + Recall(D, C, n - 1)
+                else  d^2/f
             }
             X <- model.matrix(object)
             Z <- object$random
@@ -90,11 +91,9 @@ predict.glmmPQL <- function (object, newdata = NULL, newrandom = NULL, level = 1
             diag(ZWZ) <- diag(ZWZ) + 1/sigma^2
             C <- cbind(XWX, XWZ)
             C <- rbind(C, cbind(t(XWZ), ZWZ))
-            O <- matrix(0, nrow(D), nrow(D))
-            B <- rbind(cbind(O, D), cbind(t(D), C))
             browser()
             ## absorb -> diag(D %*% chol2inv(chol(C)) %*% t(D)) = var(eta)
-            se.pred <- sqrt(absorb(B, length(c), nrow(D)))
+            se.pred <- sqrt(absorb(t(D), C, length(c), nrow(D)))
             se.pred <- switch(type,
                               "link" = se.pred,
                               "response" = se.pred * abs(family(object)$mu.eta(pred)),
