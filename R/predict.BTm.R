@@ -2,6 +2,7 @@ predict.BTm <- function (object, newdata = NULL, level = 0,
                          type = c("link", "response", "terms"), se.fit = FALSE,
                          dispersion = NULL, terms = NULL,
                          na.action = na.pass, ...) {
+    type <- match.arg(type)
     if (!is.null(newdata)) {
         ## need to define X so will work with model terms
         setup <- match(c("player1", "player2", "formula", "id",
@@ -19,9 +20,8 @@ predict.BTm <- function (object, newdata = NULL, level = 0,
             X[, colnames(setup$X)] <- setup$X
             setup$X <- X
         }
-        newdata <- data.frame(X = setup$X[,1])
-        newdata$X <- setup$X # only need X for prediction (not Y)
-        if (1 %in% level && ncol(setup$random) != length(ranef(object))){
+        if (1 %in% level && type != "terms" &&
+            ncol(setup$random) != length(ranef(object))){
             ## expand to give col for every random effect
             Z <- matrix(0, nrow(setup$random), length(ranef(object)),
                         dimnames = list(rownames(setup$random),
@@ -34,9 +34,28 @@ predict.BTm <- function (object, newdata = NULL, level = 0,
                 Z[miss,] <- NA
             }
             setup$random <- Z
+            return(NextMethod(newrandom = newrandom))
         }
-        return(NextMethod(newrandom = setup$random))
     }
-    else
-        NextMethod()
+    if (type == "terms") {
+        object$x <- model.matrix(object)
+        attr(object$x, "assign") <- object$assign
+        object$terms <- terms(reformulate(c(0, terms)))
+        id <- unique(object$assign)
+        terms <- paste("X", id, sep = "")
+        splitX <- function(X) {
+            newdata <- data.frame(matrix(, nrow(X), 0))
+            for (i in seq(id))
+                newdata[terms[i]] <- setup$X[,object$assign == id[i]]
+        }
+        if (is.null(newdata)) newdata <- splitX(object$x)
+        else newdata <- splitX(setup$X)
+        tmp <- NextMethod(newdata = newdata)
+        tmp$fit[tmp$se.fit == 0] <- NA
+        tmp$se.fit[tmp$se.fit == 0] <- NA
+        colnames(tmp$fit) <- colnames(tmp$se.fit) <-
+            c("(separate)"[0 %in% id], object$term.labels)
+        return(tmp)
+    }
+    else NextMethod()
 }

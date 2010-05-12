@@ -2,17 +2,12 @@ predict.glmmPQL <- function (object, newdata = NULL, newrandom = NULL,
                              level = 1, type = c("link", "response", "terms"),
                              se.fit = FALSE, dispersion = NULL, terms = NULL,
                              na.action = na.pass, ...) {
-    if (object$sigma == 0 || type == "terms") return(NextMethod())
-    if (0 %in% level) {
-        if (!is.null(newdata)) lev0 <- NextMethod()
-        else lev0 <- NextMethod("predict", object, newdata = object$data)
-        if (identical(level, 0)) return(lev0)
-    }
+    ## only pass on if a glm
+    if (object$sigma == 0) return(NextMethod())
     type <- match.arg(type)
+    if (!null(newdata) || type == "terms") tt <- terms(object)
     if (!is.null(newdata)) {
-        ## newdata should give variables in model formula
-        ## newrandom should give new design matrix for random effects
-        tt <- terms(object)
+        ## newdata should give variables in terms formula
         Terms <- delete.response(tt)
         m <- model.frame(Terms, newdata, na.action = na.action,
                          xlev = object$xlevels)
@@ -26,46 +21,87 @@ predict.glmmPQL <- function (object, newdata = NULL, newrandom = NULL,
                 "variables")[[i + 1]], newdata)
         if (!is.null(object$call$offset))
             offset <- offset + eval(object$call$offset, newdata)
-        if (is.null(newrandom) || dim(newrandom) != c(np, ncol(object$random)))
-            stop("newrandom should have ", np, " rows and ",
-                 ncol(object$random), " columns")
-        browser()
-        D <- cbind(D, newrandom)
-        coef <- c(fixef(object), ranef(object))
-        pred <- napredict(na.action, c(D %*% coef) + offset)
-        if (type == "response")
-            pred <- family(object)$linkinv(pred)
     }
     else {
+        D <- model.matrix(object)
+        newrandom <- object$random
         na.action <- object$na.action
-        pred <- napredict(na.action, object$linear.predictors)
-        if (type == "response")
-            pred <- family(object)$linkinv(pred)
     }
     if (se.fit == TRUE) {
-        X <- model.matrix(object)
-        Z <- object$random
-        if (is.null(newdata)) D <- cbind(X, Z)
         sigma <- object$sigma
         w <- object$weights
-        wX <- sqrt(w) * X
-        wZ <- sqrt(w) * Z
+        wX <- sqrt(w) * D
+        wZ <- sqrt(w) * newrandom
         XWX <- crossprod(wX)
         XWZ <- crossprod(wX, wZ)
         ZWZ <- crossprod(wZ, wZ)
         diag(ZWZ) <- diag(ZWZ) + 1/sigma^2
         C <- cbind(XWX, XWZ)
-        C <- rbind(C, cbind(t(XWZ), ZWZ))
-        ## diag(D %*% chol2inv(chol(C)) %*% t(D)) = var(eta)
+        C <- chol(rbind(C, cbind(t(XWZ), ZWZ)))
+    }
+    if (type == "terms") { # ignore level
+        coef <- fixef(object)
+        aa <- attr(D, "assign")
+        ll <- attr(tt, "term.labels")
+        hasintercept <- attr(tt, "intercept") > 0L
+        if (hasintercept) {
+            ll <- c("(Intercept)", ll)
+            avx <- colMeans(model.matrix(object))
+            termsconst <- sum(avx * coef) #NA coefs?
+            D <- sweep(D, 2, avx)
+        }
+        pred0 <- t(rowsum(t(D %*% diag(naToZero(coef))),
+                          attr(D, "assign")))
+        colnames(pred0) <- ll
+        if (se.fit) {
+            se.pred <- pred
+            ## equiv to D %*% solve(C)[sub, sub] %*% t(D)
+            p <- ncol(D)
+            H <- backsolve(C, diag(nrow = p), transpose = TRUE)
+            for (i in seq(length.out = length(ll)))
+                se.pred[, i] <- sqrt(colSums((D %*% H[,[1:p][aa == i]])^2))
+        }
+    }
+    if (0 %in% level) {
+        pred0 <- napredict(na.action, c(D %*% fixef(object)) + offset)
+        if (type == "response")
+            pred0 <- family(object)$linkinv(pred0)
+        if (se.fit == TRUE) {
+            D <- na.exclude(D)
+            ## get submatrix of full C^(-1)
+            p <- ncol(D)
+            #H <- backsolve(C, diag(nrow = p), transpose = TRUE)
+            #se.pred[, i] <- sqrt(colSums((D %*% H[,[1:p]])^2))
+            se.pred0 <- sqrt(diag(D %*% tcrossprod(chol2inv(C)[1:p, 1:p], D)))
+            se.pred0 <- napredict(na.action,
+                                  napredict(attr(D, "na.action"), se.pred0))
+           if (type == "response")
+               se.pred0 <- se.pred0*abs(family(object)$mu.eta(pred)))
+            pred0 <- list(fit = pred0, se.fit = se.pred0)
+        }
+    }
+    if (1 %in% level) {
+        ## newrandom should give new design matrix for original random effects
+        if (is.null(newrandom) || dim(newrandom) != c(np, ncol(object$random)))
+            stop("newrandom should have ", np, " rows and ",
+                 ncol(object$random), " columns")
+        D <- cbind(D, newrandom)
+        coef <- c(fixef(object), ranef(object))
+            pred1 <- napredict(na.action, c(D %*% coef) + offset)
+            if (type == "response")
+                pred1 <- family(object)$linkinv(pred1)
+        }
+      if (se.fit == TRUE) {
+        ## diag(D %*% chol2inv(C) %*% t(D)) = var(eta)
         D <- na.exclude(D)
-        H <- backsolve(chol(C), t(D), transpose = TRUE)
+        H <- backsolve(C, t(D), transpose = TRUE)
         se.pred <- napredict(na.action,
                              napredict(attr(D, "na.action"), sqrt(colSums(H^2))))
-        se.pred <- switch(type,
-                          "link" = se.pred,
-                          "response" = se.pred*abs(family(object)$mu.eta(pred)))
+        if (type == "response")
+            se.pred <- se.pred*abs(family(object)$mu.eta(pred)))
         pred <- list(fit = pred, se.fit = se.pred)
     }
+
     if (0 %in% level)
         list(population = lev0, individual = pred)
     else pred
