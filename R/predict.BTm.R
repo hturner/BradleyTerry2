@@ -18,7 +18,8 @@ predict.BTm <- function (object, newdata = NULL, level = 0,
                         dimnames = list(rownames(setup$X),
                         names(fixef(object))))
             X[, colnames(setup$X)] <- setup$X
-            setup$X <- X
+            newdata <- data.frame(matrix(, nrow(X), 0))
+            newdata$X <- X
         }
         if (1 %in% level && type != "terms" &&
             ncol(setup$random) != length(ranef(object))){
@@ -33,23 +34,24 @@ predict.BTm <- function (object, newdata = NULL, level = 0,
                 miss <- rowSums(setup$random[, miss, drop = FALSE] != 0) > 0
                 Z[miss,] <- NA
             }
-            setup$random <- Z
+            newrandom <- Z
             return(NextMethod(newrandom = newrandom))
         }
     }
     if (type == "terms") {
         object$x <- model.matrix(object)
         attr(object$x, "assign") <- object$assign
-        object$terms <- terms(reformulate(c(0, terms)))
         id <- unique(object$assign)
         terms <- paste("X", id, sep = "")
-        splitX <- function(X) {
+        object$terms <- terms(reformulate(c(0, terms)))
+        splitX <- function(X, assign) {
             newdata <- data.frame(matrix(, nrow(X), 0))
             for (i in seq(id))
-                newdata[terms[i]] <- setup$X[,object$assign == id[i]]
+                newdata[terms[i]] <- setup$X[,assign == id[i]]
+            newdata
         }
-        if (is.null(newdata)) newdata <- splitX(object$x)
-        else newdata <- splitX(setup$X)
+        if (is.null(newdata)) newdata <- splitX(object$x, object$assign)
+        else newdata <- splitX(setup$X, setup$assign)
         tmp <- NextMethod(newdata = newdata)
         tmp$fit[tmp$se.fit == 0] <- NA
         tmp$se.fit[tmp$se.fit == 0] <- NA
