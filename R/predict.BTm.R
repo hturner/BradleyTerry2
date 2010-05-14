@@ -44,14 +44,23 @@ predict.BTm <- function (object, newdata = NULL, level = 0,
         id <- unique(object$assign)
         terms <- paste("X", id, sep = "")
         object$terms <- terms(reformulate(c(0, terms)))
-        splitX <- function(X, assign) {
+        splitX <- function(X) {
             newdata <- data.frame(matrix(, nrow(X), 0))
             for (i in seq(id))
-                newdata[terms[i]] <- setup$X[,assign == id[i]]
+                newdata[terms[i]] <- X[,object$assign == id[i]]
             newdata
         }
-        if (is.null(newdata)) newdata <- splitX(object$x, object$assign)
-        else newdata <- splitX(setup$X, setup$assign)
+        if (is.null(newdata)) newdata <- splitX(object$x)
+        else newdata <- splitX(newdata$X)
+        newdata <- data.frame(matrix(, nrow(X), 0))
+        if (is.null(newdata)){
+            for (i in seq(id))
+                newdata[terms[i]] <- object$x[,object$assign == id[i]]
+        }
+        else {
+            for (i in seq(id))
+                newdata[terms[i]] <- newdata$X[,object$assign == id[i]]
+        }
         tmp <- NextMethod(newdata = newdata)
         tmp$fit[tmp$se.fit == 0] <- NA
         tmp$se.fit[tmp$se.fit == 0] <- NA
