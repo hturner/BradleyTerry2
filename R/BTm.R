@@ -25,6 +25,9 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
                         "subset", "offset", "contrasts"), names(fcall), 0L)
     setup <- as.call(c(quote(BradleyTerry2:::BTm.setup), fcall[setup]))
     setup <- eval(setup, environment(formula))
+    if (!is.null(setup$saturated))
+        warning("Player ability saturated - equivalent to fitting ",
+                "separate abilities.")
     mf <- data.frame(X = setup$X[,1])
     mf$X <- setup$X
     mf$Y <- setup$Y

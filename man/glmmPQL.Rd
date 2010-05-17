@@ -106,8 +106,49 @@ glmmPQL(fixed, random = NULL, family = binomial, data = NULL,
 }
 \value{
   An object of class \code{"glmmPQL"} which inherits from \code{"glm"}
-  and \code{"lm"}. Components are as for \code{"glm"} objects, except
-  that there is no \code{effect} component and there is additionally
+  and \code{"lm"}:
+  \item{coefficients}{ a named vector of coefficients, with a
+    \code{"random"} attribute giving the estimated random effects.}
+  \item{residuals}{ the working residuals from the final iteration of
+    the IWLS loop.}
+  \item{random}{the design matrix for the random effects.}
+  \item{fitted.values}{ the fitted mean values, obtained by transforming the
+    linear predictors by the inverse of the link function.}
+  \item{rank}{the numeric rank of the fitted linear model.}
+  \item{family}{the \code{family} object used.}
+  \item{linear.predictors}{the linear fit on link scale.}
+  \item{deviance}{up to a constant, minus twice the maximized
+    log-likelihood.}
+  \item{aic}{a version of Akaike's \emph{An Information Criterion}, minus twice
+    the maximized log-likelihood plus twice the number of
+    parameters, computed by the \code{aic} component of the
+    family.}
+  \item{null.deviance}{the deviance for the null model, comparable with
+    \code{deviance}.}
+  \item{iter}{the numer of iterations of the PQL algorithm.}
+  \item{weights}{the working weights, that is the weights in the final
+    iteration of the IWLS loop.}
+  \item{prior.weights}{the weights initially supplied, a vector of
+    \code{1}'s if none were.}
+  \item{df.residual}{the residual degrees of freedom.}
+  \item{df.null}{the residual degrees of freedom for the null model.}
+  \item{y}{if requested (the default) the \code{y} vector used. (It is a
+    vector even for a binomial model.)}
+  \item{x}{if requested, the model matrix.}
+  \item{model}{if requested (the default), the model frame.}
+  \item{converged}{logical. Was the PQL algorithm judged to have
+    converged?}
+  \item{call}{the matched call.}
+  \item{formula}{the formula supplied.}
+  \item{terms}{the \code{terms} object used.}
+  \item{data}{the \code{data} argument used.}
+  \item{offset}{the offset vector used.}
+  \item{control}{the value of the \code{control} argument used.}
+  \item{contrasts}{(where relevant) the contrasts used.}
+  \item{xlevels}{(where relevant) a record of the levels of the factors used
+    in fitting.}
+  \item{na.action}{(where relevant) information returned by \code{model.frame} on
+          the special handling of \code{NA}s.}
   \item{sigma}{the estimated standard deviation of the random effects}
   \item{sigma.fixed}{logical: whether or not \code{sigma} was fixed}
   \item{varFix}{the variance-covariance matrix of the fixed effects}

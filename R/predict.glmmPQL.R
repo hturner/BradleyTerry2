@@ -1,6 +1,6 @@
 predict.glmmPQL <- function (object, newdata = NULL, newrandom = NULL,
                              level = 1, type = c("link", "response", "terms"),
-                             se.fit = FALSE, dispersion = NULL, terms = NULL,
+                             se.fit = FALSE, terms = NULL,
                              na.action = na.pass, ...) {
     ## only pass on if a glm
     if (object$sigma == 0) {
@@ -56,30 +56,37 @@ predict.glmmPQL <- function (object, newdata = NULL, newrandom = NULL,
         }
     }
     if (type == "terms") { # ignore level
+        if (1 %in% level)
+            warning("type = \"terms\": setting level to 0", call. = FALSE)
         coef <- coef(object) #fixef
         aa <- attr(D, "assign")
         ll <- attr(tt, "term.labels")
+        if (!is.null(terms)) {
+            include <- ll %in% terms
+            ll <- ll[include]
+        }
         hasintercept <- attr(tt, "intercept") > 0L
         if (hasintercept) {
-            ll <- c("(Intercept)", ll)
             avx <- colMeans(model.matrix(object))
             termsconst <- sum(avx * coef) #NA coefs?
             D <- sweep(D, 2, avx)
         }
-        naToZero <- function(x){ x[is.na(x)] <- 0; x}
-        pred0 <- t(rowsum(t(D %*% diag(naToZero(coef))),
-                          attr(D, "assign")))
+        pred0 <- matrix(ncol = length(ll), nrow = NROW(D))
         colnames(pred0) <- ll
         if (se.fit) {
             A <- chol2inv(A)
             se.pred0 <- pred0
-            for (i in seq(length.out = length(ll))){
-                ind <- aa == i
-                se.pred0[, i] <-  sqrt(diag(D[, ind] %*%
-                                           tcrossprod(A[ind, ind], D[, ind])))
-            }
-            return(list(fit = pred0, se.fit = se.pred0))
         }
+        for (i in seq(length.out = length(ll))){
+            ind <- aa == which(attr(tt, "term.labels") == ll[i])
+            pred0[, i] <- D[, ind, drop = FALSE] %*% coef[ind]
+            if (se.fit) {
+                se.pred0[, i] <-  sqrt(diag(D[, ind] %*%
+                                            tcrossprod(A[ind, ind], D[, ind])))
+            }
+        }
+        if (hasintercept) attr(pred0, "constant") <- termsconst
+        if (se.fit) return(list(fit = pred0, se.fit = se.pred0))
         return(pred0)
     }
     if (0 %in% level) {

@@ -52,17 +52,8 @@ predict.BTm <- function (object, newdata = NULL, level = 0,
         }
         if (is.null(newdata)) newdata <- splitX(object$x)
         else newdata <- splitX(newdata$X)
-        newdata <- data.frame(matrix(, nrow(X), 0))
-        if (is.null(newdata)){
-            for (i in seq(id))
-                newdata[terms[i]] <- object$x[,object$assign == id[i]]
-        }
-        else {
-            for (i in seq(id))
-                newdata[terms[i]] <- newdata$X[,object$assign == id[i]]
-        }
         tmp <- NextMethod(newdata = newdata)
-        tmp$fit[tmp$se.fit == 0] <- NA
+        #tmp$fit[tmp$se.fit == 0] <- NA
         tmp$se.fit[tmp$se.fit == 0] <- NA
         colnames(tmp$fit) <- colnames(tmp$se.fit) <-
             c("(separate)"[0 %in% id], object$term.labels)

@@ -84,7 +84,8 @@ glmmPQL <- function(fixed, random = NULL, family = binomial, data = NULL,
     fit$na.action <- attr(modelData, "na.action")
     if (x)
         fit$x <- X
-    fit <- c(fit, list(call = call, formula = fixed, terms = modelTerms,
+    fit <- c(fit, list(call = call, formula = fixed, random = random,
+                       terms = modelTerms,
                        data = data, offset = offset, control = control,
                        method = "glmmPQL.fit", contrasts = attr(X, "contrasts"),
                        xlevels = .getXlevels(modelTerms, modelData)))
