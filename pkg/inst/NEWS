@@ -1,0 +1,13 @@
+Changes in BradleyTerry 0.9-3
+=============================
+
+New Features
+------------
+
+    o	added predict method for BTm objects.
+
+Bug fixes
+---------
+
+    o	fixed bug in BTm.setup causing problems in finding variables when BTm
+    nested within another function.

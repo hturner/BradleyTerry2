@@ -12,19 +12,20 @@ predict.BTm <- function (object, newdata = NULL, level = 0,
                            as.list(object$call)[setup],
                            list(data = newdata)))
         setup <- eval(setup, environment(object$formula))
-        if (ncol(setup$X) != length(fixef(object))){
+        nfix <- length(object$coefficients)
+        if (ncol(setup$X) != nfix){
             ## will be due to separate abilities - else error by now
-            X <- matrix(0, nrow(setup$X), length(fixef(object)),
+            X <- matrix(0, nrow(setup$X), nfix,
                         dimnames = list(rownames(setup$X),
-                        names(fixef(object))))
+                        names(object$coefficients)))
             X[, colnames(setup$X)] <- setup$X
             newdata <- data.frame(matrix(, nrow(X), 0))
             newdata$X <- X
         }
-        if (1 %in% level && type != "terms" &&
-            ncol(setup$random) != length(ranef(object))){
+        nran <- length(attr(object$coefficients, "random"))
+        if (1 %in% level && type != "terms" && ncol(setup$random) != nran){
             ## expand to give col for every random effect
-            Z <- matrix(0, nrow(setup$random), length(ranef(object)),
+            Z <- matrix(0, nrow(setup$random), nran,
                         dimnames = list(rownames(setup$random),
                         colnames(object$random))) #ranef need names!!
             ## set to NA for contests with new players

@@ -20,6 +20,7 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
 
     fixed <- lme4:::nobars(formula)
     offset <- missing <- NULL
+    saturated <- FALSE
     if (!is.null(fixed)) {
         mt <- terms(fixed)
         factors <- attr(mt, "factors")

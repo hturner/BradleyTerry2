@@ -8,7 +8,7 @@ Obtain predictions and optionally standard errors of
 those predictions from a \code{"glmmPQL"} object.
 }
 \usage{
-predict.glmmPQL(object, newdata = NULL, newrandom = NULL, level = 1, type = c("link", "response", "terms"), se.fit = FALSE, terms = NULL, na.action = na.pass, ...)
+\method{predict}{glmmPQL}(object, newdata = NULL, newrandom = NULL, level = 1, type = c("link", "response", "terms"), se.fit = FALSE, terms = NULL, na.action = na.pass, ...)
 }
 \arguments{
   \item{object}{
@@ -98,5 +98,5 @@ pred <- predict(seedsModel, level = 0)
 predTerms <- predict(seedsModel, type = "terms")
 
 identical(pred, rowSums(predTerms) + attr(predTerms, "constant"))
-
+}
 \keyword{ models }
