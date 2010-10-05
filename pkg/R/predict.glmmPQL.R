@@ -15,6 +15,7 @@ predict.glmmPQL <- function (object, newdata = NULL, newrandom = NULL,
         Terms <- delete.response(tt)
         m <- model.frame(Terms, newdata, na.action = na.action,
                          xlev = object$xlevels)
+        na.action <- attr(m, "na.action")
         if (!is.null(cl <- attr(Terms, "dataClasses")))
             .checkMFClasses(cl, m)
         D <- model.matrix(Terms, m, contrasts.arg = object$contrasts)
@@ -94,11 +95,10 @@ predict.glmmPQL <- function (object, newdata = NULL, newrandom = NULL,
         if (type == "response")
             pred0 <- family(object)$linkinv(pred0)
         if (se.fit == TRUE) {
-            D <- na.exclude(D)
-            H <- backsolve(A, t(D), transpose = TRUE)
+            na.act <- attr(na.exclude(pred0), "na.action")
+            H <- backsolve(A, t(na.exclude(D)), transpose = TRUE)
             ## se.pred0 <- sqrt(diag(D %*% chol2inv(C)[1:ncol(D), 1:ncol(D)] %*% t(D)))
-            se.pred0 <- napredict(na.action,
-                                  napredict(attr(D, "na.action"), sqrt(colSums(H^2))))
+            se.pred0 <- napredict(na.action, napredict(na.act, sqrt(colSums(H^2))))
            if (type == "response")
                se.pred0 <- se.pred0*abs(family(object)$mu.eta(pred0))
             pred0 <- list(fit = pred0, se.fit = se.pred0)
@@ -108,7 +108,13 @@ predict.glmmPQL <- function (object, newdata = NULL, newrandom = NULL,
 
     r <- nrow(D)
     ## newrandom should give new design matrix for original random effects
-    if (is.null(newrandom) || dim(newrandom) != c(r, ncol(object$random)))
+    if (!is.null(newdata)){
+        if(is.null(newrandom))
+            stop("newdata specified without newrandom")
+        if (!is.null(na.action))
+            newrandom <- newrandom[-na.action, , drop = FALSE]
+    }
+    if (!identical(dim(newrandom), c(r, ncol(object$random))))
         stop("newrandom should have ", r, " rows and ",
              ncol(object$random), " columns")
     D <- cbind(D, newrandom)
@@ -118,10 +124,9 @@ predict.glmmPQL <- function (object, newdata = NULL, newrandom = NULL,
         pred <- family(object)$linkinv(pred)
     if (se.fit == TRUE) {
         ##se.pred <- sqrt(diag(D %*% chol2inv(C) %*% t(D)))
-        D <- na.exclude(D)
-        H <- backsolve(C, t(D), transpose = TRUE)
-        se.pred <- napredict(na.action,
-                             napredict(attr(D, "na.action"), sqrt(colSums(H^2))))
+        na.act <- attr(na.exclude(pred), "na.action")
+        H <- backsolve(C, t(na.exclude(D)), transpose = TRUE)
+        se.pred <- napredict(na.action, napredict(na.act, sqrt(colSums(H^2))))
         if (type == "response")
             se.pred <- se.pred*abs(family(object)$mu.eta(pred))
         pred <- list(fit = pred, se.fit = se.pred)

@@ -114,7 +114,7 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
     if (length(sep)) {
         attr(X, "assign") <- attr(X, "assign") - 1
         if (!is.null(random))
-            random <- D[,!sep[[id]]]
+            random <- D[,!sep[[id]], drop = FALSE]
     }
     list(X = X, random = random, offset = offset,
          term.labels = term.labels, refcat = refcat, saturated = saturated)

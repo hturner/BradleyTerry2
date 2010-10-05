@@ -1,0 +1,120 @@
+\name{icehockey}
+\alias{icehockey}
+\docType{data}
+\title{
+   College Hockey Men's Division I 2009-10 results
+}
+\description{
+  Game results from American College Hockey Men's Division I composite
+  schedule 2009-2010.
+}
+\usage{data(icehockey)}
+\format{
+  A data frame with 1083 observations on the following 6 variables.
+  \describe{
+    \item{\code{date}}{a numeric vector}
+    \item{\code{visitor}}{a factor with 58 levels \code{Alaska Anchorage} ... \code{Yale}}
+    \item{\code{v_goals}}{a numeric vector}
+    \item{\code{opponent}}{a factor with 58 levels \code{Alaska Anchorage} ... \code{Yale}}
+    \item{\code{o_goals}}{a numeric vector}
+    \item{\code{conference}}{a factor with levels \code{AH}, \code{CC},
+      \code{CH}, \code{EC}, \code{HE}, \code{NC}, \code{WC}}
+    \item{\code{result}}{a numeric vector: 1 if visitor won, 0.5 for a
+      draw and 0 if visitor lost}
+    \item{\code{home.ice}}{a logical vector: 1 if opponent on home ice,
+      0 if game on neutral ground}
+  }
+}
+\details{
+  The Division I ice hockey teams are arranged in six conferences:
+  Atlantic Hockey, Central Collegiate Hockey Association, College Hockey
+  America, ECAC Hockey, Hockey East and the Western Collegiate Hockey
+  Association, all part of the National Collegiate Athletic
+  Association. The composite schedule includes within conference games
+  and between conference games.
+
+  The data set here contains only games from the regular season, the
+  results of which determine the teams that play in the NCAA national
+  tournament. There are six automatic bids that go to the conference
+  tournament champions, the remaining 10 teams are selected based upon
+  ranking under the NCAA's system of pairwise comparisons
+  (\url{http://www.collegehockeynews.com/info/?d=pwcrpi}). Some have
+  argued that Bradley-Terry rankings would be fairer
+  (http://www.collegehockeynews.com/info/?d=krach).
+}
+\source{
+  \url{"http://www.collegehockeystats.net/0910/schedules/men"}
+}
+\references{
+  Schlobotnik, J. Build Your Own Rankings.
+  \url{http://slack.net/~whelan/tbrw/2010/rankings.diy.shtml}
+
+  \url{http://www.collegehockeynews.com}
+
+  Selections for 2010 NCAA Tournament.
+  \url{http://sports.espn.go.com/ncaa/news/story?id=5012918}
+}
+\examples{
+data(icehockey)
+### Fit the standard Bradley-Terry model
+standardBT <- BTm(outcome = result,
+    player1 = visitor, player2 = opponent,
+    id = "team", data = icehockey)
+
+## Bradley-Terry abilities
+abilities <- exp(BTabilities(standardBT)[,1])
+
+## Compute round-robin winning probability and KRACH ratings
+## (scaled abilities such that KRACH = 100 for a team with
+## round-robin winning probability of 0.5)
+rankings <- function(abilities){
+    probwin <- abilities/outer(abilities, abilities, "+")
+    diag(probwin) <- 0
+    nteams <- ncol(probwin)
+    RRWP <- rowSums(probwin)/(nteams - 1)
+    low <- quantile(abilities, 0.45)
+    high <- quantile(abilities, 0.55)
+    middling <- uniroot(function(x) {sum(x/(x+abilities)) - 0.5*nteams},
+                        lower = low, upper = high)$root
+    KRACH <- abilities/middling*100
+    cbind(KRACH, RRWP) 
+}
+
+ranks <- rankings(abilities)
+## matches those produced by Joe Schlobotnik's Build Your Own Rankings 
+head(signif(ranks, 4)[order(ranks[,1], decreasing = TRUE),])
+
+## At one point the NCAA rankings gave more credit for wins on
+## neutral/opponent's ground. Home ice effects are easily
+## incorporated into the Bradley-Terry model, comparing teams
+## on a "level playing field"
+levelBT <- BTm(result,
+               data.frame(team = visitor, home.ice = 0),
+               data.frame(team = opponent, home.ice = home.ice),
+               ~ team + home.ice,
+               id = "team", data = icehockey)
+
+abilities <- exp(BTabilities(levelBT)[,1])
+ranks2 <- rankings(abilities)
+
+## Look at movement between the two rankings
+change <- factor(rank(ranks2[,1]) - rank(ranks[,1]))
+barplot(xtabs(~change), xlab = "Change in Rank", ylab = "No. Teams")
+
+## Take out regional winners and look at top 10
+regional <- c("RIT", "Alabama-Huntsville", "Michigan", "Cornell", "Boston College",
+              "North Dakota")
+
+ranks <- ranks[!rownames(ranks) \%in\% regional]
+ranks2 <- ranks2[!rownames(ranks2) \%in\% regional]
+
+## compare the 10 at-large selections under both rankings
+## with those selected under NCAA rankings
+cbind(names(sort(ranks, decr = TRUE)[1:10]),
+      names(sort(ranks2, decr = TRUE)[1:10]),
+      c("Miami", "Denver", "Wisconsin", "St. Cloud State",
+        "Bemidji State", "Yale", "Northern Michigan", "New Hampshire",
+        "Alsaka", "Vermont"))
+
+}
+\keyword{datasets}

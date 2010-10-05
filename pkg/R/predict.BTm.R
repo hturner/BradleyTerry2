@@ -1,4 +1,4 @@
-predict.BTm <- function (object, newdata = NULL, level = 0,
+predict.BTm <- function (object, newdata = NULL, level = 1,
                          type = c("link", "response", "terms"), se.fit = FALSE,
                          dispersion = NULL, terms = NULL,
                          na.action = na.pass, ...) {
@@ -8,34 +8,46 @@ predict.BTm <- function (object, newdata = NULL, level = 0,
         setup <- match(c("player1", "player2", "formula", "id",
                         "separate.ability", "refcat", "weights",
                         "subset", "offset", "contrasts"), names(object$call), 0L)
-        setup <- as.call(c(quote(BradleyTerry2:::BTm.setup),
+        setup <- as.call(c(quote(BTm.setup),
                            as.list(object$call)[setup],
                            list(data = newdata)))
-        setup <- eval(setup, environment(object$formula))
+        setup <- eval(setup, , environment(object$formula))
         nfix <- length(object$coefficients)
-        if (ncol(setup$X) != nfix){
-            ## will be due to separate abilities - else error by now
+        newdata <- data.frame(matrix(, nrow(setup$X), 0))
+        keep <- match(names(object$coefficients), colnames(setup$X),
+                      nomatch = 0)
+        if (0 %in% keep){
+            ## new players with missing data - set to NA
+            missing <- rowSums(setup$X[,-keep, drop = FALSE]) != 0
+            setup$X <- setup$X[, keep]
+            setup$X[missing,] <- NA
+        }
+        if (ncol(setup$X) != nfix) {
+            ## newdata does not include original players with missing data
             X <- matrix(0, nrow(setup$X), nfix,
                         dimnames = list(rownames(setup$X),
                         names(object$coefficients)))
             X[, colnames(setup$X)] <- setup$X
-            newdata <- data.frame(matrix(, nrow(X), 0))
             newdata$X <- X
         }
+        else newdata$X <- setup$X
         nran <- length(attr(object$coefficients, "random"))
-        if (1 %in% level && type != "terms" && ncol(setup$random) != nran){
-            ## expand to give col for every random effect
-            Z <- matrix(0, nrow(setup$random), nran,
-                        dimnames = list(rownames(setup$random),
-                        colnames(object$random))) #ranef need names!!
-            ## set to NA for contests with new players
-            miss <- !colnames(setup$random) %in% colnames(Z)
-            Z[, colnames(setup$random)[!miss]] <- setup$random[,!miss]
-            if (any(miss)) {
-                miss <- rowSums(setup$random[, miss, drop = FALSE] != 0) > 0
-                Z[miss,] <- NA
+        if (1 %in% level && type != "terms"){
+            if (ncol(setup$random) != nran) {
+                ## expand to give col for every random effect
+                Z <- matrix(0, nrow(setup$random), nran,
+                            dimnames = list(rownames(setup$random),
+                            colnames(object$random))) #ranef need names!!
+                ## set to NA for contests with new players (with predictors present)
+                miss <- !colnames(setup$random) %in% colnames(Z)
+                Z[, colnames(setup$random)[!miss]] <- setup$random[,!miss]
+                if (any(miss)) {
+                    miss <- rowSums(setup$random[, miss, drop = FALSE] != 0) > 0
+                    Z[miss,] <- NA
+                }
+                newrandom <- Z
             }
-            newrandom <- Z
+            else newrandom <- setup$random
             return(NextMethod(newrandom = newrandom))
         }
     }

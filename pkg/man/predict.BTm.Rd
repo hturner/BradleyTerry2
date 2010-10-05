@@ -8,7 +8,7 @@ Obtain predictions and optionally standard errors of
 those predictions from a fitted Bradley-Terry model.
 }
 \usage{
-\method{predict}{BTm}(object, newdata = NULL, level = 0,
+\method{predict}{BTm}(object, newdata = NULL, level = 1,
     type = c("link", "response", "terms"), se.fit = FALSE,
     dispersion = NULL, terms = NULL, na.action = na.pass, ...)
 
