@@ -1,0 +1,124 @@
+
+R version 2.11.1 Patched (2010-09-30 r53083)
+Copyright (C) 2010 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> ## some awkward cases for predict
+> ## (in response to Arthur Spirling's bug report)
+> 
+> ## The final model in example(flatlizards)
+> library(BradleyTerry2)
+> data(flatlizards, package = "BradleyTerry2")
+> attach(flatlizards)
+> Whiting.model3 <- BTm(1, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
++                       head.length[..] + SVL[..] + (1|..),
++                       family = binomial(link = "probit"),
++                       data = list(contests, predictors), trace = TRUE)
+Iteration 1. Score = 0.3606145
+Iteration 2. Score = 0.7990302
+Iteration 3. Score = 0.2862628
+Iteration 4. Score = 0.003823299
+Iteration 5. Score = 0.0001768978
+Iteration 6. Score = 9.279559e-06
+Iteration 7. Score = 6.79458e-07
+> 
+> 
+> ## new lizard with original lizards with NAs
+> newdata  <- list(contests = data.frame(winner = factor(c("lizard096", "lizard059"),
++                                        levels = c("lizard048", "lizard052", "lizard096", "lizard059")),
++                  loser = factor(c("lizard048", "lizard052"),
++                  levels = c("lizard048", "lizard052", "lizard096", "lizard059"))),
++                  predictors = rbind(flatlizards$predictors[c(27, 29, 55),-c(1,18) ],
++                  c(NA, 1.5, 1.5, -.2, 3, 1, -1, -1.5, -1.5, 250, 2000, 1, 0.1, 0.2, 0.5, -0.2)))
+> 
+> predict(Whiting.model3, level = 1, se.fit = TRUE, newdata = newdata)
+$fit
+[1] 19.63468       NA
+
+$se.fit
+[1] 38745321       NA
+
+> 
+> ## new lizard with NAs - can't predict, go by na.action
+> newdata  <- list(contests = data.frame(winner = factor(c("lizard048", "lizard059"),
++                                        levels = c("lizard006", "lizard011", "lizard048", "lizard059")),
++                  loser = factor(c("lizard006", "lizard011"),
++                  levels = c("lizard006", "lizard011", "lizard048", "lizard059"))),
++                  predictors = rbind(flatlizards$predictors[c(3, 6, 27),-c(1,18) ],
++                  c(NA, 1.5, 1.5, -.2, 3, 1, -1, -1.5, -1.5, 250, 2000, 1, 0.1, 0.2, 0.5, -0.2)))
+> 
+> predict(Whiting.model3, level = 0:1, se.fit = TRUE, newdata = newdata, na.action = na.pass)
+$population
+$population$fit
+[1] 0.7779567        NA
+
+$population$se.fit
+[1] 0.3207685        NA
+
+
+$individual
+$individual$fit
+[1] 1.074185       NA
+
+$individual$se.fit
+[1] 0.7845906        NA
+
+
+> 
+> predict(Whiting.model3, level = 0:1, se.fit = TRUE, newdata = newdata, na.action = na.omit)
+$population
+$population$fit
+[1] 0.7779567
+
+$population$se.fit
+[1] 0.3207685
+
+
+$individual
+$individual$fit
+[1] 1.074185
+
+$individual$se.fit
+[1] 0.7845906
+
+
+> 
+> ## newdata = original data
+> tmp <- predict(Whiting.model3)
+> tmp2 <- predict(Whiting.model3, newdata = list(contests, predictors))
+> identical(tmp, tmp2)
+[1] TRUE
+> 
+> ## new data with separate effects as in original
+> 
+> newdata  <- list(contests = data.frame(winner = factor(c("lizard096", "lizard099"),
++                                        levels = c("lizard048", "lizard052", "lizard096", "lizard099")),
++                  loser = factor(c("lizard048", "lizard052"),
++                  levels = c("lizard048", "lizard052", "lizard096", "lizard099"))),
++                  predictors = flatlizards$predictors[c(27, 29, 55, 56),-c(1,18) ])
+> 
+> predict(Whiting.model3, level = 1, se.fit = TRUE, newdata = newdata)#[31, 34]
+$fit
+[1] 19.634676  0.627538
+
+$se.fit
+[1] 3.874532e+07 7.994375e-01
+
+> 
+> predict(Whiting.model3, level = 1, se.fit = TRUE)$fit[c(31, 34)]
+[1] 19.634676  0.627538
+> predict(Whiting.model3, level = 1, se.fit = TRUE)$se.fit[c(31, 34)]
+[1] 3.874532e+07 7.994375e-01
+> 

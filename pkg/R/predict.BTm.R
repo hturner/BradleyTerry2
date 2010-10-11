@@ -8,10 +8,9 @@ predict.BTm <- function (object, newdata = NULL, level = 1,
         setup <- match(c("player1", "player2", "formula", "id",
                         "separate.ability", "refcat", "weights",
                         "subset", "offset", "contrasts"), names(object$call), 0L)
-        setup <- as.call(c(quote(BTm.setup),
-                           as.list(object$call)[setup],
-                           list(data = newdata)))
-        setup <- eval(setup, , environment(object$formula))
+        setup <- do.call(BTm.setup,
+                         c(as.list(object$call)[setup], list(data = newdata)),
+                         envir = environment(object$formula))
         nfix <- length(object$coefficients)
         newdata <- data.frame(matrix(, nrow(setup$X), 0))
         keep <- match(names(object$coefficients), colnames(setup$X),

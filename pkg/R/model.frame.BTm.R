@@ -7,13 +7,12 @@ model.frame.BTm <- function (formula, ...)
     mfArgs <- dots[match(c("na.action", "start", "etastart", "mustart"),
                          names(dots), 0L)]
     if (length(nargs) || is.null(formula$model)) {
-        fcall <- formula$call
-        fcall[[1L]] <- as.name("BradleyTerry2:::BTm.setup")
+        fcall <- formula$call[-1]
         fcall[names(nargs)] <- nargs
         env <- environment(formula$terms)
         if (is.null(env))
             env <- parent.frame()
-        setup <- eval(fcall, env)
+        setup <- do.call(BTm.setup, fcall, envir = env)
         mf <- data.frame(X = setup$X[,1])
         mf$X <- setup$X
         mf$Y <- setup$Y

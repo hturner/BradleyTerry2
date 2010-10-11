@@ -9,7 +9,8 @@ New Features
 Bug fixes
 ---------
 
-    o	predict.BTM now works for models with no random effects
+    o	predict.BTm now works for models with no random effects and handles
+    	new individuals with missing values in predictors. 
 
 
 Changes in BradleyTerry 0.9-3
