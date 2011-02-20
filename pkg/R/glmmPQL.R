@@ -70,7 +70,7 @@ glmmPQL <- function(fixed, random = NULL, family = binomial, data = NULL,
         X <- model.matrix(fixed, data = modelData, contrasts)
     else
         X <- matrix(, nObs, 0)
-    fit <- glmmPQL.fit(X = X, y = y, Z = Z, weight = weights, start = start,
+    fit <- glmmPQL.fit(X = X, y = y, Z = Z, weights = weights, start = start,
                        etastart = etastart, mustart = mustart, offset = offset,
                        family = family, control = control, sigma = sigma,
                        sigma.fixed = sigma.fixed, ...)
