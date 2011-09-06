@@ -30,8 +30,7 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
         sep <- list()
         if (length(indexed)) { #set NAs to zero
             indices <- gsub("[^[]*[[]([^],]+)[],].*", "\\1", vars[indexed])
-            vars <- gsub("([^[]*[[])[^],]+(,.*)", "\\1\\2", vars[indexed])
-            vars <- gsub("([^[]*)[[][^],]+.*", "\\1", vars)
+            vars <-  gsub("[[][^]]*[]]", "", vars[indexed])
             ## assumes no overlap, e.g. no age[..]:judge.gender[judge]
             grp <- split(vars, indices)
             for (ind in names(grp)) {
@@ -53,7 +52,8 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
                 }
             }
             if (length(sep)) {
-                fixed <- reformulate(c(names(sep), attr(mt, "term.labels")))
+                fixed <- reformulate(c(names(sep), attr(mt, "term.labels"),
+                                       rownames(attr(mt, "factors"))[attr(mt, "offset")]))
                 mt <- terms(fixed)
             }
         }

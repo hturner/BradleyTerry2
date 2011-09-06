@@ -10,25 +10,21 @@
 }
 \usage{data(citations)}
 \format{
-  A data frame with 16 observations on the following 3 variables.
-  \describe{
-    \item{\code{winner}}{a factor with levels \code{Biometrika},
-      \code{Comm Statist}, \code{JASA}, \code{JRSS-B}.}
-    \item{\code{loser}}{a factor with levels \code{Biometrika},
-      \code{Comm Statist}, \code{JASA}, \code{JRSS-B}.}
-    \item{\code{Freq}}{a numeric vector.}
-  }
-}
+  A 4 by 4 contingency table of citations, cross-classifed by the factors
+  \code{cited} and \code{citing} each with levels \code{Biometrika},
+  \code{Comm Statist}, \code{JASA}, and \code{JRSS-B}.
+ }
 \details{
-  \code{winner} is the cited journal, \code{loser} the one doing the citing.  
+  In the context of paired comparisons, the \sQuote{winner} is the cited
+  journal and the \sQuote{loser} is the one doing the citing.  
 }
 \source{
 Agresti, A (2002)  \emph{Categorical Data Analysis} (2nd ed).  
 New York: Wiley.
 }
-\references{
+\references{ 
 Firth, D. (2005)  Bradley-Terry models in R.  \emph{Journal of Statistical
-Software}, to appear.
+Software} \bold{12(1)}, 1--12.
 
 Stigler, S. (1994)  Citation patterns in the journals of statistics 
 and probability.  \emph{Statistical Science} \bold{9}, 94--108.

@@ -37,6 +37,11 @@ BTm.setup <- function(outcome = 1, player1, player2, formula = NULL,
     if (is.null(formula)) formula <- reformulate(id)
     diffModel <- Diff(player1, player2, formula, id, data, separate.ability,
                       refcat, contrasts)
-    c(diffModel, list(data = data, player1 = player1, player2 = player2, Y = Y,
-                      weights = weights, subset = subset, formula = formula))
+    offset <- withIfNecessary(substitute(offset), data, FALSE) #contest level
+    if (!is.null(offset)) {
+        if (is.null(diffModel$offset))  diffModel$offset <- offset
+        else diffModel$offset <- diffModel$offset + offset
+    }
+    res <- c(diffModel, list(data = data, player1 = player1, player2 = player2,
+                             Y = Y, weights = weights, subset = subset, formula = formula))
 }

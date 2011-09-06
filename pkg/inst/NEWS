@@ -1,10 +1,20 @@
-Changes in BradleyTerry 0.9-5
-=============================
+Changes in BradleyTerry2 0.9-6
+==============================
+
+Bug fixes
+---------
+
+    o	fixed offset argument to work as documented
+
+    o	corrected documentation for citations data
+
+Changes in BradleyTerry2 0.9-5
+==============================
 
    o	updated  contact details
 
-Changes in BradleyTerry 0.9-4
-=============================
+Changes in BradleyTerry2 0.9-4
+==============================
 
 New Features
 ------------
@@ -18,7 +28,7 @@ Bug fixes
     	new individuals with missing values in predictors. 
 
 
-Changes in BradleyTerry 0.9-3
+Changes in BradleyTerry2 0.9-3
 =============================
 
 New Features
