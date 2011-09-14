@@ -154,13 +154,16 @@ The coefficients here are maximum likelihood estimates of $\lambda_2, \lambda_3,
 \lambda_4$, with $\lambda_1$ (the log-ability for \emph{Biometrika}) set to zero
 as an identifying convention.
 
-The \Rfunarg{id} argument here gives a name to be used for the factor that identified the `players' (here the four journals).  The (necessarily one-sided)
-model formula
+The one-sided model formula
 \begin{verbatim}
       ~ journal
 \end{verbatim}
- here specifies that there is a separate
-parameter (or `ability') for each level of that factor.
+specifies the model for player ability, in this case the `citeability' of the
+journal. The \Rfunarg{id} argument specifies that \code{"journal"} is the
+name to be used for the factor that identifies the player --- the values of which
+are given here by \Rcode{journal1} and \Rcode{journal2} for the first and
+second players respectively. Therefore in this case a separate
+citeability parameter is estimated for each journal. 
 
 If a different `reference' journal is required, this can be achieved using the
 optional \Rfunarg{refcat} argument: for
@@ -287,7 +290,8 @@ The dataset records the home wins and losses for each baseball team against each
 of the 6 other teams in the dataset. The \Rfunction{head} function is used to
 show the first 6 records, which are the Milwaukee home games. We see for
 example that Milwaukee played 7 home games against Detroit and won 4 of them.
-The `standard' Bradley-Terry model without a home-advantage parameter is fitted as before:
+The `standard' Bradley-Terry model without a home-advantage parameter will be
+fitted if no formula is specified in the call to \Rfunction{BTm}:
 @
 <<baseballModel>>=
 data(baseball)
@@ -298,14 +302,20 @@ summary(baseballModel1)
 The reference team is Baltimore, estimated to be the weakest of these seven,
 with Milwaukee and Detroit the strongest.
 
-To estimate the home-advantage effect, some re-organisation of the data is
-needed.  The \Rcode{at.home} variable is needed for both the home team and
+To estimate the home-advantage effect, the \Robject{home.team} and
+\Robject{away.team} factors need to be replaced by data frames specifying an
+\Rcode{at.home} variable in addition to the factor identifying the players,
+which should be named according to the \Rfunarg{id} argument: 
+@
+<<baseballDataUpdate>>=
+baseball$home.team <- data.frame(team = baseball$home.team, at.home = 1)
+baseball$away.team <- data.frame(team = baseball$away.team, at.home = 0)
+@ %def
+The \Rcode{at.home} variable is needed for both the home team and 
 away team, so that it can be differenced as appropriate in the linear
 predictor.
 @
 <<baseballModelupdate>>=
-baseball$home.team <- data.frame(team = baseball$home.team, at.home = 1)
-baseball$away.team <- data.frame(team = baseball$away.team, at.home = 0)
 baseballModel2 <- update(baseballModel1, formula = ~ team + at.home)
 summary(baseballModel2)
 @ %def
@@ -359,9 +369,9 @@ variables; the variable \Robject{LAT}, for example, is in the data frame \Robjec
 
 The function \Rfunction{BTabilities} extracts estimates and standard errors for
 the log-ability scores $\lambda_1, \ldots,\lambda_K$.  These will either be
-`direct' estimates, as in the standard Bradley-Terry model or for players with
-one or more missing predictor values, or `model-based' estimates of the form
-$\hat\lambda_i=\sum_{r=1}^p\hat\beta_rx_{ir}$ for players whose ability is
+`direct' estimates, in the case of the standard Bradley-Terry model or for
+players with one or more missing predictor values, or `model-based' estimates
+of the form $\hat\lambda_i=\sum_{r=1}^p\hat\beta_rx_{ir}$ for players whose ability is
 predicted by explanatory variables.
 
 As a simple illustration, team ability estimates in the
