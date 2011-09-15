@@ -102,12 +102,19 @@ contests, the parameters $\{\lambda_i\}$ can be estimated by
 maximum likelihood using standard software for generalized linear models, with a
 suitably specified model matrix.  The primary purpose of the \BT\ package,
 implemented in the \R\ statistical computing environment \citep{ihak:gent:96,
-  R}, is to facilitate the specification and fitting of such models, including
-special cases in which the ability parameters are related to available
-explanatory variables through a linear predictor of the form
-$\lambda_i=\sum_{r=1}^p\beta_rx_{ir} + U_i$.  The logit link can be replaced,
-if required, by a different symmetric link function (probit or cauchit).
+  R}, is to facilitate the specification and fitting of such models. 
 
+The \BT\ package supersedes the earlier \Rpackage{BradleyTerry} package
+\citet{firt:05}, providing a more flexible user interface to allow a wider
+range of models to be fitted. In particular, \BT\ allows the inclusion of
+simple random effects so that the ability parameters can be related to available
+explanatory variables through a linear predictor of the form
+$\lambda_i=\sum_{r=1}^p\beta_rx_{ir} + U_i$.  The inclusion of the prediction
+error $U_i$ allows for variability between players with equal covariate values
+and induces correlation between comparisons with a common player. \BT\ also
+allows for general contest-specific effects to be included in the model and
+allows the logit link to be replaced, if required, by a different symmetric link
+function (probit or cauchit). 
 
 
 \subsection{Example: analysis of journal citations}
@@ -122,7 +129,7 @@ journals of statistics and are included the \BT\ package as the dataset
 library(BradleyTerry2)
 data(citations)
 @
-\newpage
+
 @
 <<CitationData2>>=
 citations
@@ -159,7 +166,7 @@ The one-sided model formula
       ~ journal
 \end{verbatim}
 specifies the model for player ability, in this case the `citeability' of the
-journal. The \Rfunarg{id} argument specifies that \code{"journal"} is the
+journal. The \Rfunarg{id} argument specifies that \Rcode{"journal"} is the
 name to be used for the factor that identifies the player --- the values of which
 are given here by \Rcode{journal1} and \Rcode{journal2} for the first and
 second players respectively. Therefore in this case a separate
@@ -268,6 +275,7 @@ have some missing covariate data, and those two lizards therefore have their
 abilities estimated by separate coefficients.
 
 \subsection{Order effect}
+\label{sec:order}
 
 In certain types of application some or all contests have an associated `bias',
 related to the order in which items are presented to a judge or with the
@@ -483,6 +491,14 @@ loss and all other levels denote a win, or a binary variable where 0 denotes a
 loss and 1 denotes a win. Each row represents either a single contest or a set
 of contests between the same two players.
 
+The \Rfunarg{player1} and \Rfunarg{player2} arguments are either factors
+specifying the two players in each contests, or data frames of the same along
+with any contest-level variables that are player-specific, such as the
+\Rcode{at.home} variable seen in Section \ref{sec:order}. The id factors
+should be named as specified by the \Rfunarg{id} argument if given in a data
+frame and should have identical levels, since they represent a particular
+sample of the full set of players.
+
 Any \emph{contest-specific} variables should be of the
 same length as the variables specified in the \Rfunarg{outcome},
 \Rfunarg{player1} and \Rfunarg{player2} arguments.  Sometimes this is
@@ -507,9 +523,12 @@ The safest approach is to put all potential predictor
 data frame with one row per (potential) player,
 and with row names the names of players exactly as used in variables passed to
 the \Rfunarg{player1} and \Rfunarg{player2} arguments of \Rfunction{BTm}.
-Such data frame
+Such a data frame
 should then be included in the list specified as the \Rfunarg{data} argument
 of \Rfunction{BTm} to specify where predictors (and any offset) can be found.
+
+Player-specific offsets should be included in the formula using the
+\Rfunction{offset} function.
 
 \subsection{Converting data from the format required by the earlier \Rpackage{BradleyTerry} package}
 
