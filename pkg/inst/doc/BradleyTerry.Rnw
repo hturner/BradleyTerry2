@@ -49,7 +49,7 @@
 
 \author{Heather Turner and David Firth\\{\it University of Warwick, UK}\\
 \\
-\url{http://go.warwick.ac.uk/heatherturner}}
+\url{http://go.warwick.ac.uk/dfirth/software/bradleyterry}}
 
 \date{For \Rpackage{BradleyTerry2} version \Sexpr{packageDescription("BradleyTerry2")[["Version"]]}, \Sexpr{Sys.Date()}}
 
@@ -92,7 +92,12 @@ representing `ability'.  For a good general introduction see \citet{agre:02}.
 Applications are many, ranging from experimental psychology to the analysis of
 sports tournaments to genetics (for example, the allelic
 transmission/disequilibrium test of \citet{sham:curt:95} is based on a
-Bradley-Terry model in which the `players' are alleles).    The model can
+Bradley-Terry model in which the `players' are alleles).
+In typical
+psychometric applications the `contests' are comparisons, made by
+different human subjects, between pairs of items.
+
+The model can
 alternatively be expressed in the logit-linear form
 \begin{equation}
 \logit[\pr(i\ \mathrm{beats}\ j)]=\lambda_i-\lambda_j,
@@ -102,7 +107,8 @@ contests, the parameters $\{\lambda_i\}$ can be estimated by
 maximum likelihood using standard software for generalized linear models, with a
 suitably specified model matrix.  The primary purpose of the \BT\ package,
 implemented in the \R\ statistical computing environment \citep{ihak:gent:96,
-  R}, is to facilitate the specification and fitting of such models. 
+R}, is to facilitate the specification and fitting of such models and some
+extensions.
 
 The \BT\ package supersedes the earlier \Rpackage{BradleyTerry} package
 \citet{firt:05}, providing a more flexible user interface to allow a wider
@@ -114,7 +120,7 @@ error $U_i$ allows for variability between players with equal covariate values
 and induces correlation between comparisons with a common player. \BT\ also
 allows for general contest-specific effects to be included in the model and
 allows the logit link to be replaced, if required, by a different symmetric link
-function (probit or cauchit). 
+function (probit or cauchit).
 
 
 \subsection{Example: analysis of journal citations}
@@ -170,7 +176,7 @@ journal. The \Rfunarg{id} argument specifies that \Rcode{"journal"} is the
 name to be used for the factor that identifies the player --- the values of which
 are given here by \Rcode{journal1} and \Rcode{journal2} for the first and
 second players respectively. Therefore in this case a separate
-citeability parameter is estimated for each journal. 
+citeability parameter is estimated for each journal.
 
 If a different `reference' journal is required, this can be achieved using the
 optional \Rfunarg{refcat} argument: for
@@ -211,7 +217,7 @@ and player $j$ is modelled by
 \end{equation}
 where $U_i \sim N(0, \sigma^2)$ for all $i$. The Bradley-Terry model is then a
 generalized linear mixed model, which the \Rfunction{BTm} function currently
-fits using the penalized quasi-likelihood algorithm of \citet{bres:93}.
+fits by using the penalized quasi-likelihood algorithm of \citet{bres:93}.
 
 As a simple illustration, consider the
 response-surface model studied by \citet{spri:73}:
@@ -313,13 +319,13 @@ with Milwaukee and Detroit the strongest.
 To estimate the home-advantage effect, the \Robject{home.team} and
 \Robject{away.team} factors need to be replaced by data frames specifying an
 \Rcode{at.home} variable in addition to the factor identifying the players,
-which should be named according to the \Rfunarg{id} argument: 
+which should be named according to the \Rfunarg{id} argument:
 @
 <<baseballDataUpdate>>=
 baseball$home.team <- data.frame(team = baseball$home.team, at.home = 1)
 baseball$away.team <- data.frame(team = baseball$away.team, at.home = 0)
 @ %def
-The \Rcode{at.home} variable is needed for both the home team and 
+The \Rcode{at.home} variable is needed for both the home team and
 away team, so that it can be differenced as appropriate in the linear
 predictor.
 @
@@ -346,7 +352,9 @@ Bradley-Terry model, where \emph{subjects} express preference for one of two
 subject attributes that is of primary interest.
 
 As an illustration of the way in which such effects are specified, consider
-the following model specification taken from the examples in \Rcode{?CEMS}:
+the following model specification taken from the examples in \Rcode{?CEMS},
+which reproduces results from Table~8 of \cite{ditt:01} apart
+from minor differences due to the different treatment of ties.
 @
 <<CEMSmodel>>=
 data(CEMS)
@@ -527,7 +535,7 @@ Such a data frame
 should then be included in the list specified as the \Rfunarg{data} argument
 of \Rfunction{BTm} to specify where predictors (and any offset) can be found.
 
-Player-specific offsets should be included in the formula using the
+Player-specific offsets should be included in the formula by using the
 \Rfunction{offset} function.
 
 \subsection{Converting data from the format required by the earlier \Rpackage{BradleyTerry} package}
