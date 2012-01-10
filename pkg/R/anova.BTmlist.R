@@ -19,7 +19,7 @@ anova.BTmlist <- function (object, ..., dispersion = NULL, test = NULL) {
     nmodels <- length(object)
 
     ncoefs <- sapply(object, function(x) length(na.omit(coef(x)))) #omit aliased
-    labels <- lapply(object, function(x) attr(terms(x), "term.labels"))
+    labels <- lapply(object, function(x) x$term.labels)
     stat <- numeric(nmodels)
     for (i in 2:nmodels) {
         descending <- ncoefs[i] < ncoefs[i - 1]
