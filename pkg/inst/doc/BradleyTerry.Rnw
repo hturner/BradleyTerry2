@@ -77,9 +77,10 @@ options(width = 60)
 
 The Bradley-Terry model \citep{brad:terr:52} assumes that in a `contest' between
 any two `players', say player $i$ and player $j$ $(i, j \in \{1,\ldots,K\})$,
-the odds that $i$ beats $j$ is $\alpha_i/\alpha_j$, where $\alpha_i$ and
+the odds that $i$ beats $j$ are $\alpha_i/\alpha_j$, where $\alpha_i$ and
 $\alpha_j$ are positive-valued parameters which might be thought of as
-representing `ability'.  For a good general introduction see \citet{agre:02}.
+representing `ability'.  A general introduction can be found in
+\citet{brad:84} or \citet{agre:02}.
 Applications are many, ranging from experimental psychology to the analysis of
 sports tournaments to genetics (for example, the allelic
 transmission/disequilibrium test of \citet{sham:curt:95} is based on a
@@ -198,9 +199,7 @@ the form
 in which ability of each player $i$ is related to explanatory variables
 $x_{i1},\ldots,x_{ip}$ through a linear predictor with coefficients
 $\beta_1,\ldots,\beta_p$; the $\{U_i\}$ are independent errors.
-See, for example, \citet{spri:73} (but note that the error term $U_i$ is
-omitted there). Dependence of
-the player abilities on explanatory variables can be specified via the
+Dependence of the player abilities on explanatory variables can be specified via the
 \code{formula} argument, using the standard \emph{S}-language
 model formulae.  The difference in the abilities of player $i$
 and player $j$ is modelled by
@@ -211,34 +210,43 @@ where $U_i \sim N(0, \sigma^2)$ for all $i$. The Bradley-Terry model is then a
 generalized linear mixed model, which the \code{BTm} function currently
 fits by using the penalized quasi-likelihood algorithm of \citet{bres:93}.
 
-As a simple illustration, consider the
-response-surface model studied by \citet{spri:73}:
+As an illustration, consider the following simple model for the
+\code{flatlizards} data, which predicts the fighting ability of Augrabies flat
+lizards by body size (snout to vent length):
 @
-<<springall>>=
+<<lizModel>>=
 options(show.signif.stars = FALSE)
-data(springall)
-summary(springall.model <- BTm(cbind(win.adj, loss.adj), col, row,
-    ~ flav[..] + gel[..] + flav.2[..] + gel.2[..] + flav.gel[..] + (1 | ..),
-    data = springall))
+data(flatlizards)
+lizModel <- BTm(1, winner, loser, ~ SVL[..] + (1|..), 
+                data = flatlizards)
 @ %def
-Differences from the fit reported in \cite{spri:73} are minor, arising from
-the different treatment of ties: here we have simply treated a tie as half a
-`win' for each `player', rather than using the \cite{rao:kupp:67} model as
-\cite{spri:73} did.
+Here the winner of each fight is compared to the loser, so the outcome is
+always 1.  The special name ``\code{..}'' appears in the formula as the default
+identifier for players, in the absence of a user-specified \code{id} argument.
+The values of this factor are given by \code{winner} for the winning lizard
+and \code{loser} for the losing lizard in each contest. %Since \code{winner}
+%and \code{loser} are specific instances of the factor \code{..}, they must
+%share the same set of levels (one for each lizard). 
+%The factors \code{winner}and \code{loser} 
+These factors are provided in the data frame \code{contests} that is the
+first element of the list object \code{flatlizards}. The second element of
+\code{flatlizards} is another data frame, \code{predictors}, containing
+measurements on the observed lizards, including \code{SVL}, which is the snout
+to vent length. Thus \code{SVL[..]} represents the snout to vent length
+indexed by lizard (\code{winner} or \code{loser} as appropriate).  Finally a
+random intercept for each lizard is included using the bar notation familiar
+to users of the \pkg{lme4} package (note that this is the only random effect
+structure currently implemented in \pkg{BradleyTerry2}).
 
-In \cite{spri:73}, the random effect (specified here via the term
-\code{(1|..)}) was omitted: that is, the quadratic response
-surface was assumed to predict `ability' without error.  In general such a
-zero-error assumption will be unrealistic.  In this instance, though,
-including the random
-term turns out to make no difference to the results: the variance of the errors $\{U_i\}$ is
-estimated as zero.
-
-The special name ``\code{..}'' appears here as the default identifier for
-players, in the absence of a user-specified \code{id} argument.  The
-predictor variables in this case are taken from the
-\code{springall\$predictors} data frame, whose rows are indexed by the
-levels of ``\code{..}''.
+The fitted model is summarized below:
+@ 
+<<summarize_lizModel>>=
+summary(lizModel)
+@ %def 
+The coefficient of snout to vent length is weakly significant, however the
+standard deviation of the random effects is large and highly significant,
+suggesting that the model is a poor fit. A more appropriate model is
+considered in the next section.
 
 \subsection{Missing values}
 
@@ -265,10 +273,25 @@ same device can be used also to accommodate any user-specified departures from a
 structured Bradley-Terry model, whereby some players have their abilities
 determined by the linear predictor but others do not.
 
-For an illustration of this device in action, see \code{example(flatlizards)}:
-two of the lizards in that study (\code{lizard096} and \code{lizard099})
-have some missing covariate data, and those two lizards therefore have their
-abilities estimated by separate coefficients.
+In the original analysis of the \code{flatlizards} data \citep{whit:06}, the
+final model included the first and third principal compenents
+of the spectral reflectance from the throat (representing brightness and UV intensity
+respectively) as well as head length and the snout to vent length seen in our
+earlier model. The spectroscopy data was missing for two lizards, therefore
+the ability of these lizards was estimated directly. The following fits this
+model, with the addition of a random intercept as before:
+@ 
+<<lizModel2>>=
+summary(BTm(1, winner, loser,
+            ~ throat.PC1[..] + throat.PC3[..] +
+            head.length[..] + SVL[..] + (1|..),
+            data = flatlizards))
+@ %def 
+We find that the random effects 
+%For an illustration of this device in action, see \code{example(flatlizards)}:
+%two of the lizards in that study (\code{lizard096} and \code{lizard099})
+%have some missing covariate data, and those two lizards therefore have their
+%abilities estimated by separate coefficients.
 
 \subsection{Order effect}
 \label{sec:order}
@@ -284,7 +307,7 @@ where $z=1$ if $i$ has the supposed advantage and $z=-1$ if $j$ has it.  (If the
 `advantage' is in fact a disadvantage, $\delta$ will be negative.)  The scores
 $\lambda_i$ then relate to ability in the absence of any such advantage.
 
-As an example, consider the baseball data given in \citet{agre:02}, p438:
+As an example, consider the baseball data given in \citet{agre:02}, page 438:
 @
 <<baseball>>=
 data(baseball)
@@ -306,18 +329,24 @@ summary(baseballModel1)
 The reference team is Baltimore, estimated to be the weakest of these seven,
 with Milwaukee and Detroit the strongest.
 
-To estimate the home-advantage effect, the \code{home.team} and
-\code{away.team} factors need to be replaced by data frames specifying an
-\code{at.home} variable in addition to the factor identifying the players,
-which should be named according to the \code{id} argument:
+In the above, the ability of each team is modelled simply as \code{~ team} where 
+the values of the factor \code{team} are given by \code{home.team} for the
+first team and \code{away.team} for the second team in each game. To
+estimate the home-advantage effect, an additional variable is required to
+indicate whether the team is at home or not. Therefore data frames
+containing both the team factor and this new indicator variable are required
+in place of the factors \code{home.team} and \code{away.team} in the call to
+\code{BTm}. This is achieved here by over-writing the \code{home.team} and
+\code{away.team} factors in the \code{baseball} data frame: 
 @
 <<baseballDataUpdate>>=
 baseball$home.team <- data.frame(team = baseball$home.team, at.home = 1)
 baseball$away.team <- data.frame(team = baseball$away.team, at.home = 0)
 @ %def
-The \code{at.home} variable is needed for both the home team and
+The \code{at.home} variable is needed for both the home team and the 
 away team, so that it can be differenced as appropriate in the linear
-predictor.
+predictor. With the data organised in this way, the ability formula can now be
+updated to include the \code{at.home} variable as follows:
 @
 <<baseballModelupdate>>=
 baseballModel2 <- update(baseballModel1, formula = ~ team + at.home)
@@ -328,7 +357,7 @@ has an estimated odds-multiplier of $\exp(0.3023) = 1.35$ in its favour.
 
 \subsection{More general (contest-specific) predictors}
 
-The `home advantage' effect is an simple
+The `home advantage' effect is a simple
 example of a contest-specific predictor.  Such predictors are necessarily
 interaction terms, between aspects of the contest and (aspects of) the two
 `players' involved.
@@ -343,8 +372,8 @@ subject attributes that is of primary interest.
 
 As an illustration of the way in which such effects are specified, consider
 the following model specification taken from the examples in \code{?CEMS},
-which reproduces results from Table~8 of \cite{ditt:01} apart
-from minor differences due to the different treatment of ties.
+where data on students' preferences in relation to six European management
+schools is analysed.
 @
 <<CEMSmodel>>=
 data(CEMS)
@@ -358,11 +387,22 @@ table8.model <-  BTm(outcome = cbind(win1.adj, win2.adj),
     SEX[student] * Milano[..],
     refcat = "Stockholm", data = CEMS)
 @ %def
-Here the subjects are students, and the objects
-(six European management schools) are referenced by ``\code{..}''.  The
-subject-specific variables \code{WOR}, \code{DEG}, etc., are found in the  data frame \code{CEMS\$students} which contains student-specific
-variables; the variable \code{LAT}, for example, is in the data frame \code{CEMS\$schools} which contains school-specific variables.
-
+This model reproduces results from Table~8 of \cite{ditt:01} apart
+from minor differences due to the different treatment of ties. Here the
+outcome is the binomial frequency of preference for \code{school1} 
+over \code{school2}, with ties counted as half a `win' and half a `loss'. The
+formula specifies the model for school `ability' or worth. In this formula,
+the default label ``\code{..}'' represents the school (with values given by
+\code{school1} or \code{school2} as appropriate) and \code{student} is a
+factor specifying the student that made the comparison. The remaining
+variables in the formula use R's standard indexing mechanism to include
+student-specific variables, e.g. \code{WOR}: whether or not the student was in
+full-time employment, and school-specific variables, e.g. \code{LAT}: whether
+the school was in a `Latin' city. Thus there are three types of variables:
+contest-specific (\code{school1}, \code{school2}, \code{student}),
+subject-specific (\code{WOR}, \code{DEG}, \ldots) and object-specific
+(\code{LAT}, \code{St.Gallen}, \ldots). These three types of variables are
+provided in three data frames, contained in the list object \code{CEMS}.
 
 \section{Ability scores}
 
@@ -484,7 +524,7 @@ loss and 1 denotes a win. Each row represents either a single contest or a set
 of contests between the same two players.
 
 The \code{player1} and \code{player2} arguments are either factors
-specifying the two players in each contests, or data frames of the same along
+specifying the two players in each contest, or data frames containing such factors, along
 with any contest-level variables that are player-specific, such as the
 \code{at.home} variable seen in Section \ref{sec:order}. The id factors
 should be named as specified by the \code{id} argument if given in a data
