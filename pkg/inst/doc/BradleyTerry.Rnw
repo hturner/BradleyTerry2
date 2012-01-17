@@ -147,7 +147,9 @@ citations.sf <- countsToBinomial(citations)
 names(citations.sf)[1:2] <- c("journal1", "journal2")
 citations.sf
 @ %def
-
+Note that the self-citation counts are ignored---these provide no
+information on the ability parameters, since these are relative rather than
+absolute quantities.
 The binomial response can then be modelled by the difference in player abilities
 as follows:
 @
@@ -287,11 +289,17 @@ summary(BTm(1, winner, loser,
             head.length[..] + SVL[..] + (1|..),
             data = flatlizards))
 @ %def 
-We find that the random effects 
-%For an illustration of this device in action, see \code{example(flatlizards)}:
-%two of the lizards in that study (\code{lizard096} and \code{lizard099})
-%have some missing covariate data, and those two lizards therefore have their
-%abilities estimated by separate coefficients.
+Note that \code{BTm} detects that lizards 96 and 99 have missing
+values in the specified predictors and automatically includes separate ability
+parameters for these lizards. This model was found to be the single best model
+based on the principal components of reflectance and the other predictors
+available and indeed the standard deviation of the random intercept is much
+reduced, but still highly significant. Allowing for this significant variation
+between lizards with the same predictor values produces more realistic (i.e.\
+larger) standard errors for the parameters when compared to the original
+analysis---although this affects the significance of the morphological
+variables, it does not affect the significance of the principal components, so
+in this case does not affect the main conclusions of the study.
 
 \subsection{Order effect}
 \label{sec:order}
@@ -356,10 +364,11 @@ This reproduces the results given on page 438 of \citet{agre:02}: the home team
 has an estimated odds-multiplier of $\exp(0.3023) = 1.35$ in its favour.
 
 \subsection{More general (contest-specific) predictors}
+\label{sec:CEMS}
 
 The `home advantage' effect is a simple
 example of a contest-specific predictor.  Such predictors are necessarily
-interaction terms, between aspects of the contest and (aspects of) the two
+interactions, between aspects of the contest and (aspects of) the two
 `players' involved.
 
 For more elaborate examples of such effects, see \code{?chameleons} and
@@ -517,50 +526,89 @@ and to compare the fit of nested models.
 The \code{outcome} argument of \code{BTm} represents a
 binomial response and can be supplied in any of the formats allowed by the
 \code{glm} function. That is, either a two-column matrix with the columns
-giving the number of wins and losses (for \code{player1}), a factor where
-the first level denotes a
-loss and all other levels denote a win, or a binary variable where 0 denotes a
-loss and 1 denotes a win. Each row represents either a single contest or a set
-of contests between the same two players.
+giving the number of wins and losses (for \code{player1} vs.\ \code{player2}),
+a factor where the first level denotes a loss and all other levels denote a
+win, or a binary variable where 0 denotes a loss and 1 denotes a win. Each row
+represents either a single contest or a set of contests between the same two players.
 
 The \code{player1} and \code{player2} arguments are either factors
 specifying the two players in each contest, or data frames containing such factors, along
-with any contest-level variables that are player-specific, such as the
-\code{at.home} variable seen in Section \ref{sec:order}. The id factors
-should be named as specified by the \code{id} argument if given in a data
-frame and should have identical levels, since they represent a particular
-sample of the full set of players.
+with any contest-specific variables that are also player-specific, such as the
+\code{at.home} variable seen in Section \ref{sec:order}. If given in data
+frames, the factors identifying the players should be named as specified by the
+\code{id} argument and should have identical levels, since they represent a
+particular sample of the full set of players.
 
-Any \emph{contest-specific} variables should be of the
-same length as the variables specified in the \code{outcome},
-\code{player1} and \code{player2} arguments.  Sometimes this is
-achieved most economically by appropriate indexing: see, for example,
-\code{?CEMS}, where student-specific variables are stored in a data frame
-with one row per student rather than one row per `contest'.
+Thus for \code{baseballModel2}, which was specified by the following call:
+@ 
+<<baseballModel2_call>>=
+ baseballModel2$call
+@ %def 
+the data are provided in the \code{baseball} data frame, which has the
+following structure:
+@ 
+<<str_baseball>>=
+str(baseball)
+@ %def 
+In this case \code{home.team} and \code{away.team} are both data frames, with
+the factor \code{team} specifying the team and the variable \code{at.home}
+specifying whether or not the team was at home. So the first comparison
+@ 
+<<first_comparison>>=
+baseball$home.team[1,]
+baseball$away.team[1,]
+@ %def 
+is Milwaukee playing at home against Detroit. The outcome is given by 
+@ 
+<<first_outcome>>=
+ baseball[1, c("home.wins", "away.wins")]
+@ %def
+
+Contest-specific variables that are \emph{not} player-specific---for example,
+whether it rained or not during a contest---should only be used in
+interactions with variables that \emph{are} player-specific, otherwise the
+effect on ability would be the same for both players and would cancel
+out. Such variables can be provided in a single data frame along with the
+\code{outcome}, \code{player1} and \code{player2} data.
 
 An offset in the model can be specified by
 using the \code{offset} argument to \code{BTm}.
 
-To use only certain rows of the data in the analysis, the \code{subset}
+To use only certain rows of the contest data in the analysis, the \code{subset}
 argument may be used in the call to \code{BTm}.  This should either be a
 logical vector of the same length as the binomial response, or a numeric vector
 containing the indices of rows to be used.
 
-\subsection{Player-specific data}
 
-Variables indexed by the levels of \code{player1} and \code{player2},
-i.e., indexed by \code{id}, are said to be `player-specific'.
-The safest approach is to put all potential predictor
-(explanatory) variables  --- including factors and any offset term --- into a
-data frame with one row per (potential) player,
-and with row names the names of players exactly as used in variables passed to
-the \code{player1} and \code{player2} arguments of \code{BTm}.
-Such a data frame
-should then be included in the list specified as the \code{data} argument
-of \code{BTm} to specify where predictors (and any offset) can be found.
+\subsection{Non contest-specific data}
+
+Some variables do not vary by contest directly, but rather vary by a factor
+that is contest-specific, such as the player ID or the judge making the paired
+comparison. For these variables, it is more economical to store the data by
+the levels of the contest-specific factor and use indexing to obtain the
+values for each contest.   
+
+The \code{CEMS} example in Section \ref{sec:CEMS} provides an illustration of
+such variables.  In this example student-specific variables are indexed by
+\code{student} and school-specific variables are indexed by \code{..}, i.e.\
+the first or second school in the comparison as appropriate. There are then
+two extra sets of variables in addition to the usual contest-specific data as
+described in the last section. The best way to provide these data to \code{BTm}
+is a list of data frames, one for each set of variables, e.g.
+@ 
+<<str_CEMS>>=
+str(CEMS)
+@ %def 
+The names of the data frames are not used by \code{BTm}, but help to clarify
+the structure. The rows should either correspond to the contests or the levels
+of the factor used for indexing.
 
 Player-specific offsets should be included in the formula by using the
 \code{offset} function.
+
+\subsection{Converting data from a wide format}
+
+
 
 \subsection[Converting data from the format required by the earlier BradleyTerry package]{Converting data from the format required by the earlier \pkg{BradleyTerry} package}
 
