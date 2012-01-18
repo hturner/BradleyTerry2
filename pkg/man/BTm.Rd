@@ -28,7 +28,7 @@ BTm(outcome, player1, player2, formula = NULL, id = "..",
     create such a data.frame. } 
   \item{player2}{ an object corresponding to that given in
     \code{player1} for the second player in each contest, with identical
-    structure -- in particular factors must have the same levels. }
+    structure -- in particular factors must have identical levels. }
   \item{formula}{ a formula with no left-hand-side, specifying the
     model for player ability. See details for more information. }
   \item{id}{ the name of the ID factor. } 
@@ -43,13 +43,15 @@ BTm(outcome, player1, player2, formula = NULL, id = "..",
     function to be used in the model. Only the binomial family is
     implemented, with either\code{"logit"}, \code{"probit"} , or \code{"cauchit"} link. (See
     \code{\link{family}} for details of family functions.)}
-  \item{data}{ a list of data frames. This may include named data frames
-    for \code{player1} and \code{player2}, otherwise data frames of
-    objects that are required to fit the model. The rows of these data
-    frames should either correspond to the contests or the levels
-    of a factor used for indexing. Objects are searched for first in the
-    list of data frames in the order given, then in the environment of
-    \code{formula}.} 
+  \item{data}{ an optional object providing data required by the
+    model. This may be a single data frame of contest-level data or a list of
+    data frames. Names of data frames are ignored unless they refer to
+    data frames specified by \code{player1} and \code{player2}.The rows
+    of data frames that do not contain contest-level data must
+    correspond to the levels of a factor used for indexing. Objects are
+    searched for first in the \code{data} object if provided, then in
+    the environment of \code{formula}. If \code{data} is a list, the
+    data frames are searched in the order given.} 
   \item{weights}{ an optional numeric vector of \sQuote{prior weights}.}
   \item{subset}{  an optional logical or numeric vector specifying a 
     subset of observations to be used in the fitting process. }
