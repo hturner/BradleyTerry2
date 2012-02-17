@@ -4,8 +4,8 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
     new.form <- update.formula(old.form, scope)
 
     if (!is.character(scope)){
-        orandom <- lme4:::expandSlash(lme4:::findbars(old.form[[2]]))
-        srandom <- lme4:::expandSlash(lme4:::findbars(new.form[[2]]))
+        orandom <- lme4:::findbars(old.form[[2]])
+        srandom <- lme4:::findbars(new.form[[2]])
         if (length(srandom) && !identical(orandom, srandom))
             stop("Random effects structure of object and scope must be identical.")
         scope <- add.scope(old.form, new.form)

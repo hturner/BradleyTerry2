@@ -27,8 +27,12 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
     if (setup$saturated)
         warning("Player ability saturated - equivalent to fitting ",
                 "separate abilities.")
-    mf <- data.frame(X = setup$X[,1])
-    mf$X <- setup$X
+    mf <- data.frame(X = setup$player1) #just to get length
+    if (!is.null(setup$X)) {
+        mf$X <- setup$X
+        formula <- Y ~ X - 1
+    }
+    else formula <- Y ~ 0
     mf$Y <- setup$Y
     argPos <- match(c("na.action", "start", "etastart",
                       "mustart", "control", "model", "x"), names(fcall), 0)
@@ -36,7 +40,7 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
     if (is.null(setup$random)) {
         method <- get(ifelse(br, "brglm", "glm"), mode = "function")
         fit <- as.call(c(method, fcall[argPos],
-                         list(formula = Y ~ X - 1, family = family, data = mf,
+                         list(formula = formula, family = family, data = mf,
                               offset = setup$offset, subset = setup$subset,
                               weights = setup$weights), dotArgs))
         fit <- eval(fit, parent.frame())
@@ -44,7 +48,7 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
     else {
         method <- get("glmmPQL", mode = "function")
         fit <- as.call(c(method, fcall[argPos],
-                         list(Y ~ X - 1, setup$random, family = family,
+                         list(formula, setup$random, family = family,
                               data = mf, offset = setup$offset,
                               subset = setup$subset, weights = setup$weights), dotArgs))
         fit <- eval(fit, parent.frame())
@@ -53,7 +57,7 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
                 argPos <- match(c("na.action", "model", "x"), names(fcall), 0)
                 method <- get("brglm", mode = "function")
                 fit <- as.call(c(method, fcall[argPos],
-                                 list(Y ~ X - 1, family = family, data = mf,
+                                 list(formula, family = family, data = mf,
                                       offset = setup$offset,
                                       subset = setup$subset,
                                       weights = setup$weights,
@@ -66,10 +70,13 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
                         call. = FALSE)
         }
     }
-    if (ncol(setup$X) > 1)
-        names(fit$coefficients) <- substring(names(fit$coefficients), 2)
-    else
-        names(fit$coefficients) <- colnames(setup$X)
+    if (length(fit$coefficients)) {
+        if (ncol(setup$X) > 1)
+            names(fit$coefficients) <- substring(names(fit$coefficients), 2)
+        else
+            names(fit$coefficients) <- colnames(setup$X)
+        fit$assign <- attr(setup$X, "assign")
+    }
     fit$call <- call
     fit$id <- id
     fit$separate.ability <- separate.ability
@@ -77,7 +84,6 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
     fit$formula <- setup$formula
     fit$player1 <- setup$player1
     fit$player2 <- setup$player2
-    fit$assign <- attr(setup$X, "assign")
     fit$term.labels <- setup$term.labels
     fit$data <- setup$data
     fit$random <- setup$random

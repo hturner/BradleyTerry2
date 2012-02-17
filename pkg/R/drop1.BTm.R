@@ -16,7 +16,7 @@ drop1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
         scope <- drop.scope(lme4:::nobars(form))
      else {
         if (!is.character(scope)) {
-            srandom <- lme4:::expandSlash(lme4:::findbars(scope[[2]]))
+            srandom <- lme4:::findbars(scope[[2]])
             if (length(srandom))
                 stop("Scope should not include random effects.")
             scope <- attr(terms(update.formula(form, scope)),

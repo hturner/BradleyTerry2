@@ -4,12 +4,12 @@ print.summary.glmmPQL <- function(x, digits = max(3, getOption("digits") - 3),
                                    ...)  {
     cat("\nCall:\n", deparse(x$call), sep = "", fill = TRUE)
     p <- length(x$aliased)
+    tidy.zeros <- function(vec) ifelse(abs(vec) < 100 * .Machine$double.eps,
+                                       0, vec)
     if (p == 0) {
         cat("\nNo Fixed Effects\n")
     }
     else {
-        tidy.zeros <- function(vec) ifelse(abs(vec) < 100 * .Machine$double.eps,
-                                           0, vec)
         if (nsingular <- p - x$rank) {
             cat("\nFixed Effects: (", nsingular,
                 " not defined because of singularities)\n", sep = "")

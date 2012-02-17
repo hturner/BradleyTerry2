@@ -19,15 +19,15 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
     colnames(D) <- paste(id, players, sep = "")
 
     fixed <- lme4:::nobars(formula)
-    offset <- missing <- NULL
+    X <- offset <- missing <- term.labels <- NULL
     saturated <- FALSE
-    if (!is.null(fixed)) {
-        mt <- terms(fixed)
+    sep <- list()
+    empty <- is.null(fixed) || is.empty.model(mt <- terms(fixed))
+    if (!empty) {
         factors <- attr(mt, "factors")
         term.labels <- as.character(colnames(factors))
         vars <- rownames(factors)
         indexed <- grep("[[][^],]+[],]", vars)
-        sep <- list()
         if (length(indexed)) { #set NAs to zero
             indices <- gsub("[^[]*[[]([^],]+)[],].*", "\\1", vars[indexed])
             vars <-  gsub("[[][^]]*[]]", "", vars[indexed])
@@ -99,15 +99,16 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
         attr(X, "assign") <- attr(X1, "assign")[-1]
     }
 
-    random <- lme4:::expandSlash(lme4:::findbars(formula[[2]]))
+    random <- lme4:::findbars(formula[[2]])
     if (!is.null(random)) {
+        if (!is.list(random)) random <- list(random)
         if (length(random) > 1 ||
             random[[1]] != parse(text = paste("1|", id, sep = ""))[[1]])
             stop("Currently '(1 | ", id, ")' is the only random effects",
                  "structure allowed.")
         random <- D
     }
-    else if (!idterm & !saturated)
+    else if (!empty && (!idterm & !saturated))
         warning("Ability modelled by predictors but no random effects",
                 call. = FALSE)
 
