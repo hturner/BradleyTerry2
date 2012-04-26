@@ -3,15 +3,16 @@
 %\VignettePackage{BradleyTerry2}
 
 %%% For jss:
- \documentclass{jss}
- \newcommand{\pkginfo}{}
+%% \documentclass{jss}
+%% \newcommand{\pkginfo}{}
 
 %%% uncomment for vignette version
-%\documentclass[nojss]{jss}
-%\newcommand{\pkginfo}{\small \\[12pt]For \pkg{BradleyTerry2} version \Sexpr{packageDescription("BradleyTerry2")[["Version"]]}, \Sexpr{Sys.Date()}\\\url{http://bradleyterry2.r-forge.r-project.org/}\\[-12pt]}
+\documentclass[nojss]{jss}
+\newcommand{\pkginfo}{\small \\[12pt]For \pkg{BradleyTerry2} version \Sexpr{packageDescription("BradleyTerry2")[["Version"]]}, \Sexpr{Sys.Date()}\\\url{http://bradleyterry2.r-forge.r-project.org/}\\[-12pt]}
 
 %% need no \usepackage{Sweave.sty}
 
+\usepackage[english]{babel} % to avoid et~al with texi2pdf
 \usepackage{amsmath}
 \usepackage{booktabs}
 \usepackage{thumbpdf}
@@ -25,14 +26,14 @@
 \newcommand{\logit}{\mathop{\rm logit}}
 \newcommand{\pr}{\mathop{\rm pr}}
 
-\author{Heather Turner\\{\it University of Warwick} \And 
+\author{Heather Turner\\{\it University of Warwick} \And
   David Firth\\{\it University of Warwick}}
 \Plainauthor{Heather Turner, David Firth}
 
-\title{Bradley-Terry models in R: The \BT\ package 
+\title{Bradley-Terry Models in \proglang{R}: The \BT\ Package
 \pkginfo}
-\Plaintitle{Bradley-Terry models in R: The BradleyTerry2 package}
-\Shorttitle{Bradley-Terry models in R}
+\Plaintitle{Bradley-Terry Models in R: The BradleyTerry2 Package}
+\Shorttitle{Bradley-Terry Models in R}
 
 \Abstract{
 
@@ -43,7 +44,7 @@ Included are the standard `unstructured' Bradley-Terry model, structured
 versions in which the parameters are related through a linear predictor to
 explanatory variables, and the possibility of an order or `home advantage'
 effect or other `contest-specific' effects.
-Model fitting is either by maximum likelihood, by penalised
+Model fitting is either by maximum likelihood, by penalized
 quasi-likelihood (for models which involve a random effect), or by bias-reduced
 maximum likelihood in which the first-order asymptotic bias of parameter
 estimates is eliminated.  Also  provided are a simple and efficient approach to
@@ -51,7 +52,7 @@ handling missing covariate data, and suitably-defined residuals for diagnostic
 checking of the linear predictor.
 }
 
-\Keywords{generalized linear model, logistic regression, Jeffreys prior, penalised quasi-likelihood, ranking, tournament analysis, working residuals}
+\Keywords{generalized linear model, logistic regression, penalized quasi-likelihood, ranking, tournament analysis, working residuals}
 
 \Address{
   David Firth\\
@@ -65,10 +66,10 @@ checking of the linear predictor.
 
 \begin{document}
 
-@ 
-<<set_width, echo = FALSE>>=
-options(width = 60)
-@ %def 
+@
+<<set_options, echo = FALSE>>=
+options(width = 65, digits = 7)
+@ %def
 
 \section{Introduction}
 
@@ -90,57 +91,66 @@ The model can
 alternatively be expressed in the logit-linear form
 \begin{equation}
 \logit[\pr(i\ \mathrm{beats}\ j)]=\lambda_i-\lambda_j,
+\label{eq:unstructured}
 \end{equation}
 where $\lambda_i=\log\alpha_i$ for all $i$.  Thus, assuming independence of all
 contests, the parameters $\{\lambda_i\}$ can be estimated by
 maximum likelihood using standard software for generalized linear models, with a
-suitably specified model matrix.  The primary purpose of the \BT\ package,
+suitably specified model matrix.  The primary purpose of the \BT\ package \citep{turn:11},
 implemented in the \R\ statistical computing environment \citep{ihak:gent:96,
 R}, is to facilitate the specification and fitting of such models and some
 extensions.
 
 The \BT\ package supersedes the earlier \pkg{BradleyTerry} package
-\citet{firt:05}, providing a more flexible user interface to allow a wider
+\citep{firt:05}, providing a more flexible user interface to allow a wider
 range of models to be fitted. In particular, \BT\ allows the inclusion of
 simple random effects so that the ability parameters can be related to available
 explanatory variables through a linear predictor of the form
-$\lambda_i=\sum_{r=1}^p\beta_rx_{ir} + U_i$.  The inclusion of the prediction
+\begin{equation}
+    \lambda_i=\sum_{r=1}^p\beta_rx_{ir} + U_i. 
+\end{equation}    
+The inclusion of the prediction
 error $U_i$ allows for variability between players with equal covariate values
 and induces correlation between comparisons with a common player. \BT\ also
 allows for general contest-specific effects to be included in the model and
 allows the logit link to be replaced, if required, by a different symmetric link
 function (probit or cauchit).
 
-The remainder of the paper is organised as follows. Section \ref{sec:BTmodel}
-demonstrates how to use the \pkg{BradleyTerry2} package to fit a `standard'
-Bradley-Terry model, with a separate ability parameter estimated for each
-player. Section \ref{sec:covariates} considers variations of the standard
+The remainder of the paper is organised as follows. Section~\ref{sec:BTmodel}
+demonstrates how to use the \pkg{BradleyTerry2} package to fit a standard
+(i.e., unstructured) Bradley-Terry model, with a separate ability parameter estimated for each
+player, including the use of bias-reduced estimation for such
+models.  Section~\ref{sec:covariates} considers variations of the standard
 model, including the use of player-specific variables to model ability and
 allowing for contest-specific effects such as an order effect or judge
-effects. Sections \ref{sec:ability} and \ref{sec:residuals} explain how to
+effects. Sections~\ref{sec:ability} and \ref{sec:residuals} explain how to
 obtain important information about a fitted model, in particular the
 estimates of ability and their standard errors, and player-level
-residuals. Section \ref{sec:bias} introduces biad-reduced estimation, whilst
-Section \ref{sec:model} notes the function available to aid model
-search. Section \ref{sec:data} explains in more detail how set up data for use
-with the \code{BTm} package, Section \ref{sec:functions} lists the functions
-provided by the package and finally Section \ref{sec:ties} comments on the
-treatment of ties.
+residuals, whilst
+Section~\ref{sec:model} notes the functions available to aid model
+search. Section~\ref{sec:data} explains in more detail how set up data for use
+with the \BT\ package, Section~\ref{sec:functions} lists the functions
+provided by the package and finally Section~\ref{sec:finalremarks}
+comments on two directions for further development of the software.
 
 \section{Standard Bradley-Terry model}
 \label{sec:BTmodel}
 
-\subsection{Example: analysis of journal citations}
+\subsection{Example: Analysis of journal citations}
 \label{citations}
 
-The following comes from page 448 of \citet{agre:02}, extracted from the larger
+The following data come from page 448 of \citet{agre:02}, extracted from the larger
 table of \citet{stig:94}.  The data are counts of citations among four prominent
-journals of statistics and are included the \BT\ package as the dataset
+journals of statistics and are included the \BT\ package as the data set
 \code{citations}:
 @
+<<LoadBradleyTerry2>>=
+library("BradleyTerry2")
+@ 
+
+@
 <<CitationData>>=
-library(BradleyTerry2)
-data(citations)
+data("citations", package = "BradleyTerry2")
 @
 
 @
@@ -163,13 +173,14 @@ names(citations.sf)[1:2] <- c("journal1", "journal2")
 citations.sf
 @ %def
 Note that the self-citation counts are ignored---these provide no
-information on the ability parameters, since these are relative rather than
+information on the ability parameters, since the abilities are relative rather than
 absolute quantities.
+P
 The binomial response can then be modelled by the difference in player abilities
 as follows:
 @
 <<citeModel>>=
-citeModel <- BTm(cbind(win1, win2), journal1, journal2, ~ journal, 
+citeModel <- BTm(cbind(win1, win2), journal1, journal2, ~ journal,
     id = "journal", data = citations.sf)
 citeModel
 @ %def
@@ -183,7 +194,7 @@ The one-sided model formula
 \end{verbatim}
 specifies the model for player ability, in this case the `citeability' of the
 journal. The \code{id} argument specifies that \code{"journal"} is the
-name to be used for the factor that identifies the player --- the values of which
+name to be used for the factor that identifies the player---the values of which
 are given here by \code{journal1} and \code{journal2} for the first and
 second players respectively. Therefore in this case a separate
 citeability parameter is estimated for each journal.
@@ -195,13 +206,41 @@ example, making use of \code{update} to avoid re-specifying the whole model,
 <<citeModelupdate>>=
 update(citeModel, refcat = "JASA")
 @ %def
---- the same model in a different parameterization.
+---the same model in a different parameterization.
 
 The use of the standard Bradley-Terry model for this application might perhaps
-seem rather questionable --- for example, citations within a published paper can
+seem rather questionable---for example, citations within a published paper can
 hardly be considered independent, and the model discards potentially important
 information on self-citation.  \citet{stig:94} provides arguments to defend the
 model's use despite such concerns.
+
+\subsection{Bias-reduced estimates}
+%\label{sec:bias}
+
+Estimation of the standard Bradley-Terry model in \code{BTm} is by default
+computed by maximum likelihood, using an internal call to the
+\code{glm} function.  An alternative  is to fit by bias-reduced
+maximum likelihood \citep{firt:93}: this requires additionally the
+\pkg{brglm}
+package \citep{kosm:07}, and is specified by the optional argument \code{br = TRUE}.  The
+resultant effect, namely removal of first-order asymptotic bias in
+the estimated coefficients, is often quite small.  One notable feature of
+bias-reduced fits is that all estimated coefficients and standard errors are
+necessarily finite, even in situations of `complete separation' where maximum
+likelihood estimates take
+infinite values \citep{hein:sche:02}.
+
+For the citation data, the parameter estimates are only very
+slightly changed in the bias-reduced fit:
+@
+<<citeModelupdate2>>=
+update(citeModel, br = TRUE)
+@ %def
+Here the bias of maximum likelihood is small because the binomial
+counts are fairly large.  In more sparse arrangements of contests---that is,
+where there is less
+or no replication of the contests---the effect of bias reduction would
+typically be more substantial than the insignificant one seen here.
 
 \section{Abilities predicted by explanatory variables}
 \label{sec:covariates}
@@ -223,6 +262,7 @@ model formulae.  The difference in the abilities of player $i$
 and player $j$ is modelled by
 \begin{equation}
 \sum_{r=1}^p\beta_rx_{ir} - \sum_{r=1}^p\beta_rx_{jr} + U_i - U_j,
+\label{eq:structured}
 \end{equation}
 where $U_i \sim N(0, \sigma^2)$ for all $i$. The Bradley-Terry model is then a
 generalized linear mixed model, which the \code{BTm} function currently
@@ -234,18 +274,18 @@ lizards by body size (snout to vent length):
 @
 <<lizModel>>=
 options(show.signif.stars = FALSE)
-data(flatlizards)
-lizModel <- BTm(1, winner, loser, ~ SVL[..] + (1|..), 
+data("flatlizards", package = "BradleyTerry2")
+lizModel <- BTm(1, winner, loser, ~ SVL[..] + (1|..),
                 data = flatlizards)
 @ %def
 Here the winner of each fight is compared to the loser, so the outcome is
-always 1.  The special name ``\code{..}'' appears in the formula as the default
+always 1.  The special name `\code{..}' appears in the formula as the default
 identifier for players, in the absence of a user-specified \code{id} argument.
 The values of this factor are given by \code{winner} for the winning lizard
 and \code{loser} for the losing lizard in each contest. %Since \code{winner}
 %and \code{loser} are specific instances of the factor \code{..}, they must
-%share the same set of levels (one for each lizard). 
-%The factors \code{winner}and \code{loser} 
+%share the same set of levels (one for each lizard).
+%The factors \code{winner}and \code{loser}
 These factors are provided in the data frame \code{contests} that is the
 first element of the list object \code{flatlizards}. The second element of
 \code{flatlizards} is another data frame, \code{predictors}, containing
@@ -253,18 +293,18 @@ measurements on the observed lizards, including \code{SVL}, which is the snout
 to vent length. Thus \code{SVL[..]} represents the snout to vent length
 indexed by lizard (\code{winner} or \code{loser} as appropriate).  Finally a
 random intercept for each lizard is included using the bar notation familiar
-to users of the \pkg{lme4} package (note that this is the only random effect
-structure currently implemented in \pkg{BradleyTerry2}).
+to users of the \pkg{lme4} package \citep{bate:11}. (Note that a random intercept is the only random effect
+structure currently implemented in \pkg{BradleyTerry2}.)
 
 The fitted model is summarized below:
-@ 
+@
 <<summarize_lizModel>>=
 summary(lizModel)
-@ %def 
-The coefficient of snout to vent length is weakly significant, however the
-standard deviation of the random effects is large and highly significant,
-suggesting that the model is a poor fit. A more appropriate model is
-considered in the next section.
+@ %def
+The coefficient of snout to vent length is weakly significant; however, the
+standard deviation of the random effect is quite large,
+suggesting that this simple model has fairly poor explanatory power.
+A more appropriate model is considered in the next section.
 
 \subsection{Missing values}
 
@@ -279,42 +319,43 @@ will typically be very wasteful to discard all contests involving players for
 which some values are missing. Instead, such cases are accommodated by the
 inclusion of one or more parameters in the model.  If, for example, player $1$
 has one or more of its predictor values $x_{11},\ldots,x_{1p}$ missing, then the
-combination of (1) and (3) above yields
-\[
+combination of Equations~\ref{eq:unstructured} and \ref{eq:structured} above yields
+\begin{equation}
 \logit[\pr(1\ \mathrm{beats}\ j)]=\lambda_1 - \left(\sum_{r=1}^p\beta_rx_{jr} + U_j\right),
-\]
+\end{equation}
 for all other players $j$.  This results in the inclusion of a `direct' ability
 parameter for each player having missing predictor values, in addition to the
-common coefficients $\beta_1,\ldots,\beta_p$ --- an approach which will be
+common coefficients $\beta_1,\ldots,\beta_p$---an approach which will be
 appropriate when the missingness mechanism is unrelated to contest success.  The
 same device can be used also to accommodate any user-specified departures from a
 structured Bradley-Terry model, whereby some players have their abilities
 determined by the linear predictor but others do not.
 
 In the original analysis of the \code{flatlizards} data \citep{whit:06}, the
-final model included the first and third principal compenents
+final model included the first and third principal components
 of the spectral reflectance from the throat (representing brightness and UV intensity
 respectively) as well as head length and the snout to vent length seen in our
 earlier model. The spectroscopy data was missing for two lizards, therefore
 the ability of these lizards was estimated directly. The following fits this
 model, with the addition of a random intercept as before:
-@ 
+@
 <<lizModel2>>=
 lizModel2 <- BTm(1, winner, loser,
             ~ throat.PC1[..] + throat.PC3[..] +
             head.length[..] + SVL[..] + (1|..),
             data = flatlizards)
 summary(lizModel2)
-@ %def 
+@ %def
 Note that \code{BTm} detects that lizards 96 and 99 have missing
 values in the specified predictors and automatically includes separate ability
 parameters for these lizards. This model was found to be the single best model
 based on the principal components of reflectance and the other predictors
 available and indeed the standard deviation of the random intercept is much
 reduced, but still highly significant. Allowing for this significant variation
-between lizards with the same predictor values produces more realistic (i.e.\
+between lizards with the same predictor values produces more realistic (i.e.,
 larger) standard errors for the parameters when compared to the original
-analysis---although this affects the significance of the morphological
+analysis of \citet{whit:06}.
+Although this affects the significance of the morphological
 variables, it does not affect the significance of the principal components, so
 in this case does not affect the main conclusions of the study.
 
@@ -324,10 +365,10 @@ in this case does not affect the main conclusions of the study.
 In certain types of application some or all contests have an associated `bias',
 related to the order in which items are presented to a judge or with the
 location in which a contest takes place, for example.  A natural extension of
-the Bradley-Terry model (1) is then
-\[
+the Bradley-Terry model (Equation~\ref{eq:unstructured}) is then
+\begin{equation}
 \logit[\pr(i\ \mathrm{beats}\ j)]=\lambda_i-\lambda_j + \delta z,
-\]
+\end{equation}
 where $z=1$ if $i$ has the supposed advantage and $z=-1$ if $j$ has it.  (If the
 `advantage' is in fact a disadvantage, $\delta$ will be negative.)  The scores
 $\lambda_i$ then relate to ability in the absence of any such advantage.
@@ -335,18 +376,17 @@ $\lambda_i$ then relate to ability in the absence of any such advantage.
 As an example, consider the baseball data given in \citet{agre:02}, page 438:
 @
 <<baseball>>=
-data(baseball)
+data("baseball", package = "BradleyTerry2")
 head(baseball)
 @ %def
-The dataset records the home wins and losses for each baseball team against each
-of the 6 other teams in the dataset. The \code{head} function is used to
+The data set records the home wins and losses for each baseball team against each
+of the 6 other teams in the data set. The \code{head} function is used to
 show the first 6 records, which are the Milwaukee home games. We see for
 example that Milwaukee played 7 home games against Detroit and won 4 of them.
 The `standard' Bradley-Terry model without a home-advantage parameter will be
 fitted if no formula is specified in the call to \code{BTm}:
 @
 <<baseballModel>>=
-data(baseball)
 baseballModel1 <- BTm(cbind(home.wins, away.wins), home.team, away.team,
                       data = baseball, id = "team")
 summary(baseballModel1)
@@ -354,7 +394,7 @@ summary(baseballModel1)
 The reference team is Baltimore, estimated to be the weakest of these seven,
 with Milwaukee and Detroit the strongest.
 
-In the above, the ability of each team is modelled simply as \code{~ team} where 
+In the above, the ability of each team is modelled simply as \code{~ team} where
 the values of the factor \code{team} are given by \code{home.team} for the
 first team and \code{away.team} for the second team in each game. To
 estimate the home-advantage effect, an additional variable is required to
@@ -362,13 +402,13 @@ indicate whether the team is at home or not. Therefore data frames
 containing both the team factor and this new indicator variable are required
 in place of the factors \code{home.team} and \code{away.team} in the call to
 \code{BTm}. This is achieved here by over-writing the \code{home.team} and
-\code{away.team} factors in the \code{baseball} data frame: 
+\code{away.team} factors in the \code{baseball} data frame:
 @
 <<baseballDataUpdate>>=
 baseball$home.team <- data.frame(team = baseball$home.team, at.home = 1)
 baseball$away.team <- data.frame(team = baseball$away.team, at.home = 0)
 @ %def
-The \code{at.home} variable is needed for both the home team and the 
+The \code{at.home} variable is needed for both the home team and the
 away team, so that it can be differenced as appropriate in the linear
 predictor. With the data organised in this way, the ability formula can now be
 updated to include the \code{at.home} variable as follows:
@@ -402,9 +442,9 @@ where data on students' preferences in relation to six European management
 schools is analysed.
 @
 <<CEMSmodel>>=
-data(CEMS)
+data("CEMS", package = "BradleyTerry2")
 table8.model <-  BTm(outcome = cbind(win1.adj, win2.adj),
-    player1 = school1, player2 = school2, formula = ~ .. + 
+    player1 = school1, player2 = school2, formula = ~ .. +
     WOR[student] * LAT[..] +  DEG[student] * St.Gallen[..] +
     STUD[student] * Paris[..] + STUD[student] * St.Gallen[..] +
     ENG[student] * St.Gallen[..] + FRA[student] * London[..] +
@@ -415,15 +455,15 @@ table8.model <-  BTm(outcome = cbind(win1.adj, win2.adj),
 @ %def
 This model reproduces results from Table~8 of \cite{ditt:01} apart
 from minor differences due to the different treatment of ties. Here the
-outcome is the binomial frequency of preference for \code{school1} 
+outcome is the binomial frequency of preference for \code{school1}
 over \code{school2}, with ties counted as half a `win' and half a `loss'. The
 formula specifies the model for school `ability' or worth. In this formula,
-the default label ``\code{..}'' represents the school (with values given by
+the default label `\code{..}' represents the school (with values given by
 \code{school1} or \code{school2} as appropriate) and \code{student} is a
 factor specifying the student that made the comparison. The remaining
-variables in the formula use R's standard indexing mechanism to include
-student-specific variables, e.g. \code{WOR}: whether or not the student was in
-full-time employment, and school-specific variables, e.g. \code{LAT}: whether
+variables in the formula use \proglang{R}'s standard indexing mechanism to include
+student-specific variables, e.g., \code{WOR}: whether or not the student was in
+full-time employment, and school-specific variables, e.g., \code{LAT}: whether
 the school was in a `Latin' city. Thus there are three types of variables:
 contest-specific (\code{school1}, \code{school2}, \code{student}),
 subject-specific (\code{WOR}, \code{DEG}, \ldots) and object-specific
@@ -450,32 +490,43 @@ This gives, for each team, the estimated ability when the team
 enjoys no home advantage.
 
 Similarly, estimates of the fighting ability of each lizard in the
-\code{flatlizards} data under the model based on the principal compenents
-of the spectral reflectance from the throat are given by
+\code{flatlizards} data under the model based on the principal components
+of the spectral reflectance from the throat are obtained as follows:
 @
 <<BTabilities2>>=
-head(BTabilities(lizModel2))
+head(BTabilities(lizModel2), 4)
 @ %def
 
-The ability estimates in an un-structured Bradley-Terry model are particularly well suited to presentation using the device of \emph{quasi variances} \citep{firt:04}.  The \pkg{qvcalc} package (version 0.8-5 or later) contains a function of the same name which does the necessary work:
+The ability estimates in an unstructured Bradley-Terry model are
+particularly well suited to presentation using the device of
+\emph{quasi-variances} \citep{firt:04}.  The \pkg{qvcalc}
+package \citep[][version 0.8-5 or later]{firt:10} contains a function of the same name
+which does the necessary work:
 \begin{Sinput}
-> library(qvcalc)
+> library("qvcalc")
 > baseball.qv <- qvcalc(BTabilities(baseballModel2))
-> plot(baseball.qv, 
+> plot(baseball.qv,
 +      levelNames = c("Bal", "Bos", "Cle", "Det", "Mil", "NY", "Tor"))
 \end{Sinput}
 \begin{figure}[!tbph]
     \begin{center}
         \includegraphics{baseball-qvplot.pdf}
     \end{center}
-    \caption{Estimated relative abilities of baseball teams}
+    \caption{Estimated relative abilities of baseball teams.}
     \label{fig:qvplot}
 \end{figure}
+The `comparison intervals' as shown in Figure~\ref{fig:qvplot} are based on
+`quasi standard errors', and can be interpreted as if they refer to
+\emph{independent} estimates of ability for the journals.  This has the
+advantage that comparison between any pair of journals is readily made
+(i.e., not only comparisons with the `reference' journal).  For details
+of the theory and method of calculation see \citet{firt:04}.
 
 \section{Residuals}
 \label{sec:residuals}
 
-There are two main types of residuals available for a Bradley-Terry model object.
+There are two main types of residuals available for a Bradley-Terry model
+object. 
 
 First, there are residuals obtained by the standard methods for models of class
 \code{"glm"}.  These all deliver one residual for each contest or type of
@@ -484,7 +535,7 @@ contest.  For example, Pearson residuals for the model
 @
 <<residuals>>=
 res.pearson <- round(residuals(lizModel2), 3)
-head(cbind(flatlizards$contests, res.pearson))
+head(cbind(flatlizards$contests, res.pearson), 4)
 @ %def
 
 More useful for diagnostics on the linear predictor $\sum\beta_rx_{ir}$ are
@@ -500,37 +551,49 @@ res <- residuals(lizModel2, type = "grouped")
 These residuals estimate the error in the linear predictor; they are obtained by
 suitable aggregation of the so-called `working' residuals from the model fit.
 The \code{weights} attribute
-indicates the relative information in these residuals --- weight is roughly
-inversely proportional to variance --- which may be useful for plotting and/or
+indicates the relative information in these residuals---weight is roughly
+inversely proportional to variance---which may be useful for plotting and/or
 interpretation; for example, a large residual may be of no real concern if based
 on very little information. Weighted least-squares regression of these residuals
-on any variable already in the model is null.  For example:
+on any variable already in the model is null.
+For example:
 @
 <<residualWLS>>=
-lm(res ~ throat.PC1, weights = attr(res, "weights"), data = flatlizards$predictors)
-lm(res ~ head.length, weights = attr(res, "weights"), data = flatlizards$predictors)
+lm(res ~ throat.PC1, weights = attr(res, "weights"), 
+   data = flatlizards$predictors)
+lm(res ~ head.length, weights = attr(res, "weights"), 
+   data = flatlizards$predictors)
 @ %def %$
 
-\section{Bias-reduced estimates}
-\label{sec:bias}
+As an illustration of evident \emph{non-null} residual structure, consider the
+unrealistically simple model \code{lizModel} that was fitted in
+Section~\ref{sec:covariates} above.
+That model lacks the
+clearly significant predictor variable \code{throat.PC3}, and the
+plot shown in Figure~\ref{fig:residuals} demonstrates this fact
+graphically:
+\begin{Sinput}
+> lizModel.residuals <- residuals(lizModel, type = "grouped")
+> plot(flatlizards$predictors$throat.PC3, lizModel.residuals)
+\end{Sinput}
+\begin{figure}[!tbph]
+    \begin{center}
+        \vspace{-17pt}
+        \includegraphics{residuals.pdf}
+    \end{center}
+    \caption{Lizard residuals for the simple model \code{lizModel}, plotted
+    against \code{throat.PC3}.}
+    \label{fig:residuals}
+\end{figure}
+The residuals in the plot exhibit a strong, positive regression slope in
+relation to the omitted predictor variable \code{throat.PC3}.
 
-Estimation of the Bradley-Terry model in \pkg{BTm} is by default
-(when there are no random effects in the model)
-computed by maximum likelihood, using an internal call to the
-\code{glm} function.  An alternative  is to fit by bias-reduced
-maximum likelihood \citep{firt:93}: this requires additionally the
-\pkg{brglm}
-package, and is specified by the optional argument \code{br = TRUE}.  The
-resultant effect, namely removal of first-order asymptotic bias in
-the estimated coefficients, is often quite small.  One notable feature of
-bias-reduced fits is that all estimated coefficients and standard errors are
-necessarily finite, even in situations of `complete separation' where MLEs take
-infinite values \citep{hein:sche:02}.
 
 \section{Model search}
 \label{sec:model}
 
-In addition to \code{update()} as illustrated above, methods for the
+In addition to \code{update()} as illustrated in preceding sections,
+methods for the
 generic functions \code{add1()}, \code{drop1()} and
 \code{anova()} are provided. These
 can be used to investigate the effect of adding or removing a variable, whether
@@ -558,32 +621,32 @@ represents either a single contest or a set of contests between the same two pla
 The \code{player1} and \code{player2} arguments are either factors
 specifying the two players in each contest, or data frames containing such factors, along
 with any contest-specific variables that are also player-specific, such as the
-\code{at.home} variable seen in Section \ref{sec:order}. If given in data
+\code{at.home} variable seen in Section~\ref{sec:order}. If given in data
 frames, the factors identifying the players should be named as specified by the
 \code{id} argument and should have identical levels, since they represent a
 particular sample of the full set of players.
 
-Thus for \code{baseballModel2}, which was specified by the following call:
-@ 
+Thus for the model \code{baseballModel2}, which was specified by the following call:
+@
 <<baseballModel2_call>>=
  baseballModel2$call
-@ %def 
+@ %def
 the data are provided in the \code{baseball} data frame, which has the
 following structure:
-@ 
+@
 <<str_baseball>>=
-str(baseball)
-@ %def 
+str(baseball, vec.len = 3)
+@ %def
 In this case \code{home.team} and \code{away.team} are both data frames, with
 the factor \code{team} specifying the team and the variable \code{at.home}
 specifying whether or not the team was at home. So the first comparison
-@ 
+@
 <<first_comparison>>=
 baseball$home.team[1,]
 baseball$away.team[1,]
-@ %def 
-is Milwaukee playing at home against Detroit. The outcome is given by 
-@ 
+@ %def
+is Milwaukee playing at home against Detroit. The outcome is given by
+@
 <<first_outcome>>=
  baseball[1, c("home.wins", "away.wins")]
 @ %def
@@ -592,11 +655,13 @@ Contest-specific variables that are \emph{not} player-specific---for example,
 whether it rained or not during a contest---should only be used in
 interactions with variables that \emph{are} player-specific, otherwise the
 effect on ability would be the same for both players and would cancel
-out. Such variables can be provided in a single data frame along with the
+out. Such variables can conveniently be provided in a single data frame along with the
 \code{outcome}, \code{player1} and \code{player2} data.
 
 An offset in the model can be specified by
-using the \code{offset} argument to \code{BTm}.
+using the \code{offset} argument to \code{BTm}\null.  This facility is
+provided for completeness: the authors have not yet encountered
+an application where it is needed.
 
 To use only certain rows of the contest data in the analysis, the \code{subset}
 argument may be used in the call to \code{BTm}.  This should either be a
@@ -609,27 +674,27 @@ containing the indices of rows to be used.
 
 Some variables do not vary by contest directly, but rather vary by a factor
 that is contest-specific, such as the player ID or the judge making the paired
-comparison. For these variables, it is more economical to store the data by
+comparison. For such variables, it is more economical to store the data by
 the levels of the contest-specific factor and use indexing to obtain the
-values for each contest.   
+values for each contest.
 
-The \code{CEMS} example in Section \ref{sec:CEMS} provides an illustration of
+The \code{CEMS} example in Section~\ref{sec:CEMS} provides an illustration of
 such variables.  In this example student-specific variables are indexed by
-\code{student} and school-specific variables are indexed by \code{..}, i.e.\
+\code{student} and school-specific variables are indexed by \code{..}, i.e.,
 the first or second school in the comparison as appropriate. There are then
 two extra sets of variables in addition to the usual contest-specific data as
-described in the last section. The best way to provide these data to \code{BTm}
-is a list of data frames, one for each set of variables, e.g.
-@ 
+described in the last section. A good way to provide these data to \code{BTm}
+is as a list of data frames, one for each set of variables, e.g.,
+@
 <<str_CEMS>>=
-str(CEMS)
-@ %def 
+str(CEMS, vec.len = 2)
+@ %def
 The names of the data frames are only used by \code{BTm} if they match the
 names specified in the \code{player1} and \code{player2} arguments, in which
 case it is assumed that these are data frames providing the data for the first
-an second player respectively. The rows of data frames in the list should
+and second player respectively. The rows of data frames in the list should
 either correspond to the contests or the levels of the factor used for
-indexing. 
+indexing.
 
 Player-specific offsets should be included in the formula by using the
 \code{offset} function.
@@ -637,12 +702,12 @@ Player-specific offsets should be included in the formula by using the
 \subsection{Converting data from a `wide' format}
 
 The \code{BTm} function requires data in a `long' format, with one row per
-contest, provided either directly as in Section \ref{sec:contest} or via
-indexing as in Section \ref{sec:non-contest}. In studies where the same set of
+contest, provided either directly as in Section~\ref{sec:contest} or via
+indexing as in Section~\ref{sec:non-contest}. In studies where the same set of
 paired comparisons are made by several judges, as in a questionnaire for
 example, the data may be stored in a `wide' format, with one row per judge.
 
-As an example, consider the \code{cemspc} data from the \pkg{prefmod} package,
+As an example, consider the \code{cemspc} data from the \pkg{prefmod} package \citep{hatz:12},
 which provides data from the CEMS study in a wide format. Each row corresponds to
 one student; the first 15 columns give the outcome of all pairwise comparisons
 between the 6 schools in the study and the last two columns correspond to two
@@ -652,26 +717,28 @@ of English) and \code{SEX} (indicating the student's gender).
 The following steps convert these data into a form suitable for analysis with
 \code{BTm}. First a new data frame is created from the student-specific
 variables and these variables are converted to factors:
-@ 
+@
 <<student-specific_data>>=
-library(prefmod)
+library("prefmod")
 student <- cemspc[c("ENG", "SEX")]
-student$ENG <- factor(student$ENG, levels = 1:2, labels = c("good", "poor"))
-student$SEX <- factor(student$SEX, levels = 1:2, labels = c("female", "male"))
-@ %def 
+student$ENG <- factor(student$ENG, levels = 1:2, 
+                      labels = c("good", "poor"))
+student$SEX <- factor(student$SEX, levels = 1:2, 
+                      labels = c("female", "male"))
+@ %def
 This data frame is put into a list, which will eventually hold all the
 necessary data. Then a \code{student} factor is created for indexing
-the student data to produce contest-level data. This put in a new data frame
-that will hold the contest-specific data
-@ 
+the student data to produce contest-level data. This is put in a new data frame
+that will hold the contest-specific data.
+@
 <<student_factor>>=
 cems <- list(student = student)
-student <- gl(303, 1, 303*15) #303 students, 15 comparisons
+student <- gl(303, 1, 303 * 15) #303 students, 15 comparisons
 contest <- data.frame(student = student)
-@ %def 
+@ %def
 Next the outcome data is converted to a binomial response, adjusted for
-ties. The result is added to the \code{contest} data frame
-@ 
+ties. The result is added to the \code{contest} data frame.
+@
 <<binomial_response>>=
 win <- cemspc[, 1:15] == 0
 lose <- cemspc[, 1:15] == 2
@@ -681,13 +748,14 @@ contest$lose.adj <- c(lose + draw/2)
 @ %def
 Then two factors are created identifying the first and second school in each
 comparison. The comparisons are in the order 1 vs.\ 2, 1 vs.\ 3, 2 vs.\ 3, 1
-vs.\ 4, \ldots, so the factors can be created as follows
-@ 
+vs.\ 4, \ldots, so the factors can be created as follows:
+@
 <<school_factors>>=
-lab <- c("London", "Paris", "Milano", "St. Gallen", "Barcelona", "Stockholm")
+lab <- c("London", "Paris", "Milano", "St. Gallen", "Barcelona", 
+         "Stockholm")
 contest$school1 <- factor(sequence(1:5), levels = 1:6, labels = lab)
 contest$school2 <- factor(rep(2:6, 1:5), levels = 1:6, labels = lab)
-@ %def 
+@ %def
 Note that both factors have exactly the same levels, even though only five of
 the six players are represented in each case. In other words, the numeric
 factor levels refer to the same players in each case, so that the player is
@@ -695,28 +763,28 @@ unambiguously identified. This ensures that player-specific parameters and
 player-specific covariates are correctly specified.
 
 Finally the \code{contest} data frame is added to the main list:
-@ 
+@
 <<cems_data>>=
-cems$contest <- contest 
-@ %def 
+cems$contest <- contest
+@ %def
 This creates a single data object that can be passed to the \code{data}
 argument of \code{BTm}. Of course, such a list could be created on-the-fly as
 in \code{data = list(contest, student)}, which may be more convenient in
-practice. 
+practice.
 
 \subsection[Converting data from the format required by the earlier BradleyTerry package]{Converting data from the format required by the earlier \pkg{BradleyTerry} package}
 
 The \pkg{BradleyTerry} package described in \citet{firt:05} required contest/comparison results to be in a data frame with columns named \code{winner}, \code{loser} and \code{Freq}.  The following example shows how \code{xtabs} and \code{countsToBinomial} can be used to convert such data for use with the \code{BTm} function in \pkg{BradleyTerry2}:
 \begin{Sinput}
-> library(BradleyTerry)  ## the /old/ BradleyTerry package
+> library("BradleyTerry")  ## the /old/ BradleyTerry package
 > ## load data frame with columns "winner", "loser", "Freq"
-> data(citations, package = "BradleyTerry")
+> data("citations", package = "BradleyTerry")
 > ## convert to 2-way table of counts
 > citations <- xtabs(Freq ~ winner + loser, citations)
 > ## convert to a data frame of binomial observations
-> citations.sf <- countsToBinomial(citations)  
+> citations.sf <- countsToBinomial(citations)
 \end{Sinput}
-The \code{citations.sf} data frame can then be used with \code{BTm} as shown in Section \ref{citations}.
+The \code{citations.sf} data frame can then be used with \code{BTm} as shown in Section~\ref{citations}.
 
 
 
@@ -752,8 +820,10 @@ for (fn in getNamespaceExports("BradleyTerry2")) {
 options(width = 60)
 @ %def
 
-\section[A note on the treatment of ties]{A note on the treatment of ties}
-\label{sec:ties}
+\section{Some final remarks}
+\label{sec:finalremarks}
+
+\subsection[A note on the treatment of ties]{A note on the treatment of ties}
 
 The present version of \BT\ provides no sophisticated facilities for handling
 tied contests/comparisons; the well-known models of \cite{rao:kupp:67}
@@ -764,9 +834,29 @@ category of response is not allowed.
 In several of the data examples (e.g., \code{?CEMS}, \code{?springall},
 \code{?sound.fields}),
 ties are handled by the crude but simple device of adding half of a `win' to
-the tally for each player involved; in each of the examples where this has been done it is found that the result is very similar, after a simple re-scaling, to the more sophisticated analyses that have appeared in the literature.
+the tally for each player involved;
+in each of the examples where this has been done it is found that the
+result is very similar, after a simple re-scaling, to the more
+sophisticated analyses that have appeared in the literature.  Note that this
+device when used with \code{BTm} typically gives rise to warnings
+produced by the back-end
+\code{glm} function, about non-integer `binomial' counts; such warnings
+are of no consequence and can be safely ignored.
 
-It is likely that a future version of \BT\ will have a more general method for handling ties.
+It is likely that a future version of \BT\ will have a more general
+method for handling ties.
+
+\subsection{A note on `contest-specific' random effects}
+
+The current version of \BT\ provides facilities for fitting models with
+random effects in `player-specific' predictor functions, as illustrated
+in Section~\ref{sec:covariates}.
+For more general, `contest-specific' random-effect structures,
+such as random `judge'
+effects in psychological studies \citep[e.g.,][]{bock:01}, \BT\ provides
+(through \code{BTm}) the necessary user interface but as yet no
+back-end calculation.  It is hoped that this important generalization
+can be made successfully in a future version of \BT.
 
 \section*{Acknowledgments}
 

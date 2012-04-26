@@ -1,3 +1,22 @@
+Changes in BradleyTerry2 0.9-7
+==============================
+
+Bug fixes
+---------
+
+    o	fixed anova.BTmlist to work for models with random effects
+
+    o   allow models to be specified with no fixed effects
+
+
+Improvements
+------------
+
+    o	updated vignette, including example of bias-reduction, a 
+    	new example incorporating random effects and a new example
+	on preparing data for use with package
+
+
 Changes in BradleyTerry2 0.9-6
 ==============================
 
