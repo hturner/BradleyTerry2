@@ -79,10 +79,13 @@
   and they appear here with his kind permission.
 }
 \references{
- Whiting, M.J., Stuart-Fox, D.M., O'Connor, D., Firth, D., Bennett,
- N.C. and Blomberg, S.P. (2006). Ultraviolet signals ultra-aggression in
- a lizard. \emph{Animal Behaviour} \bold{72}, 353-363.
- (\url{http://dx.doi.org/10.1016/j.anbehav.2005.10.018})
+  Turner, H and Firth, D. (2012)  Bradley-Terry models in R: The
+  BradleyTerry2 package.  \emph{Journal of Statistical
+    Software},  \bold{48}(9), 1--21.
+  
+  Whiting, M.J., Stuart-Fox, D.M., O'Connor, D., Firth, D., Bennett,
+  N.C. and Blomberg, S.P. (2006). Ultraviolet signals ultra-aggression in
+  a lizard. \emph{Animal Behaviour} \bold{72}, 353--363.
 }
 \seealso{\code{\link{BTm}}}
 \examples{

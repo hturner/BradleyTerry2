@@ -86,7 +86,11 @@ Dittrich, R, Hatzinger, R and Katzenbeisser, W (1998)  Modelling the
 Dittrich, R, Hatzinger, R and Katzenbeisser, W (2001)  Corrigendum:
 Modelling the effect of subject-specific covariates in paired comparison
 studies with an application to university rankings. \emph{Applied
-  statistics} \bold{50}, 247--249. 
+  statistics} \bold{50}, 247--249.
+
+Turner, H and Firth, D. (2012)  Bradley-Terry models in R: The
+BradleyTerry2 package.  \emph{Journal of Statistical
+Software},  \bold{48}(9), 1--21.
 }
 \author{David Firth}
 \examples{

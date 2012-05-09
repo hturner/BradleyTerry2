@@ -1,20 +1,21 @@
-## R >= 2.8.0 passes package metadata to citation().
-if(!exists("meta") || is.null(meta)) meta <- packageDescription("BradleyTerry")
-year <- sub("-.*", "", meta$Date)
-note <- sprintf("R package version %s", meta$Version) 
-url <- sprintf("http://CRAN.R-project.org/package=BradleyTerry", meta$Version) 
+citHeader("To cite BradleyTerry2 in publications use:")
 
-citEntry(entry="Manual",
-    title = {"Bradley-Terry models in R: The BradleyTerry2 package"},
-    author = personList(as.person("Heather Turner"),
-                        as.person("David Firth")),
-    year = year,
-    note = note,
-    url = url,
-    textVersion = paste(
-      "Heather Turner and David Firth", sprintf("(%s).", year),
-      "Bradley-Terry models in R: The BradleyTerry2 package",
-      sprintf("(%s).", note), sprintf("(%s).", url))
+citEntry(entry = "Article",
+  title        = "Bradley-Terry Models in {R}: The {BradleyTerry2} Package",
+  author       = personList(as.person("Heather Turner"),
+                   as.person("David Firth")),
+  journal      = "Journal of Statistical Software",
+  year         = "2012",
+  volume       = "48",
+  number       = "9",
+  pages        = "1--21",
+  url          = "http://www.jstatsoft.org/v48/i09/",
+
+  textVersion  =
+  paste("Heather Turner, David Firth (2012).",
+        "Bradley-Terry Models in R: The BradleyTerry2 Package.",
+        "Journal of Statistical Software, 48(9), 1-21.",
+        "URL http://www.jstatsoft.org/v48/i09/.")
 )
 
 
