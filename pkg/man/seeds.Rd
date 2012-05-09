@@ -23,9 +23,9 @@ variety and type of root extract.
 Crowder, M. (1978) Beta-Binomial ANOVA for proportions. \emph{Applied Statistics}, \bold{27}, 34--37. 
 }
 \references{
-  Breslow, N. E. and Clayton, D. G. (1993) Approximate Inference
-  in Generalized Linear Mixed Models. \emph{JASA}, \bold{88(421)},
-  9--25.
+  Breslow, N. E. and Clayton, D. G. (1993) Approximate inference
+  in Generalized Linear Mixed Models. \emph{Journal of the American
+    Statistical Association}, \bold{88}(421), 9--25.
 }
 \seealso{\code{\link{glmmPQL}}}
 \examples{

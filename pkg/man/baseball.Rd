@@ -21,12 +21,16 @@
   }
 }
 \source{
-Page 438 of Agresti, A (2002) \emph{Categorcal Data Analysis} (2nd Edn.).  
-Wiley, New York.
+  Page 438 of Agresti, A. (2002) \emph{Categorical Data Analysis} (2nd
+  Edn.). New York: Wiley.
 }
 \references{
-Firth, D. (2005)  Bradley-Terry models in R.  \emph{Journal of Statistical
-Software},  \bold{12}(1).
+  Firth, D. (2005)  Bradley-Terry models in R.  \emph{Journal of
+    Statistical Software},  \bold{12}(1), 1--12.
+  
+  Turner, H. and Firth, D. (2012)  Bradley-Terry models in R: The
+  BradleyTerry2 package.  \emph{Journal of Statistical
+    Software},  \bold{48}(9), 1--21.
 }
 \note{This dataset is in a simpler format than the one described in
   Firth (2005).}

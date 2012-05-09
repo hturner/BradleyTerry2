@@ -136,22 +136,26 @@ BTm(outcome, player1, player2, formula = NULL, id = "..",
   }
 \references{
 
-  Agresti, A (2002)  \emph{Categorical Data Analysis} (2nd ed).  New
+  Agresti, A. (2002)  \emph{Categorical Data Analysis} (2nd ed).  New
   York: Wiley.
   
   Firth, D. (1992)  Bias reduction, the Jeffreys prior and GLIM. In 
-  \emph{Advances in GLIM and Statistical Modelling}, Eds. L Fahrmeir,
-  B J Francis, R Gilchrist and G Tutz, pp91--100.  New York: Springer.
+  \emph{Advances in GLIM and Statistical Modelling}, Eds. Fahrmeir, L.,
+  Francis, B. J., Gilchrist, R. and Tutz, G., pp91--100. New York:
+  Springer. 
   
   Firth, D. (1993)  Bias reduction of maximum likelihood estimates.
   \emph{Biometrika} \bold{80}, 27--38.
   
-  Firth, D. (2005)  Bradley-Terry models in R.  \emph{Journal of Statistical
-    Software}, \bold{12}(1). 
+  Firth, D. (2005)  Bradley-Terry models in R.  \emph{Journal of
+    Statistical Software},  \bold{12}(1), 1--12.
   
   Stigler, S. (1994)  Citation patterns in the journals of statistics 
   and probability.  \emph{Statistical Science} \bold{9}, 94--108.
-  
+
+  Turner, H. and Firth, D. (2012)  Bradley-Terry models in R: The
+  BradleyTerry2 package.  \emph{Journal of Statistical
+    Software},  \bold{48}(9), 1--21.
 }
 \author{ Heather Turner, David Firth }
 \examples{

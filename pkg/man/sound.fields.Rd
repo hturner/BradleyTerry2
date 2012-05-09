@@ -5,8 +5,9 @@
 Kousgaard (1984) Data on Pair Comparisons of Sound Fields
 }
 \description{
-\emph{The results of a series of factorial subjective room acoustic
-  experiments carried out at the Technical University of Denmark by A C Gade. }
+The results of a series of factorial subjective room acoustic
+  experiments carried out at the Technical University of Denmark by A C
+  Gade. 
 }
 \usage{data(sound.fields)}
 \format{
@@ -15,8 +16,7 @@ and \code{sound.fields$design}.
 
 The \code{sound.fields$comparisons} data frame has 84 observations on the following 8 variables:
  \describe{
-   \item{\code{field1}}{a factor with levels \code{c("000", "001",
-       "010", "011", "100", "101", "110", "111")}, the first sound
+   \item{\code{field1}}{a factor with levels \code{c("000", "001", "010", "011", "100", "101", "110", "111")}, the first sound
      field in a comparison}
    \item{\code{field2}}{a factor with the same levels as
      \code{field1}; the second sound field in a comparison}
@@ -37,14 +37,11 @@ The \code{sound.fields$design} data frame has 8 observations (one for
 each of the sound fields compared in the experiment)
 on the following 3 variables:
 \describe{
-   \item{\code{a}}{a factor with levels \code{c("0",
-       "1")}, the \emph{direct sound} factor (0 for \emph{obstructed
+   \item{\code{a}}{a factor with levels \code{c("0", "1")}, the \emph{direct sound} factor (0 for \emph{obstructed
        sight line}, 1 for \emph{free sight line}); contrasts are sum contrasts}
-   \item{\code{b}}{a factor with levels \code{c("0",
-       "1")}, the \emph{reflection} factor (0 for \emph{-26dB},
+   \item{\code{b}}{a factor with levels \code{c("0", "1")}, the \emph{reflection} factor (0 for \emph{-26dB},
      1 for \emph{-20dB}); contrasts are sum contrasts}
-   \item{\code{c}}{a factor with levels \code{c("0",
-       "1")}, the \emph{reverberation} factor (0 for \emph{-24dB},
+   \item{\code{c}}{a factor with levels \code{c("0", "1")}, the \emph{reverberation} factor (0 for \emph{-24dB},
      1 for \emph{-20dB}); contrasts are sum contrasts}
  }
  }
@@ -61,9 +58,9 @@ for Paired Comparisons with Explanatory Variables.  \emph{Scandinavian
   Journal of Statistics} \bold{11}, 51--57.
  }
 \references{
-Davidson, R R (1970)  Extending the Bradley-Terry model to accommodate
- ties in paired comparison experiments.  \emph{Journal of the American
-   Statistical Association} \bold{65}, 317--328.
+  Davidson, R. R. (1970)  Extending the Bradley-Terry model to
+  accommodate ties in paired comparison experiments.  \emph{Journal of
+    the American Statistical Association} \bold{65}, 317--328.
 }
 \author{David Firth}
 \examples{

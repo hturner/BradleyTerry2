@@ -155,14 +155,14 @@ glmmPQL(fixed, random = NULL, family = binomial, data = NULL,
   \item{varSigma}{the variance of \code{sigma}}
 }
 \references{
-  Breslow, N. E. and Clayton, D. G. (1993) Approximate Inference
-  in Generalized Linear Mixed Models. \emph{JASA} \bold{88(421)},
+  Breslow, N. E. and Clayton, D. G. (1993) Approximate inference
+  in Generalized Linear Mixed Models. \emph{Journal of the American
+    Statistical Association} \bold{88}(421),
   9--25.
-
   
-  Harville, D. A. (1977) Maximum Likelihood Approaches to Variance
-  Component Estimation and to Related Problems. \emph{JASA}
-  \bold{72(358)}, 320--338.
+  Harville, D. A. (1977) Maximum likelihood approaches to variance
+  component estimation and to related problems. \emph{Journal of the
+    American Statistical Association} \bold{72}(358), 320--338.
 }
 \author{
 Heather Turner

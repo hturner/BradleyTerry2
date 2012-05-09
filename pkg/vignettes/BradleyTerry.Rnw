@@ -1,5 +1,5 @@
 % \VignetteIndexEntry{Bradley-Terry models in R}
-%\VignetteKeywords{generalized linear model, logistic regression, Jeffreys prior, ranking, tournament analysis, working residuals}
+%\VignetteKeyword{generalized linear model, logistic regression, penalized quasi-likelihood, ranking, tournament analysis, working residuals}
 %\VignettePackage{BradleyTerry2}
 
 %%% For jss:
@@ -26,17 +26,16 @@
 \newcommand{\logit}{\mathop{\rm logit}}
 \newcommand{\pr}{\mathop{\rm pr}}
 
-\author{Heather Turner\\{\it University of Warwick} \And
-  David Firth\\{\it University of Warwick}}
+\author{Heather Turner\\University of Warwick \And
+  David Firth\\University of Warwick}
 \Plainauthor{Heather Turner, David Firth}
 
 \title{Bradley-Terry Models in \proglang{R}: The \BT\ Package
 \pkginfo}
 \Plaintitle{Bradley-Terry Models in R: The BradleyTerry2 Package}
-\Shorttitle{Bradley-Terry Models in R}
+\Shorttitle{\pkg{BradleyTerry2}: Bradley-Terry Models in \proglang{R}}
 
 \Abstract{
-
 This is a short overview of the \R\ add-on package \BT, which facilitates the
 specification and fitting of Bradley-Terry logit, probit or cauchit
 models to pair-comparison data.
@@ -59,7 +58,7 @@ checking of the linear predictor.
   Department of Statistics\\
   University of Warwick\\
   Coventry\\
-  CV4 7AL, UK\\
+  CV4 7AL, United Kingdom\\
   E-mail: \email{d.firth@warwick.ac.uk}\\
   URL: \url{http://go.warwick.ac.uk/dfirth}
 }
@@ -68,7 +67,8 @@ checking of the linear predictor.
 
 @
 <<set_options, echo = FALSE>>=
-options(width = 65, digits = 7)
+options(prompt = "R> ", continue = "+  ", width = 70, 
+        useFancyQuotes = FALSE, digits = 7)
 @ %def
 
 \section{Introduction}
@@ -81,7 +81,7 @@ representing `ability'.  A general introduction can be found in
 \citet{brad:84} or \citet{agre:02}.
 Applications are many, ranging from experimental psychology to the analysis of
 sports tournaments to genetics (for example, the allelic
-transmission/disequilibrium test of \citet{sham:curt:95} is based on a
+transmission/disequilibrium test of \citealp{sham:curt:95} is based on a
 Bradley-Terry model in which the `players' are alleles).
 In typical
 psychometric applications the `contests' are comparisons, made by
@@ -96,7 +96,7 @@ alternatively be expressed in the logit-linear form
 where $\lambda_i=\log\alpha_i$ for all $i$.  Thus, assuming independence of all
 contests, the parameters $\{\lambda_i\}$ can be estimated by
 maximum likelihood using standard software for generalized linear models, with a
-suitably specified model matrix.  The primary purpose of the \BT\ package \citep{turn:11},
+suitably specified model matrix.  The primary purpose of the \BT\ package \citep{turn:12},
 implemented in the \R\ statistical computing environment \citep{ihak:gent:96,
 R}, is to facilitate the specification and fitting of such models and some
 extensions.
@@ -158,7 +158,7 @@ data("citations", package = "BradleyTerry2")
 citations
 @ %def
 Thus, for example, \emph{Biometrika} was cited 498 times by papers in
-\emph{JASA} during the period under study.  In order to fit a Bradley-Terry
+\emph{Journal of the American Statistical Association} (JASA) during the period under study.  In order to fit a Bradley-Terry
 model to these data using \code{BTm} from the \BT\ package, the data must
 first be converted to binomial frequencies. That is, the data need to be
 organised into pairs (\code{player1}, \code{player2}) and corresponding
@@ -172,10 +172,9 @@ citations.sf <- countsToBinomial(citations)
 names(citations.sf)[1:2] <- c("journal1", "journal2")
 citations.sf
 @ %def
-Note that the self-citation counts are ignored---these provide no
+Note that the self-citation counts are ignored -- these provide no
 information on the ability parameters, since the abilities are relative rather than
 absolute quantities.
-P
 The binomial response can then be modelled by the difference in player abilities
 as follows:
 @
@@ -190,11 +189,11 @@ as an identifying convention.
 
 The one-sided model formula
 \begin{verbatim}
-      ~ journal
+  ~ journal
 \end{verbatim}
 specifies the model for player ability, in this case the `citeability' of the
 journal. The \code{id} argument specifies that \code{"journal"} is the
-name to be used for the factor that identifies the player---the values of which
+name to be used for the factor that identifies the player -- the values of which
 are given here by \code{journal1} and \code{journal2} for the first and
 second players respectively. Therefore in this case a separate
 citeability parameter is estimated for each journal.
@@ -206,10 +205,10 @@ example, making use of \code{update} to avoid re-specifying the whole model,
 <<citeModelupdate>>=
 update(citeModel, refcat = "JASA")
 @ %def
----the same model in a different parameterization.
+-- the same model in a different parameterization.
 
 The use of the standard Bradley-Terry model for this application might perhaps
-seem rather questionable---for example, citations within a published paper can
+seem rather questionable -- for example, citations within a published paper can
 hardly be considered independent, and the model discards potentially important
 information on self-citation.  \citet{stig:94} provides arguments to defend the
 model's use despite such concerns.
@@ -237,9 +236,9 @@ slightly changed in the bias-reduced fit:
 update(citeModel, br = TRUE)
 @ %def
 Here the bias of maximum likelihood is small because the binomial
-counts are fairly large.  In more sparse arrangements of contests---that is,
+counts are fairly large.  In more sparse arrangements of contests -- that is,
 where there is less
-or no replication of the contests---the effect of bias reduction would
+or no replication of the contests -- the effect of bias reduction would
 typically be more substantial than the insignificant one seen here.
 
 \section{Abilities predicted by explanatory variables}
@@ -325,7 +324,7 @@ combination of Equations~\ref{eq:unstructured} and \ref{eq:structured} above yie
 \end{equation}
 for all other players $j$.  This results in the inclusion of a `direct' ability
 parameter for each player having missing predictor values, in addition to the
-common coefficients $\beta_1,\ldots,\beta_p$---an approach which will be
+common coefficients $\beta_1,\ldots,\beta_p$ -- an approach which will be
 appropriate when the missingness mechanism is unrelated to contest success.  The
 same device can be used also to accommodate any user-specified departures from a
 structured Bradley-Terry model, whereby some players have their abilities
@@ -417,8 +416,13 @@ updated to include the \code{at.home} variable as follows:
 baseballModel2 <- update(baseballModel1, formula = ~ team + at.home)
 summary(baseballModel2)
 @ %def
+
+\vspace*{-0.3cm}
+
 This reproduces the results given on page 438 of \citet{agre:02}: the home team
 has an estimated odds-multiplier of $\exp(0.3023) = 1.35$ in its favour.
+
+\vspace*{-0.2cm}
 
 \subsection{More general (contest-specific) predictors}
 \label{sec:CEMS}
@@ -440,6 +444,9 @@ As an illustration of the way in which such effects are specified, consider
 the following model specification taken from the examples in \code{?CEMS},
 where data on students' preferences in relation to six European management
 schools is analysed.
+
+\vspace*{-0.3cm}
+
 @
 <<CEMSmodel>>=
 data("CEMS", package = "BradleyTerry2")
@@ -496,7 +503,7 @@ of the spectral reflectance from the throat are obtained as follows:
 <<BTabilities2>>=
 head(BTabilities(lizModel2), 4)
 @ %def
-
+%
 The ability estimates in an unstructured Bradley-Terry model are
 particularly well suited to presentation using the device of
 \emph{quasi-variances} \citep{firt:04}.  The \pkg{qvcalc}
@@ -508,13 +515,13 @@ which does the necessary work:
 > plot(baseball.qv,
 +      levelNames = c("Bal", "Bos", "Cle", "Det", "Mil", "NY", "Tor"))
 \end{Sinput}
-\begin{figure}[!tbph]
-    \begin{center}
-        \includegraphics{baseball-qvplot.pdf}
-    \end{center}
-    \caption{Estimated relative abilities of baseball teams.}
-    \label{fig:qvplot}
+%
+\begin{figure}[t!]
+    \centering
+        \includegraphics[width=0.67\textwidth]{baseball-qvplot.pdf}
+    \caption{Estimated relative abilities of baseball teams.\label{fig:qvplot}}
 \end{figure}
+%
 The `comparison intervals' as shown in Figure~\ref{fig:qvplot} are based on
 `quasi standard errors', and can be interpreted as if they refer to
 \emph{independent} estimates of ability for the journals.  This has the
@@ -532,31 +539,45 @@ First, there are residuals obtained by the standard methods for models of class
 \code{"glm"}.  These all deliver one residual for each contest or type of
 contest.  For example, Pearson residuals for the model
 \code{lizModel2} can be obtained simply by
+
+\vspace*{0.2cm}
+
 @
 <<residuals>>=
 res.pearson <- round(residuals(lizModel2), 3)
 head(cbind(flatlizards$contests, res.pearson), 4)
 @ %def
 
+\vspace*{-0.2cm}
+
 More useful for diagnostics on the linear predictor $\sum\beta_rx_{ir}$ are
 `player'-level residuals, obtained by using the function \code{residuals}
 with argument \code{type = "grouped"}.  These residuals can then be
 plotted against other player-specific variables.
+
+\vspace*{-0.2cm}
+
 @
 <<BTresiduals>>=
 res <- residuals(lizModel2, type = "grouped")
 #  with(flatlizards$predictors, plot(throat.PC2, res))
 #  with(flatlizards$predictors, plot(head.width, res))
 @ %def
+
+\vspace*{-0.2cm}
+
 These residuals estimate the error in the linear predictor; they are obtained by
 suitable aggregation of the so-called `working' residuals from the model fit.
 The \code{weights} attribute
-indicates the relative information in these residuals---weight is roughly
-inversely proportional to variance---which may be useful for plotting and/or
+indicates the relative information in these residuals -- weight is roughly
+inversely proportional to variance -- which may be useful for plotting and/or
 interpretation; for example, a large residual may be of no real concern if based
 on very little information. Weighted least-squares regression of these residuals
 on any variable already in the model is null.
 For example:
+
+\vspace*{-0.2cm}
+
 @
 <<residualWLS>>=
 lm(res ~ throat.PC1, weights = attr(res, "weights"), 
@@ -564,6 +585,8 @@ lm(res ~ throat.PC1, weights = attr(res, "weights"),
 lm(res ~ head.length, weights = attr(res, "weights"), 
    data = flatlizards$predictors)
 @ %def %$
+
+\vspace*{-0.2cm}
 
 As an illustration of evident \emph{non-null} residual structure, consider the
 unrealistically simple model \code{lizModel} that was fitted in
@@ -576,15 +599,14 @@ graphically:
 > lizModel.residuals <- residuals(lizModel, type = "grouped")
 > plot(flatlizards$predictors$throat.PC3, lizModel.residuals)
 \end{Sinput}
-\begin{figure}[!tbph]
-    \begin{center}
-        \vspace{-17pt}
-        \includegraphics{residuals.pdf}
-    \end{center}
+%
+\begin{figure}[t!]
+    \centering
+        \includegraphics[width=0.69\textwidth]{residuals.pdf}
     \caption{Lizard residuals for the simple model \code{lizModel}, plotted
-    against \code{throat.PC3}.}
-    \label{fig:residuals}
+    against \code{throat.PC3}.\label{fig:residuals}}
 \end{figure}
+%
 The residuals in the plot exhibit a strong, positive regression slope in
 relation to the omitted predictor variable \code{throat.PC3}.
 
@@ -635,7 +657,7 @@ the data are provided in the \code{baseball} data frame, which has the
 following structure:
 @
 <<str_baseball>>=
-str(baseball, vec.len = 3)
+str(baseball, vec.len = 2)
 @ %def
 In this case \code{home.team} and \code{away.team} are both data frames, with
 the factor \code{team} specifying the team and the variable \code{at.home}
@@ -651,8 +673,8 @@ is Milwaukee playing at home against Detroit. The outcome is given by
  baseball[1, c("home.wins", "away.wins")]
 @ %def
 
-Contest-specific variables that are \emph{not} player-specific---for example,
-whether it rained or not during a contest---should only be used in
+Contest-specific variables that are \emph{not} player-specific -- for example,
+whether it rained or not during a contest -- should only be used in
 interactions with variables that \emph{are} player-specific, otherwise the
 effect on ability would be the same for both players and would cancel
 out. Such variables can conveniently be provided in a single data frame along with the
@@ -710,7 +732,7 @@ example, the data may be stored in a `wide' format, with one row per judge.
 As an example, consider the \code{cemspc} data from the \pkg{prefmod} package \citep{hatz:12},
 which provides data from the CEMS study in a wide format. Each row corresponds to
 one student; the first 15 columns give the outcome of all pairwise comparisons
-between the 6 schools in the study and the last two columns correspond to two
+between the 6~schools in the study and the last two columns correspond to two
 of the student-specific variables: \code{ENG} (indicating the student's knowledge
 of English) and \code{SEX} (indicating the student's gender).
 

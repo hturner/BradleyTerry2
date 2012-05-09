@@ -10,8 +10,7 @@
 }
 \usage{
 \method{residuals}{BTm}(object, type = c("deviance", "pearson", "working",
-                        "response", "partial", "grouped"),
-                        by = object$id, ...)
+  "response", "partial", "grouped"), by = object$id, ...)
 }
 \arguments{ 
   \item{object}{a model object for which \code{inherits(model, "BTm")} is
@@ -38,8 +37,13 @@
 }
 \author{ David Firth and Heather Turner }
 \references{
-Firth, D. (2005)  Bradley-Terry models in R.  \emph{Journal of Statistical
-Software} \bold{12}(1), 1--12.
+  Firth, D. (2005)  Bradley-Terry models in R.  \emph{Journal of
+    Statistical Software} \bold{12}(1), 1--12.
+
+  Turner, H. and Firth, D. (2012)  Bradley-Terry models in R: The
+  BradleyTerry2 package.  \emph{Journal of Statistical
+    Software},  \bold{48}(9), 1--21.
+
 }
 \seealso{ \code{\link{BTm}}, \code{\link{BTabilities}} }
 \examples{

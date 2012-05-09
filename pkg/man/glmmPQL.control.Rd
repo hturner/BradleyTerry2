@@ -38,8 +38,9 @@ glmmPQL.control(maxiter = 50, IWLSiter = 10, tol = 1e-06, trace = FALSE)
   A list with the arguments as components.
 }
 \references{
-  Breslow, N. E. and Clayton, D. G. (1993), Approximate Inference in
-  Generalized Linear Mixed Models. \emph{JASA} \bold{88(421)}, 9--25.
+  Breslow, N. E. and Clayton, D. G. (1993), Approximate inference in
+  Generalized Linear Mixed Models. \emph{Journal of the American
+    Statistical Association} \bold{88}(421), 9--25.
 }
 \author{ Heather Turner }
 \seealso{\code{\link{glmmPQL}}, \code{\link{BTm}} }

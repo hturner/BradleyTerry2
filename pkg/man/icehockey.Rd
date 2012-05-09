@@ -40,18 +40,18 @@
   ranking under the NCAA's system of pairwise comparisons
   (\url{http://www.collegehockeynews.com/info/?d=pwcrpi}). Some have
   argued that Bradley-Terry rankings would be fairer
-  (http://www.collegehockeynews.com/info/?d=krach).
+  (\url{http://www.collegehockeynews.com/info/?d=krach}).
 }
 \source{
-  \url{"http://www.collegehockeystats.net/0910/schedules/men"}
+  \url{http://www.collegehockeystats.net/0910/schedules/men}
 }
 \references{
-  Schlobotnik, J. Build Your Own Rankings.
+  Schlobotnik, J. Build your own rankings.
   \url{http://slack.net/~whelan/tbrw/2010/rankings.diy.shtml}
 
   \url{http://www.collegehockeynews.com}
 
-  Selections for 2010 NCAA Tournament.
+  Selections for 2010 NCAA tournament.
   \url{http://sports.espn.go.com/ncaa/news/story?id=5012918}
 }
 \examples{

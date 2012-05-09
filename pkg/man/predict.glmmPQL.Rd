@@ -8,7 +8,9 @@ Obtain predictions and optionally standard errors of
 those predictions from a \code{"glmmPQL"} object.
 }
 \usage{
-\method{predict}{glmmPQL}(object, newdata = NULL, newrandom = NULL, level = 1, type = c("link", "response", "terms"), se.fit = FALSE, terms = NULL, na.action = na.pass, ...)
+\method{predict}{glmmPQL}(object, newdata = NULL, newrandom = NULL,
+    level = 1, type = c("link", "response", "terms"), se.fit = FALSE,
+    terms = NULL, na.action = na.pass, ...)
 }
 \arguments{
   \item{object}{
@@ -76,9 +78,9 @@ a fitted object of class \code{"glmmPQL"}
   \item{se.fit }{Estimated standard errors}
 }
 \references{
-  Booth, J. G. and Hobert, J. P. (1998). Standard Errors of Prediction
+  Booth, J. G. and Hobert, J. P. (1998). Standard errors of prediction
   in Generalized Linear Mixed Models. \emph{Journal of the American
-    Statistical Association} \bold{93(441)}, 262 -- 272.
+    Statistical Association} \bold{93}(441), 262 -- 272.
 }
 \author{
   Heather Turner

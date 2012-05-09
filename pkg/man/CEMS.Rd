@@ -68,29 +68,29 @@ The variables \code{win1.adj} and \code{win2.adj} are provided in order
  examples.
 }
 \source{
-Royal statistical Society datasets website, at
+Royal Statistical Society datasets website, at
 \url{http://www.blackwellpublishing.com/rss/Readmefiles/dittrich.htm}.
  }
 
 
 \references{
-Davidson, R R (1970)  Extending the Bradley-Terry model to accommodate
- ties in paired comparison experiments.  \emph{Journal of the American
-   Statistical Association} \bold{65}, 317--328.
+  Davidson, R. R. (1970)  Extending the Bradley-Terry model to
+  accommodate ties in paired comparison experiments.  \emph{Journal of
+  the American Statistical Association} \bold{65}, 317--328.
+  
+  Dittrich, R., Hatzinger, R. and Katzenbeisser, W. (1998)  Modelling
+  the effect of subject-specific covariates in paired comparison studies
+  with an application to university rankings.  \emph{Applied Statistics}
+  \bold{47}, 511--525.
 
-Dittrich, R, Hatzinger, R and Katzenbeisser, W (1998)  Modelling the
- effect of subject-specific covariates in paired comparison studies with
- an application to university rankings.  \emph{Applied Statistics}
- \bold{47}, 511--525.
-
-Dittrich, R, Hatzinger, R and Katzenbeisser, W (2001)  Corrigendum:
-Modelling the effect of subject-specific covariates in paired comparison
-studies with an application to university rankings. \emph{Applied
-  statistics} \bold{50}, 247--249.
-
-Turner, H and Firth, D. (2012)  Bradley-Terry models in R: The
-BradleyTerry2 package.  \emph{Journal of Statistical
-Software},  \bold{48}(9), 1--21.
+  Dittrich, R., Hatzinger, R. and Katzenbeisser, W. (2001)  Corrigendum:
+  Modelling the effect of subject-specific covariates in paired
+  comparison studies with an application to university
+  rankings. \emph{Applied Statistics} \bold{50}, 247--249.
+  
+  Turner, H. and Firth, D. (2012)  Bradley-Terry models in R: The
+  BradleyTerry2 package.  \emph{Journal of Statistical
+    Software},  \bold{48}(9), 1--21.
 }
 \author{David Firth}
 \examples{

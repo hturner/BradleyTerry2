@@ -6,7 +6,7 @@
 \title{ Estimated Abilities from a Bradley-Terry Model }
 \description{
    Computes the (baseline) ability of each player from a model object of
-   class \code{\link{BTm}}. 
+   class \code{"BTm"}. 
 }
 \usage{
 BTabilities(model)
@@ -16,8 +16,7 @@ BTabilities(model)
     \code{TRUE}}
 }
 \value{
-  A two-column numeric matrix (of class \code{c("BTabilities",
-    "matrix")}, with columns named \dQuote{ability} and \dQuote{se}; has
+  A two-column numeric matrix (of class \code{c("BTabilities", "matrix")}, with columns named \code{"ability"} and \code{"se"}; has
   one row for each player; has attributes named \code{"vcov"},
   \code{"modelcall"}, \code{"factorname"} and (sometimes --- see below)
   \code{"separate"}.  The first three attributes are not printed
@@ -38,9 +37,12 @@ BTabilities(model)
 }
 \author{ David Firth and Heather Turner }
 \references{
-Firth, D. (2005)  Bradley-Terry models in R.  \emph{Journal of Statistical
-  Software}, \emph{Journal of Statistical Software} \bold{12}(1), 1-12.
-  (\url{http://www.jstatsoft.org/v12/a01}).
+  Firth, D. (2005)  Bradley-Terry models in R.  \emph{Journal of
+    Statistical Software},  \bold{12}(1), 1--12.
+
+  Turner, H. and Firth, D. (2012)  Bradley-Terry models in R: The
+  BradleyTerry2 package.  \emph{Journal of Statistical
+    Software},  \bold{48}(9), 1--21.
 }
 \seealso{ \code{\link{BTm}}, \code{\link{residuals.BTm}} }
 \examples{

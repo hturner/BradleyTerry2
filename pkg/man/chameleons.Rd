@@ -62,10 +62,10 @@ involving that lizard, so it is uninformative).
 
   These are the same data that were used in
 
-  Stuart-Fox, D M, Firth, D, Moussalli, A and Whiting, M J (2006) Multiple
-  signals in chameleon contests: designing and analysing animal contests
-  as a tournament. \emph{Animal Behaviour} \bold{71}, 1263--1271.
-  (\url{http://dx.doi.org/10.1016/j.anbehav.2005.07.028})
+  Stuart-Fox, D. M., Firth, D., Moussalli, A. and Whiting, M. J. (2006)
+  Multiple signals in chameleon contests: designing and analysing animal
+  contests as a tournament. \emph{Animal Behaviour} \bold{71},
+  1263--1271.
 }
 \author{David Firth}
 \examples{

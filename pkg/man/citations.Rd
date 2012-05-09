@@ -19,15 +19,19 @@
   journal and the \sQuote{loser} is the one doing the citing.  
 }
 \source{
-Agresti, A (2002)  \emph{Categorical Data Analysis} (2nd ed).  
-New York: Wiley.
+  Agresti, A. (2002)  \emph{Categorical Data Analysis} (2nd ed).  
+  New York: Wiley.
 }
 \references{ 
-Firth, D. (2005)  Bradley-Terry models in R.  \emph{Journal of Statistical
-Software} \bold{12(1)}, 1--12.
+  Firth, D. (2005)  Bradley-Terry models in R.  \emph{Journal of
+    Statistical Software} \bold{12}(1), 1--12.
 
-Stigler, S. (1994)  Citation patterns in the journals of statistics 
-and probability.  \emph{Statistical Science} \bold{9}, 94--108.
+  Turner, H. and Firth, D. (2012)  Bradley-Terry models in R: The
+  BradleyTerry2 package.  \emph{Journal of Statistical
+    Software},  \bold{48}(9), 1--21.  
+
+  Stigler, S. (1994)  Citation patterns in the journals of statistics 
+  and probability.  \emph{Statistical Science} \bold{9}, 94--108.
 }
 \seealso{\code{\link{BTm}}}
 \examples{
