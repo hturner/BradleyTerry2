@@ -1,4 +1,4 @@
-summary.glmmPQL <- function(object, dispersion = NULL, correlation = FALSE,
+summary.BTglmmPQL <- function(object, dispersion = NULL, correlation = FALSE,
                             symbolic.cor = FALSE, ...) {
     if (identical(object$sigma, 0)){
         cat("PQL algorithm converged to fixed effects model\n")
@@ -33,6 +33,6 @@ summary.glmmPQL <- function(object, dispersion = NULL, correlation = FALSE,
         ans$correlation <- cov.unscaled/outer(dd, dd)
         ans$symbolic.cor <- symbolic.cor
     }
-    class(ans) <- "summary.glmmPQL"
+    class(ans) <- "summary.BTglmmPQL"
     ans
 }

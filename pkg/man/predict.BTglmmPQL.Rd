@@ -1,20 +1,20 @@
-\name{predict.glmmPQL}
-\alias{predict.glmmPQL}
+\name{predict.BTglmmPQL}
+\alias{predict.BTglmmPQL}
 \title{
-Predict Method for glmmPQL Objects
+Predict Method for BTglmmPQL Objects
 }
 \description{
 Obtain predictions and optionally standard errors of
-those predictions from a \code{"glmmPQL"} object.
+those predictions from a \code{"BTglmmPQL"} object.
 }
 \usage{
-\method{predict}{glmmPQL}(object, newdata = NULL, newrandom = NULL,
+\method{predict}{BTglmmPQL}(object, newdata = NULL, newrandom = NULL,
     level = 1, type = c("link", "response", "terms"), se.fit = FALSE,
     terms = NULL, na.action = na.pass, ...)
 }
 \arguments{
   \item{object}{
-a fitted object of class \code{"glmmPQL"}
+a fitted object of class \code{"BTglmmPQL"}
 }
   \item{newdata}{
 (optional) a data frame in which to look for variables
@@ -99,6 +99,6 @@ seedsModel <- glmmPQL(cbind(r, n - r) ~ seed + extract,
 pred <- predict(seedsModel, level = 0)
 predTerms <- predict(seedsModel, type = "terms")
 
-identical(pred, rowSums(predTerms) + attr(predTerms, "constant"))
+all.equal(pred, rowSums(predTerms) + attr(predTerms, "constant"))
 }
 \keyword{ models }

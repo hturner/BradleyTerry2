@@ -1,4 +1,4 @@
-print.glmmPQL <- function (x, digits = max(3, getOption("digits") - 3), ...)
+print.BTglmmPQL <- function (x, digits = max(3, getOption("digits") - 3), ...)
 {
     if (identical(x$sigma, 0)){
         cat("PQL algorithm converged to fixed effects model\n")

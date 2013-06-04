@@ -1,4 +1,4 @@
-predict.glmmPQL <- function (object, newdata = NULL, newrandom = NULL,
+predict.BTglmmPQL <- function (object, newdata = NULL, newrandom = NULL,
                              level = 1, type = c("link", "response", "terms"),
                              se.fit = FALSE, terms = NULL,
                              na.action = na.pass, ...) {

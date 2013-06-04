@@ -23,7 +23,9 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
     setup <- match(c("outcome", "player1", "player2", "formula", "id",
                         "separate.ability", "refcat", "data", "weights",
                         "subset", "offset", "contrasts"), names(fcall), 0L)
-    setup <- do.call(BTm.setup, fcall[setup], envir = environment(formula))
+    if (is.null(formula)) env <- parent.frame()
+    else env <- environment(formula)
+    setup <- do.call(BTm.setup, fcall[setup], envir = env)
     if (setup$saturated)
         warning("Player ability saturated - equivalent to fitting ",
                 "separate abilities.")

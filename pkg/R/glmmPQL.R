@@ -89,7 +89,7 @@ glmmPQL <- function(fixed, random = NULL, family = binomial, data = NULL,
                        data = data, offset = offset, control = control,
                        method = "glmmPQL.fit", contrasts = attr(X, "contrasts"),
                        xlevels = .getXlevels(modelTerms, modelData)))
-    class(fit) <- c("glmmPQL", "glm", "lm")
+    class(fit) <- c("BTglmmPQL", "glm", "lm")
     fit
 }
 

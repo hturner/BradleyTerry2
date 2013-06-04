@@ -1,13 +1,13 @@
 Package: BradleyTerry2
-Version: 1.0-0
-Date: 2012-05-09
+Version: 1.0-1
+Date: 2013-06-04
 Title: Bradley-Terry Models
 Author: Heather Turner and David Firth
 Maintainer: Heather Turner <ht@heatherturner.net>
 URL: http://bradleyterry2.r-forge.r-project.org
 Description: Specify and fit the Bradley-Terry model and structured versions
 Depends: R (>= 1.8.0)
-Imports: brglm, gtools, lme4
+Imports: brglm, gtools, lme4, stats
 Suggests: prefmod
 License: GPL (>= 2)
 ZipData: no

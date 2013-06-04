@@ -105,7 +105,7 @@ glmmPQL(fixed, random = NULL, family = binomial, data = NULL,
       \sigma^2)}{N(0, sigma^2)}}.
 }
 \value{
-  An object of class \code{"glmmPQL"} which inherits from \code{"glm"}
+  An object of class \code{"BTglmmPQL"} which inherits from \code{"glm"}
   and \code{"lm"}:
   \item{coefficients}{ a named vector of coefficients, with a
     \code{"random"} attribute giving the estimated random effects.}
@@ -168,7 +168,7 @@ glmmPQL(fixed, random = NULL, family = binomial, data = NULL,
 Heather Turner
 }
 \seealso{
-  \code{\link{glmmPQL.control}},\code{\link{BTm}}
+  \code{\link{predict.BTglmmPQL}},\code{\link{glmmPQL.control}},\code{\link{BTm}}
 }
 \examples{
 ###############################################
