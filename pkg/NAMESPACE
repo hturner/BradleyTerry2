@@ -2,7 +2,6 @@ export(BTabilities, BTm, countsToBinomial, glmmPQL, glmmPQL.control)
 
 importFrom(brglm, brglm)
 importFrom(gtools, combinations)
-importFrom(lme4, findbars, nobars)
 importFrom(stats, predict)
 
 S3method(add1, BTm)

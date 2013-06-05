@@ -18,6 +18,8 @@ Type 'q()' to quit R.
 > ## some awkward cases for predict
 > ## (in response to Arthur Spirling's bug report)
 > 
+> options(digits = 4) ## only applies to this file
+> 
 > ## The final model in example(flatlizards)
 > library(BradleyTerry2)
 > data(flatlizards, package = "BradleyTerry2")
@@ -26,13 +28,13 @@ Type 'q()' to quit R.
 +                       head.length[..] + SVL[..] + (1|..),
 +                       family = binomial(link = "probit"),
 +                       data = list(contests, predictors), trace = TRUE)
-Iteration 1. Score = 0.3606145
-Iteration 2. Score = 0.7990302
-Iteration 3. Score = 0.2862628
-Iteration 4. Score = 0.003823299
-Iteration 5. Score = 0.0001768978
-Iteration 6. Score = 9.279559e-06
-Iteration 7. Score = 6.79458e-07
+Iteration 1. Score = 0.3606
+Iteration 2. Score = 0.799
+Iteration 3. Score = 0.2863
+Iteration 4. Score = 0.003823
+Iteration 5. Score = 0.0001769
+Iteration 6. Score = 9.28e-06
+Iteration 7. Score = 6.795e-07
 > 
 > 
 > ## new lizard with original lizards with NAs
@@ -45,7 +47,7 @@ Iteration 7. Score = 6.79458e-07
 > 
 > predict(Whiting.model3, level = 1, se.fit = TRUE, newdata = newdata)
 $fit
-[1] 19.63476       NA
+[1] 19.63    NA
 
 $se.fit
 [1] 38745321       NA
@@ -62,36 +64,36 @@ $se.fit
 > predict(Whiting.model3, level = 0:1, se.fit = TRUE, newdata = newdata, na.action = na.pass)
 $population
 $population$fit
-[1] 0.7779567        NA
+[1] 0.778    NA
 
 $population$se.fit
-[1] 0.3207685        NA
+[1] 0.3208     NA
 
 
 $individual
 $individual$fit
-[1] 1.074185       NA
+[1] 1.074    NA
 
 $individual$se.fit
-[1] 0.7845906        NA
+[1] 0.7846     NA
 
 
 > 
 > predict(Whiting.model3, level = 0:1, se.fit = TRUE, newdata = newdata, na.action = na.omit)
 $population
 $population$fit
-[1] 0.7779567
+[1] 0.778
 
 $population$se.fit
-[1] 0.3207685
+[1] 0.3208
 
 
 $individual
 $individual$fit
-[1] 1.074185
+[1] 1.074
 
 $individual$se.fit
-[1] 0.7845906
+[1] 0.7846
 
 
 > 
@@ -111,17 +113,17 @@ $individual$se.fit
 > 
 > predict(Whiting.model3, level = 1, se.fit = TRUE, newdata = newdata)#[31, 34]
 $fit
-[1] 19.6347556  0.6275379
+[1] 19.6348  0.6275
 
 $se.fit
-[1] 3.874532e+07 7.994375e-01
+[1] 3.875e+07 7.994e-01
 
 > 
 > predict(Whiting.model3, level = 1, se.fit = TRUE)$fit[c(31, 34)]
-[1] 19.6347556  0.6275379
+[1] 19.6348  0.6275
 > predict(Whiting.model3, level = 1, se.fit = TRUE)$se.fit[c(31, 34)]
-[1] 3.874532e+07 7.994375e-01
+[1] 3.875e+07 7.994e-01
 > 
 > proc.time()
    user  system elapsed 
-  8.480   0.116   8.626 
+  6.028   0.128   6.164 

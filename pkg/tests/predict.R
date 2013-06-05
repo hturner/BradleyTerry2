@@ -1,6 +1,8 @@
 ## some awkward cases for predict
 ## (in response to Arthur Spirling's bug report)
 
+options(digits = 4) ## only applies to this file
+
 ## The final model in example(flatlizards)
 library(BradleyTerry2)
 data(flatlizards, package = "BradleyTerry2")

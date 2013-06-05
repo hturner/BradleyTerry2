@@ -1,3 +1,4 @@
+options(digits = 4) ## only applies to this file
 library(BradleyTerry2)
 data(flatlizards, package = "BradleyTerry2")
 ##
