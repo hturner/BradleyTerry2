@@ -1,0 +1,178 @@
+\name{GenDavidson}
+\alias{GenDavidson}
+\title{ Specify a Generalised Davidson Term in a gnm Model Formula}
+\description{
+  GenDavidson is a function of class \code{"nonlin"} to specify a
+  generalised Davidson term in the formula argument to
+  \code{\link{gnm}}, providing a model for paired comparison data where ties are
+  a possible outcome.
+}
+\usage{
+GenDavidson(win, tie, loss, player1, player2, home.adv = NULL,
+            tie.max = ~1, tie.mode = NULL, tie.scale = NULL, 
+            at.home1 = NULL, at.home2 = NULL)
+}
+\arguments{
+  \item{win}{ a logical vector: \code{TRUE} if player1 wins,
+    \code{FALSE} otherwise.
+}
+  \item{tie}{ a logical vector: \code{TRUE} if the outcome is a tie,
+    \code{FALSE} otherwise.
+}
+  \item{loss}{ a logical vector: \code{TRUE} if player1 loses,
+    \code{FALSE} otherwise.
+  }
+  \item{player1}{ an ID factor specifying the first player in
+    each contest, with the same set of levels as \code{player2}.
+}
+  \item{player2}{ an ID factor specifying the second player in
+    each contest, with the same set of levels as \code{player2}.
+  }
+  \item{home.adv}{ a formula for the paramter corresponding to the
+    home advantage effect. If \code{NULL}, no home advantage effect is
+    estimated. 
+  }
+  \item{tie.max}{ a formula for the parameter corresponding to the
+    maximum tie probability.
+  }
+    \item{tie.scale}{ a formula for the parameter corresponding to the
+    scale of dependence of the tie probability on the probability
+    that \code{player1} wins, given the outcome is not a draw.
+}
+  \item{tie.mode}{ a formula for the parameter corresponding to the
+    location of maximum tie probability, in terms of the probability
+    that \code{player1} wins, given the outcome is not a draw.
+}
+  \item{at.home1}{ a logical vector: \code{TRUE} if \code{player1} is at
+    home, \code{FALSE} otherwise.
+}
+  \item{at.home2}{ a logical vector: \code{TRUE} if \code{player2} is at
+    home, \code{FALSE} otherwise.
+}
+}
+\details{
+\code{GenDavidson} specifies a generalisation of the Davidson model
+(1970) for paired comparisons where a tie is a possible outcome. It is
+designed for modelling trinomial counts corresponding to the win/draw/loss
+outcome for each contest, which are assumed Poisson conditional on the
+total count for each match. Since this total must be one, the expected
+counts are equivalently the probabilities for each possible outcome,
+which are modelled on the log scale:
+\deqn{\log(p(i \textrm{beats} j)_k) = \theta_{ijk} + \log(\mu\alpha_i}{log(p(i beats j)_k) = theta_{ijk} + log(mu * alpha_i)}
+\deqn{\log(p(draw)_k) = \theta_{ijk} + \delta + c +
+  \sigma(\pi\log(\mu\alpha_i) - (1 - \pi)log(\alpha_j)) +
+  (1 - \sigma)(\log(\mu\alpha_i + \alpha_j))}{
+  log(p(draw)_k) = theta_{ijk} + log(delta) + c + sigma * (pi * log(mu *
+  alpha_i) + (1 - pi) * log(alpha_j)) + (1 - sigma) * log(mu * alpha_i + alpha_j) }
+\deqn{\log(p(j \textrm{beats} i)_k) = \theta_{ijk} +
+  log(\alpha_j)}{log(p(j beats i)_k) = theta_{ijk} + log(alpha_j)}
+Here \eqn{\theta_{ijk}}{theta_{ijk}} is a structural parameter to fix
+the trinomial totals; \eqn{\mu}{mu} is the home advantage parameter;
+\eqn{\alpha_i}{alpha_i} and \eqn{\alpha_j}{alpha_j} are the abilities of
+players \eqn{i} and \eqn{j} respectively; \eqn{c}{c} is a function of
+the parameters such that \eqn{\textrm{expit}(\delta)}{plogis(delta)} is
+the maximum probability of a tie, \eqn{\sigma}{sigma} scales the
+dependence of the probability of a tie on the relative abilities and
+\eqn{\pi}{pi} allows for asymmetry in this dependence.
+
+For parameters that must be positive (\eqn{\alpha_i, \sigma, \mu}{alpha,
+  sigma, mu}), the log is estimated, while for parameters that must be
+  between zero and one (\eqn{\delta, \pi}), the logit is estimated, as
+  illustrated in the example. }
+\value{
+  A list with the anticipated components of a "nonlin" function:
+  \item{ predictors }{ the formulae for the different parameters and the
+    ID factors for player 1 and player 2. }
+  \item{ variables }{ the outcome variables and the \dQuote{at home}
+    variables, if specified. 
+    }
+  \item{ common }{ an index to specify that common effects are to be
+    estimated for the players. }
+  \item{ term }{ a function to create a deparsed mathematical expression
+    of the term, given labels for the predictors.}
+  \item{ start }{ a function to generate starting values for the parameters.}
+}
+\references{
+  Davidson, R. R. (1970). On extending the Bradley-Terry model to
+  accommodate ties in paired comparison experiments. \emph{Journal of
+    the American Statistical Association}, \bold{65}, 317--328.
+}
+\author{
+  Heather Turner
+}
+\seealso{\code{\link{football}}, \code{\link{plotProportions}}}
+\examples{
+data(football)
+
+### convert to trinomial counts
+library(gnm)
+football.tri <- expandCategorical(football, "result", idvar = "match")
+head(football.tri)
+
+### add variable to indicate whether team playing at home
+football.tri$at.home <- !logical(nrow(football.tri))
+
+### fit Davidson model for ties
+Dm0 <- gnm(count ~ GenDavidson(result == 1, result == 0, result == -1,
+                              home:season, away:season, home.adv = ~1,
+                              tie.max = ~1,
+                              at.home1 = at.home,
+                              at.home2 = !at.home) - 1,
+          eliminate = match, family = poisson, data = football.tri)
+
+### fit scaled Davidson model
+Dm1 <- gnm(count ~ GenDavidson(result == 1, result == 0, result == -1,
+                              home:season, away:season, home.adv = ~1,
+                              tie.max = ~1, tie.scale = ~1,
+                              at.home1 = at.home,
+                              at.home2 = !at.home) - 1,
+           eliminate = match, family = poisson, data = football.tri)
+
+### fit shifted & scaled Davidson model
+Dm2 <- gnm(count ~ GenDavidson(result == 1, result == 0, result == -1,
+                               home:season, away:season, home.adv = ~1,
+                               tie.max = ~1, tie.scale = ~1, tie.mode = ~1,
+                               at.home1 = at.home,
+                               at.home2 = !at.home) - 1,
+           eliminate = match, family = poisson, data = football.tri)
+## look at coefs
+coef <- coef(Dm2)
+## home advantage
+exp(coef["home.adv"])
+## max p(tie)
+plogis(coef["tie.max"])
+## mode p(tie)
+plogis(coef["tie.mode"])
+## scale relative to Davidson of dependence of p(tie) on p(win|not a draw)
+exp(coef["tie.scale"])
+
+### compare models
+anova(Dm0, Dm1, Dm2, test = "Chisq")
+
+### diagnostic plots
+main <- c("Davidson", "Scaled Davidson", "Shifted & Scaled Davidson")
+mod <- list(Dm0, Dm1, Dm2)
+names(mod) <- main
+alpha <- names(coef(Dm0)[-(1:2)])
+
+## use football.tri data so that at.home can be found,
+## but restrict to actual match results
+par(mfrow = c(2,2))
+for (i in 1:3) {
+    coef <- parameters(mod[[i]])
+    plotProportions(result == 1, result == 0, result == -1,
+                    home:season, away:season,
+                    abilities = coef[alpha],
+                    home.adv = coef["home.adv"],
+                    tie.max = coef["tie.max"],
+                    tie.scale = coef["tie.scale"],
+                    tie.mode = coef["tie.mode"],
+                    at.home1 = at.home,
+                    at.home2 = !at.home,
+                    main = main[i],
+                    data = football.tri, subset = count == 1)
+}
+
+}
+\keyword{ models }
+\keyword{ nonlinear }

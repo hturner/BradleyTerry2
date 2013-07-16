@@ -1,6 +1,8 @@
-export(BTabilities, BTm, countsToBinomial, glmmPQL, glmmPQL.control)
+export(BTabilities, BTm, countsToBinomial, GenDavidson, glmmPQL, glmmPQL.control,
+       plotProportions)
 
 importFrom(brglm, brglm)
+importFrom(gnm, gnm)
 importFrom(gtools, combinations)
 importFrom(stats, predict)
 
