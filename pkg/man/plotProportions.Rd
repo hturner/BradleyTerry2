@@ -159,6 +159,8 @@ plotProportions(win = result == 1, loss = result == 0,
 
 #### A generalized Davidson example
 data(football)
+## subset to first and last season for illustration
+football <- subset(football, season \%in\% c("2008-9", "2012-13"))
 
 ## convert to trinomial counts
 library(gnm)
@@ -167,41 +169,33 @@ football.tri <- expandCategorical(football, "result", idvar = "match")
 ## add variable to indicate whether team playing at home
 football.tri$at.home <- !logical(nrow(football.tri))
 
-
-## fit Davidson model for ties
-Dm0 <- gnm(count ~ GenDavidson(result == 1, result == 0, result == -1,
-                              home:season, away:season, home.adv = ~1,
-                              tie.max = ~1,
-                              at.home1 = at.home,
-                              at.home2 = !at.home) - 1,
-          eliminate = match, family = poisson, data = football.tri)
-
-## fit scaled Davidson model
-Dm1 <- gnm(count ~ GenDavidson(result == 1, result == 0, result == -1,
-                              home:season, away:season, home.adv = ~1,
-                              tie.max = ~1, tie.scale = ~1,
-                              at.home1 = at.home,
-                              at.home2 = !at.home) - 1,
-           eliminate = match, family = poisson, data = football.tri)
-
-## fit shifted & scaled Davidson model
-Dm2 <- gnm(count ~ GenDavidson(result == 1, result == 0, result == -1,
+## fit Davidson model
+Dav <- gnm(count ~ GenDavidson(result == 1, result == 0, result == -1,
                                home:season, away:season, home.adv = ~1,
-                               tie.max = ~1, tie.scale = ~1, tie.mode = ~1,
+                               tie.max = ~1,
                                at.home1 = at.home,
                                at.home2 = !at.home) - 1,
            eliminate = match, family = poisson, data = football.tri)
 
+## fit shifted & scaled Davidson model
+shifScalDav <- gnm(count ~
+    GenDavidson(result == 1, result == 0, result == -1,
+                home:season, away:season, home.adv = ~1,
+                tie.max = ~1, tie.scale = ~1, tie.mode = ~1,
+                at.home1 = at.home,
+                at.home2 = !at.home) - 1,
+    eliminate = match, family = poisson, data = football.tri)
+
 ## diagnostic plots
-main <- c("Davidson", "Scaled Davidson", "Shifted & Scaled Davidson")
-mod <- list(Dm0, Dm1, Dm2)
+main <- c("Davidson", "Shifted & Scaled Davidson")
+mod <- list(Dav, shifScalDav)
 names(mod) <- main
-alpha <- names(coef(Dm0)[-(1:2)])
+alpha <- names(coef(Dav)[-(1:2)])
 
 ## use football.tri data so that at.home can be found,
 ## but restrict to actual match results
-par(mfrow = c(2,2))
-for (i in 1:3) {
+par(mfrow = c(1,2))
+for (i in 1:2) {
     coef <- parameters(mod[[i]])
     plotProportions(result == 1, result == 0, result == -1,
                     home:season, away:season,

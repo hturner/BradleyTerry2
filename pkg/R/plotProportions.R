@@ -3,9 +3,9 @@ GenDavidsonTie <- function(p){
     scale <- match("tie.scale", substring(names(coef), 1, 9), 0)
     if (scale != 0) scale <- exp(coef[scale])
     else scale <- 1
-    tie.mode <- match("tie.mode", substring(names(coef), 1, 7), 0)
+    tie.mode <- match("tie.mode", substring(names(coef), 1, 8), 0)
     if (tie.mode != 0) tie.mode <- coef["tie.mode"]
-    delta <- coef[match("tie.max", substring(names(coef), 1, 9))]
+    delta <- coef[match("tie.max", substring(names(coef), 1, 7))]
     ## first player is at home
     weight1 <- plogis(tie.mode)
     weight2 <- 1 - weight1
@@ -111,7 +111,7 @@ plotProportions <- function(win, tie = NULL, loss,
     plot(h_b ~ winBin$mid, xlim = c(0, 1), ylim = c(0, 1),
          xlab = xlab, ylab = ylab, ...)
     if (missing(legend)) {
-        if (!is.null(dat$tie)) legend <- "Matches won"
+        if (is.null(dat$tie)) legend <- "Matches won"
         else legend <- c("Non-tied matches won", "Matches tied")
     }
     legend("topleft", legend, col = col[c(1, 2[!missing(tie)])],

@@ -112,31 +112,19 @@ head(football.tri)
 ### add variable to indicate whether team playing at home
 football.tri$at.home <- !logical(nrow(football.tri))
 
-### fit Davidson model for ties
-Dm0 <- gnm(count ~ GenDavidson(result == 1, result == 0, result == -1,
-                              home:season, away:season, home.adv = ~1,
-                              tie.max = ~1,
-                              at.home1 = at.home,
-                              at.home2 = !at.home) - 1,
-          eliminate = match, family = poisson, data = football.tri)
-
-### fit scaled Davidson model
-Dm1 <- gnm(count ~ GenDavidson(result == 1, result == 0, result == -1,
-                              home:season, away:season, home.adv = ~1,
-                              tie.max = ~1, tie.scale = ~1,
-                              at.home1 = at.home,
-                              at.home2 = !at.home) - 1,
-           eliminate = match, family = poisson, data = football.tri)
-
 ### fit shifted & scaled Davidson model
-Dm2 <- gnm(count ~ GenDavidson(result == 1, result == 0, result == -1,
-                               home:season, away:season, home.adv = ~1,
-                               tie.max = ~1, tie.scale = ~1, tie.mode = ~1,
-                               at.home1 = at.home,
-                               at.home2 = !at.home) - 1,
-           eliminate = match, family = poisson, data = football.tri)
-## look at coefs
-coef <- coef(Dm2)
+###  - subset to first and last season for illustration
+shifScalDav <- gnm(count ~
+    GenDavidson(result == 1, result == 0, result == -1,
+                home:season, away:season, home.adv = ~1,
+                tie.max = ~1, tie.scale = ~1, tie.mode = ~1,
+                at.home1 = at.home,
+                at.home2 = !at.home) - 1,
+    eliminate = match, family = poisson, data = football.tri,
+    subset = season \%in\% c("2008-9", "2012-13"))
+
+### look at coefs
+coef <- coef(shifScalDav)
 ## home advantage
 exp(coef["home.adv"])
 ## max p(tie)
@@ -146,14 +134,52 @@ plogis(coef["tie.mode"])
 ## scale relative to Davidson of dependence of p(tie) on p(win|not a draw)
 exp(coef["tie.scale"])
 
+### check model fit
+alpha <- names(coef[-(1:4)])
+plotProportions(result == 1, result == 0, result == -1,
+                home:season, away:season,
+                abilities = coef[alpha], home.adv = coef["home.adv"],
+                tie.max = coef["tie.max"], tie.scale = coef["tie.scale"],
+                tie.mode = coef["tie.mode"],
+                at.home1 = at.home, at.home2 = !at.home,
+                data = football.tri, subset = count == 1)
+
+
+### analyse all five seasons
+### - takes a little while to run, particularly likelihood ratio tests
+\dontrun{
+### fit Davidson model
+Dav <- gnm(count ~ GenDavidson(result == 1, result == 0, result == -1,
+                               home:season, away:season, home.adv = ~1,
+                               tie.max = ~1,
+                               at.home1 = at.home,
+                               at.home2 = !at.home) - 1,
+           eliminate = match, family = poisson, data = football.tri)
+
+### fit scaled Davidson model
+scalDav <- gnm(count ~ GenDavidson(result == 1, result == 0, result == -1,
+                                  home:season, away:season, home.adv = ~1,
+                                  tie.max = ~1, tie.scale = ~1,
+                                  at.home1 = at.home,
+                                  at.home2 = !at.home) - 1,
+               eliminate = match, family = poisson, data = football.tri)
+
+### fit shifted & scaled Davidson model
+shifScalDav <- gnm(count ~
+    GenDavidson(result == 1, result == 0, result == -1,
+                home:season, away:season, home.adv = ~1,
+                tie.max = ~1, tie.scale = ~1, tie.mode = ~1,
+                at.home1 = at.home,
+                at.home2 = !at.home) - 1,
+    eliminate = match, family = poisson, data = football.tri)
+
 ### compare models
-anova(Dm0, Dm1, Dm2, test = "Chisq")
+anova(Dav, scalDav, shifScalDav, test = "Chisq")
 
 ### diagnostic plots
 main <- c("Davidson", "Scaled Davidson", "Shifted & Scaled Davidson")
-mod <- list(Dm0, Dm1, Dm2)
+mod <- list(Dav, scalDav, shifScalDav)
 names(mod) <- main
-alpha <- names(coef(Dm0)[-(1:2)])
 
 ## use football.tri data so that at.home can be found,
 ## but restrict to actual match results
@@ -171,6 +197,7 @@ for (i in 1:3) {
                     at.home2 = !at.home,
                     main = main[i],
                     data = football.tri, subset = count == 1)
+}
 }
 
 }
