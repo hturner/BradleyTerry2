@@ -13,10 +13,10 @@ drop1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
     form <- formula(object)
 
     if (missing(scope))
-        scope <- drop.scope(lme4:::nobars(form))
+        scope <- drop.scope(nobars(form))
      else {
         if (!is.character(scope)) {
-            srandom <- lme4:::findbars(scope[[2]])
+            srandom <- findbars(scope[[2]])
             if (length(srandom))
                 stop("Scope should not include random effects.")
             scope <- attr(terms(update.formula(form, scope)),

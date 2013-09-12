@@ -1,3 +1,35 @@
+Changes in BradleyTerry2 1.0-3
+==============================
+
+New Features
+------------
+
+    o	updated football data to include full 2011-12 season.
+
+
+Changes in BradleyTerry2 1.0-2
+==============================
+
+New Features
+------------
+
+    o	added football example presented at useR! 2013 with generalised
+    	Davidson model for ties.
+
+
+Changes in BradleyTerry2 1.0-1
+==============================
+
+Bug fixes
+---------
+
+    o	renamed "glmmPQL" object "BTglmmPQL" to avoid conflict with lme4 
+    	(which loads MASS).
+    o	fixed BTm so that it is able to find variables when called inside
+    	another function (stackoverflow.com question 14911525).
+    	
+
+
 Changes in BradleyTerry2 1.0-0
 ==============================
 

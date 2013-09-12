@@ -4,8 +4,8 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
     new.form <- update.formula(old.form, scope)
 
     if (!is.character(scope)){
-        orandom <- lme4:::findbars(old.form[[2]])
-        srandom <- lme4:::findbars(new.form[[2]])
+        orandom <- findbars(old.form[[2]])
+        srandom <- findbars(new.form[[2]])
         if (length(srandom) && !identical(orandom, srandom))
             stop("Random effects structure of object and scope must be identical.")
         scope <- add.scope(old.form, new.form)
@@ -69,8 +69,8 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
     }
 
     ## use original term labels: no sep effects or backticks (typically)
-    oTerms <- attr(terms(lme4:::nobars(old.form)), "term.labels")
-    Terms <- attr(terms(lme4:::nobars(new.form)), "term.labels")
+    oTerms <- attr(terms(nobars(old.form)), "term.labels")
+    Terms <- attr(terms(nobars(new.form)), "term.labels")
     ousex <- asgn %in% c(0, which(Terms %in% oTerms))
 
     sTerms <- sapply(strsplit(Terms, ":", fixed = TRUE),

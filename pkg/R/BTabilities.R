@@ -11,7 +11,7 @@ BTabilities <-  function (model)
         players <- data.frame(factor(seq(player.names), labels = player.names))
         names(players) <- model$id
         ## assume player covariates indexed by id
-        fixed <- lme4:::nobars(model$formula)
+        fixed <- nobars(model$formula)
         factors <- attr(terms(fixed), "factors")
         vars <- rownames(factors)
         by.id <- grep(paste("[", model$id, "]", sep = ""), vars,

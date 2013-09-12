@@ -18,7 +18,7 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
     D <- D - (col(D) == as.numeric(player.two))
     colnames(D) <- paste(id, players, sep = "")
 
-    fixed <- lme4:::nobars(formula)
+    fixed <- nobars(formula)
     X <- offset <- missing <- term.labels <- NULL
     saturated <- FALSE
     sep <- list()
@@ -99,7 +99,7 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
         attr(X, "assign") <- attr(X1, "assign")[-1]
     }
 
-    random <- lme4:::findbars(formula[[2]])
+    random <- findbars(formula[[2]])
     if (!is.null(random)) {
         if (!is.list(random)) random <- list(random)
         if (length(random) > 1 ||
