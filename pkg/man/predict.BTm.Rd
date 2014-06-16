@@ -64,7 +64,6 @@ those predictions from a fitted Bradley-Terry model.
 }
 \examples{
 ## The final model in example(flatlizards)
-data(flatlizards, package = "BradleyTerry2")
 attach(flatlizards)
 Whiting.model3 <- BTm(1, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
                       head.length[..] + SVL[..] + (1|..),

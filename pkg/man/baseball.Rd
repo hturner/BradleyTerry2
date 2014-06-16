@@ -6,7 +6,7 @@
   Baseball results for games in the 1987 season between 7 teams
   in the Eastern Division of the American League.
 }
-\usage{data(baseball)}
+\usage{baseball}
 \format{
   A data frame with 42 observations on the following 4 variables.
   \describe{
@@ -37,8 +37,6 @@
 \seealso{\code{\link{BTm}}}
 \examples{
 ##  This reproduces the analysis in Sec 10.6 of Agresti (2002).
-
-data(baseball, package = "BradleyTerry2")
 
 ##  Simple Bradley-Terry model, ignoring home advantage:
 baseballModel1 <- BTm(cbind(home.wins, away.wins), home.team, away.team,

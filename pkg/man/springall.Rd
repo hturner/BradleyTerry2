@@ -10,7 +10,7 @@ response surface modelling.  An experiment to assess the effects of gel
 and flavour concentrations on the subjective assessment of flavour strength
 by pair comparisons.
 }
-\usage{data(springall)}
+\usage{springall}
 \format{
 A list containing two data frames, \code{springall$contests} and \code{springall$predictors}.
 
@@ -48,7 +48,6 @@ Springall, A (1973)  Response surface fitting using a generalization of the Brad
 }
 \author{David Firth}
 \examples{
-data(springall)
 ##
 ## Fit the same response-surface model as in section 7 of 
 ## Springall (1973).

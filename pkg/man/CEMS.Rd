@@ -7,7 +7,7 @@ Dittrich, Hatzinger and Katzenbeisser (1998, 2001) Data on Management School Pre
 \description{
 \emph{Community of European management schools} (CEMS) data as used in the paper by Dittrich et al. (1998, 2001), re-formatted for use with \code{\link{BTm}}
 }
-\usage{data(CEMS)}
+\usage{CEMS}
 \format{
 A list containing three data frames, \code{CEMS$preferences},
 \code{CEMS$students} and \code{CEMS$schools}.
@@ -94,7 +94,6 @@ Royal Statistical Society datasets website, at
 }
 \author{David Firth}
 \examples{
-data(CEMS)
 ##
 ##  Fit the standard Bradley-Terry model, using the simple 'add 0.5'
 ##  method to handle ties:

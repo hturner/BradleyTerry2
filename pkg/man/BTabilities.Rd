@@ -46,8 +46,7 @@ BTabilities(model)
 }
 \seealso{ \code{\link{BTm}}, \code{\link{residuals.BTm}} }
 \examples{
-#########
-data(citations, package = "BradleyTerry2")
+### citations example
 
 ## Convert frequencies to success/failure data
 citations.sf <- countsToBinomial(citations)
@@ -57,8 +56,8 @@ names(citations.sf)[1:2] <- c("journal1", "journal2")
 citeModel <- BTm(cbind(win1, win2), journal1, journal2, data = citations.sf)
 BTabilities(citeModel)
 
-######### 
-data(baseball, package = "BradleyTerry2")
+### baseball example
+
 baseball$home.team <- data.frame(team = baseball$home.team, at.home = 1)
 baseball$away.team <- data.frame(team = baseball$away.team, at.home = 0)
 baseballModel2 <- BTm(cbind(home.wins, away.wins), home.team, away.team,

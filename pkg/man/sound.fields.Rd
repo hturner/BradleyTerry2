@@ -9,7 +9,7 @@ The results of a series of factorial subjective room acoustic
   experiments carried out at the Technical University of Denmark by A C
   Gade. 
 }
-\usage{data(sound.fields)}
+\usage{sound.fields}
 \format{
 A list containing two data frames, \code{sound.fields$comparisons},
 and \code{sound.fields$design}.
@@ -64,7 +64,6 @@ for Paired Comparisons with Explanatory Variables.  \emph{Scandinavian
 }
 \author{David Firth}
 \examples{
-data(sound.fields)
 ##
 ##  Fit the Bradley-Terry model to data for flutes, using the simple 'add 0.5'
 ##  method to handle ties:

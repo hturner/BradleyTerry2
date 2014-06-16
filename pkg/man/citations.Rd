@@ -8,7 +8,7 @@
   \dQuote{Comm Statist.}, \dQuote{JASA} and \dQuote{JRSS-B}, as used
   on p448 of Agresti (2002).
 }
-\usage{data(citations)}
+\usage{citations}
 \format{
   A 4 by 4 contingency table of citations, cross-classifed by the factors
   \code{cited} and \code{citing} each with levels \code{Biometrika},
@@ -35,8 +35,9 @@
 }
 \seealso{\code{\link{BTm}}}
 \examples{
-data(citations, package = "BradleyTerry2")
 ##  Data as a square table, as in Agresti p448
+citations
+
 ##
 ## Convert frequencies to success/failure data:
 ##

@@ -9,7 +9,7 @@ Data from Crowder(1978) giving the proportion of seeds germinated for
 21 plates that were arranged according to a 2x2 factorial layout by seed
 variety and type of root extract.
 }
-\usage{data(seeds)}
+\usage{seeds}
 \format{
   A data frame with 21 observations on the following 4 variables.
   \describe{
@@ -29,7 +29,6 @@ Crowder, M. (1978) Beta-Binomial ANOVA for proportions. \emph{Applied Statistics
 }
 \seealso{\code{\link{glmmPQL}}}
 \examples{
-data(seeds)
 attach(seeds)
 
 summary(glmmPQL(cbind(r, n - r) ~ seed + extract,

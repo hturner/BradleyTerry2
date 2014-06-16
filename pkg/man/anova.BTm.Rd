@@ -58,8 +58,6 @@
 \author{ Heather Turner }
 \seealso{ \code{\link{BTm}}, \code{\link{add1.BTm}} }
 \examples{
-data(flatlizards, package = "BradleyTerry2")
-
 attach(flatlizards)
 result <- rep(1, nrow(contests))
 BTmodel <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +

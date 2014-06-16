@@ -58,8 +58,6 @@
 \author{ Heather Turner }
 \seealso{ \code{\link{BTm}}, \code{\link{anova.BTm}} }
 \examples{
-data(flatlizards, package = "BradleyTerry2")
-
 attach(flatlizards)
 result <- rep(1, nrow(contests))
 BTmodel1 <- BTm(result, winner, loser,

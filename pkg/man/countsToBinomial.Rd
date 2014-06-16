@@ -26,7 +26,6 @@ countsToBinomial(xtab)
 ##  Statistics journal citation data from Stigler (1994)
 ##  -- see also Agresti (2002, p448)
 ########################################################
-data(citations, package = "BradleyTerry2")
 citations
 
 ## Convert frequencies to success/failure data

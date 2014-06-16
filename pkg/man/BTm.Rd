@@ -163,7 +163,6 @@ BTm(outcome, player1, player2, formula = NULL, id = "..",
 ##  Statistics journal citation data from Stigler (1994)
 ##  -- see also Agresti (2002, p448)
 ########################################################
-data(citations, package = "BradleyTerry2")
 
 ## Convert frequencies to success/failure data
 citations.sf <- countsToBinomial(citations)
@@ -178,7 +177,6 @@ update(citeModel, refcat = "JASA")
 ##################################################################
 ##  Now an example with an order effect -- see Agresti (2002) p438
 ##################################################################
-data(baseball, package = "BradleyTerry2")
 
 ##  Simple Bradley-Terry model, ignoring home advantage:
 baseballModel1 <- BTm(cbind(home.wins, away.wins), home.team, away.team,

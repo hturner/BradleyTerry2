@@ -9,7 +9,7 @@ Data as used in the study by Stuart-Fox et al. (2006).  Physical
 measurements made on 35 male Cape dwarf chameleons, and the results of
 106 inter-male contests.
 }
-\usage{data(chameleons)}
+\usage{chameleons}
 \format{
   A list containing three data frames: \code{chameleons$winner},
   \code{chameleons$loser} and \code{chameleons$predictors}.
@@ -69,7 +69,6 @@ involving that lizard, so it is uninformative).
 }
 \author{David Firth}
 \examples{
-data(chameleons)
 ##
 ## Reproduce Table 3 from page 1268 of the above paper:
 ##

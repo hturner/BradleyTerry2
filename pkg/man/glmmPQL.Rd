@@ -174,7 +174,6 @@ Heather Turner
 ###############################################
 ## Crowder seeds example from Breslow & Clayton
 ###############################################
-data(seeds, package = "BradleyTerry2")
 attach(seeds)
 
 summary(glmmPQL(cbind(r, n - r) ~ seed + extract,

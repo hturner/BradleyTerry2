@@ -4,8 +4,8 @@
 \description{
   GenDavidson is a function of class \code{"nonlin"} to specify a
   generalised Davidson term in the formula argument to
-  \code{\link{gnm}}, providing a model for paired comparison data where ties are
-  a possible outcome.
+  \code{\link[gnm]{gnm}}, providing a model for paired comparison data
+  where ties are a possible outcome.
 }
 \usage{
 GenDavidson(win, tie, loss, player1, player2, home.adv = NULL,
@@ -102,48 +102,47 @@ For parameters that must be positive (\eqn{\alpha_i, \sigma, \mu}{alpha,
 }
 \seealso{\code{\link{football}}, \code{\link{plotProportions}}}
 \examples{
-data(football)
+### example requires gnm
+if (require(gnm)) {
+    ### convert to trinomial counts
+    football.tri <- expandCategorical(football, "result", idvar = "match")
+    head(football.tri)
 
-### convert to trinomial counts
-library(gnm)
-football.tri <- expandCategorical(football, "result", idvar = "match")
-head(football.tri)
+    ### add variable to indicate whether team playing at home
+    football.tri$at.home <- !logical(nrow(football.tri))
 
-### add variable to indicate whether team playing at home
-football.tri$at.home <- !logical(nrow(football.tri))
+    ### fit shifted & scaled Davidson model
+    ###  - subset to first and last season for illustration
+    shifScalDav <- gnm(count ~
+        GenDavidson(result == 1, result == 0, result == -1,
+                    home:season, away:season, home.adv = ~1,
+                    tie.max = ~1, tie.scale = ~1, tie.mode = ~1,
+                    at.home1 = at.home,
+                    at.home2 = !at.home) - 1,
+        eliminate = match, family = poisson, data = football.tri,
+        subset = season \%in\% c("2008-9", "2012-13"))
 
-### fit shifted & scaled Davidson model
-###  - subset to first and last season for illustration
-shifScalDav <- gnm(count ~
-    GenDavidson(result == 1, result == 0, result == -1,
-                home:season, away:season, home.adv = ~1,
-                tie.max = ~1, tie.scale = ~1, tie.mode = ~1,
-                at.home1 = at.home,
-                at.home2 = !at.home) - 1,
-    eliminate = match, family = poisson, data = football.tri,
-    subset = season \%in\% c("2008-9", "2012-13"))
+    ### look at coefs
+    coef <- coef(shifScalDav)
+    ## home advantage
+    exp(coef["home.adv"])
+    ## max p(tie)
+    plogis(coef["tie.max"])
+    ## mode p(tie)
+    plogis(coef["tie.mode"])
+    ## scale relative to Davidson of dependence of p(tie) on p(win|not a draw)
+    exp(coef["tie.scale"])
 
-### look at coefs
-coef <- coef(shifScalDav)
-## home advantage
-exp(coef["home.adv"])
-## max p(tie)
-plogis(coef["tie.max"])
-## mode p(tie)
-plogis(coef["tie.mode"])
-## scale relative to Davidson of dependence of p(tie) on p(win|not a draw)
-exp(coef["tie.scale"])
-
-### check model fit
-alpha <- names(coef[-(1:4)])
-plotProportions(result == 1, result == 0, result == -1,
-                home:season, away:season,
-                abilities = coef[alpha], home.adv = coef["home.adv"],
-                tie.max = coef["tie.max"], tie.scale = coef["tie.scale"],
-                tie.mode = coef["tie.mode"],
-                at.home1 = at.home, at.home2 = !at.home,
-                data = football.tri, subset = count == 1)
-
+    ### check model fit
+    alpha <- names(coef[-(1:4)])
+    plotProportions(result == 1, result == 0, result == -1,
+                    home:season, away:season,
+                    abilities = coef[alpha], home.adv = coef["home.adv"],
+                    tie.max = coef["tie.max"], tie.scale = coef["tie.scale"],
+                    tie.mode = coef["tie.mode"],
+                    at.home1 = at.home, at.home2 = !at.home,
+                    data = football.tri, subset = count == 1)
+}
 
 ### analyse all five seasons
 ### - takes a little while to run, particularly likelihood ratio tests

@@ -47,7 +47,6 @@
 }
 \seealso{ \code{\link{BTm}}, \code{\link{BTabilities}} }
 \examples{
-data(springall)
 ##
 ##  See ?springall
 ##

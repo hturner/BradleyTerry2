@@ -46,8 +46,6 @@ glmmPQL.control(maxiter = 50, IWLSiter = 10, tol = 1e-06, trace = FALSE)
 \seealso{\code{\link{glmmPQL}}, \code{\link{BTm}} }
 \examples{
 ## Variation on example(flatlizards)
-data(flatlizards)
-
 attach(flatlizards)
 result <- rep(1, nrow(contests))
 

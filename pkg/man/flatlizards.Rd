@@ -11,7 +11,7 @@
   measurements made on each lizard.  Full details of the study are in
   Whiting et al. (2006).
 }
-\usage{data(flatlizards)}
+\usage{flatlizards}
 \format{
   This dataset is a list containing two data frames: \code{flatlizards$contests}
   and \code{flatlizards$predictors}.
@@ -89,12 +89,11 @@
 }
 \seealso{\code{\link{BTm}}}
 \examples{
-data(flatlizards, package = "BradleyTerry2")
+attach(flatlizards)
 ##
 ##  Fit the standard Bradley-Terry model, using the bias-reduced
 ##  maximum likelihood method:
 ##
-attach(flatlizards)
 result <- rep(1, nrow(contests))
 BTmodel <- BTm(result, winner, loser, br = TRUE, data = contests)
 summary(BTmodel)

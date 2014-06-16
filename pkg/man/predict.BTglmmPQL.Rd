@@ -89,7 +89,6 @@ a fitted object of class \code{"BTglmmPQL"}
   \code{\link{predict.glm}},  \code{\link{predict.BTm}}
 }
 \examples{
-data(seeds)
 attach(seeds)
 
 seedsModel <- glmmPQL(cbind(r, n - r) ~ seed + extract,

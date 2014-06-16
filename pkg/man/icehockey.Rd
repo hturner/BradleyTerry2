@@ -8,7 +8,7 @@
   Game results from American College Hockey Men's Division I composite
   schedule 2009-2010.
 }
-\usage{data(icehockey)}
+\usage{icehockey}
 \format{
   A data frame with 1083 observations on the following 6 variables.
   \describe{
@@ -55,7 +55,6 @@
   \url{http://sports.espn.go.com/ncaa/news/story?id=5012918}
 }
 \examples{
-data(icehockey)
 ### Fit the standard Bradley-Terry model
 standardBT <- BTm(outcome = result,
     player1 = visitor, player2 = opponent,
