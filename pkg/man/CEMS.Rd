@@ -134,6 +134,7 @@ table6.model <-  BTm(outcome = cbind(win1.adj, win2.adj),
 table6 <- summary(table6.model)$coef[, 1:2]/1.75
 print(table6)
 ##
+\dontrun{
 ##  Now the slightly simplified model of Table 8 of Dittrich et al. (2001):
 ##
 table8.model <-  BTm(outcome = cbind(win1.adj, win2.adj),
@@ -161,5 +162,6 @@ table8 <- summary(table8.model)$coef[, 1:2]/1.75
 ##  February 2010).
 ##
 print(table8)
+}
 }
 \keyword{datasets}

@@ -54,6 +54,7 @@ BTabilities <-  function (model)
         }
     }
     else {
+        ## get ability coef and corresponding vcov
         asgn <- model$assign
         if (is.null(asgn))
             abilities <- TRUE
@@ -61,22 +62,27 @@ BTabilities <-  function (model)
             idterm <- attr(terms(model$formula), "term.labels") == model$id
             if (!any(idterm))
                stop("abilities not uniquely defined for this parameterization")
-            coefs.to.include <- asgn[!is.na(coef(model))] == which(attr(terms(model$formula),
-                                "term.labels") == model$id)
+            coefs.to.include <- asgn == which(idterm)
+            vcov.to.include <- asgn[!is.na(coef(model))] == which(idterm)
         }
-        summ <- coef(summary(model))[coefs.to.include, , drop = FALSE]
-        abilities <- cbind(c(0, summ[, 1]), c(0, summ[, 2]))
-        vc <- vcov(model)[coefs.to.include, coefs.to.include,
-                          drop = FALSE]
-        vc <- rbind(0, cbind(0, vc))
-        refcat <- model$refcat
-        if (!is.null(refcat)) {
-            perm <- order(match(levels(relevel(player1, refcat)),
-                                player.names))
-            abilities <- abilities[perm, ]
-            vc <- vc[perm, perm]
+        coef <- na.exclude(coef(model)[coefs.to.include])
+        vc <- vcov(model)[names(coef), names(coef), drop = FALSE]
+        ## setup factor reflecting contrasts used ..
+        fac <- factor(player.names, player.names)
+        if (!is.null(model$refcat)) {
+            fac <- C(relevel(fac, model$refcat), "contr.treatment")
+        } else fac <- C(fac, model$contrasts[[model$id]])
+        contr <- contrasts(fac)
+        ## calc abilities and s.e., fill in NA as necessary
+        if (!is.null(attr(coef, "na.action"))) {
+            contr <- contr[, -attr(coef, "na.action"), drop = FALSE]
         }
-        rownames(vc) <- colnames(vc) <- player.names
+        est <- contr %*% coef
+        se <- sqrt(diag(contr %*% vc %*% t(contr)))
+        if (!is.null(attr(coef, "na.action"))){
+            est[attr(coef, "na.action")] <- se[attr(coef, "na.action")] <- NA
+        }
+        abilities <- cbind(est, se)
         attr(abilities, "vcov") <- vc
     }
     colnames(abilities) <- c("ability", "s.e.")

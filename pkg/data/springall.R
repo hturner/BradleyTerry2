@@ -1,15 +1,32 @@
-springall <- read.table("springall.txt", header=TRUE)
-springall$row <- factor(springall$row, levels = 1:9)
-springall$col <- (factor(c(0, springall$col), levels = 1:9))[-1]
-springall$win.adj <- springall$win + springall$tie/2
-springall$loss.adj <- springall$loss + springall$tie/2
-
-springall <- list(contests = springall,
-                  predictors = data.frame(
-                      flav = rep(c(0.6, 4.8, 9.0), 3),
-                      gel = rep(c(0, 2.4, 4.8), rep(3, 3))
-                  ))
-springall$predictors$flav.2 <- springall$predictors$flav ^ 2
-springall$predictors$gel.2 <- springall$predictors$gel ^ 2
-springall$predictors$flav.gel <- springall$predictors$flav *
-                                  springall$predictors$gel
+springall <-
+structure(list(contests = structure(list(row = structure(c(1L,
+1L, 1L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 3L, 3L,
+3L, 3L, 3L, 3L, 4L, 4L, 4L, 4L, 4L, 5L, 5L, 5L, 5L, 6L, 6L, 6L,
+7L, 7L, 8L), .Label = c("1", "2", "3", "4", "5", "6", "7", "8",
+"9"), class = "factor"), col = structure(c(2L, 3L, 4L, 5L, 6L,
+7L, 8L, 9L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 4L, 5L, 6L, 7L, 8L, 9L,
+5L, 6L, 7L, 8L, 9L, 6L, 7L, 8L, 9L, 7L, 8L, 9L, 8L, 9L, 9L), .Label = c("1",
+"2", "3", "4", "5", "6", "7", "8", "9"), class = "factor"), win = c(2L,
+0L, 5L, 2L, 0L, 12L, 13L, 10L, 6L, 17L, 9L, 8L, 24L, 16L, 15L,
+22L, 14L, 11L, 24L, 22L, 17L, 3L, 2L, 12L, 10L, 8L, 5L, 20L,
+15L, 13L, 27L, 19L, 18L, 2L, 2L, 6L), loss = c(16L, 21L, 10L,
+15L, 22L, 3L, 9L, 12L, 11L, 2L, 6L, 12L, 2L, 3L, 2L, 2L, 4L,
+4L, 1L, 0L, 2L, 14L, 18L, 6L, 6L, 9L, 11L, 0L, 2L, 5L, 1L, 1L,
+2L, 13L, 21L, 8L), tie = c(7L, 1L, 10L, 7L, 2L, 9L, 5L, 3L, 5L,
+7L, 8L, 6L, 0L, 5L, 7L, 4L, 5L, 7L, 3L, 3L, 6L, 9L, 4L, 5L, 6L,
+11L, 9L, 2L, 5L, 9L, 0L, 5L, 2L, 8L, 5L, 8L), win.adj = c(5.5,
+0.5, 10, 5.5, 1, 16.5, 15.5, 11.5, 8.5, 20.5, 13, 11, 24, 18.5,
+18.5, 24, 16.5, 14.5, 25.5, 23.5, 20, 7.5, 4, 14.5, 13, 13.5,
+9.5, 21, 17.5, 17.5, 27, 21.5, 19, 6, 4.5, 10), loss.adj = c(19.5,
+21.5, 15, 18.5, 23, 7.5, 11.5, 13.5, 13.5, 5.5, 10, 15, 2, 5.5,
+5.5, 4, 6.5, 7.5, 2.5, 1.5, 5, 18.5, 20, 8.5, 9, 14.5, 15.5,
+1, 4.5, 9.5, 1, 3.5, 3, 17, 23.5, 12)), .Names = c("row", "col",
+"win", "loss", "tie", "win.adj", "loss.adj"), row.names = c(NA,
+-36L), class = "data.frame"), predictors = structure(list(flav = c(0.6,
+4.8, 9, 0.6, 4.8, 9, 0.6, 4.8, 9), gel = c(0, 0, 0, 2.4, 2.4,
+2.4, 4.8, 4.8, 4.8), flav.2 = c(0.36, 23.04, 81, 0.36, 23.04,
+81, 0.36, 23.04, 81), gel.2 = c(0, 0, 0, 5.76, 5.76, 5.76, 23.04,
+23.04, 23.04), flav.gel = c(0, 0, 0, 1.44, 11.52, 21.6, 2.88,
+23.04, 43.2)), .Names = c("flav", "gel", "flav.2", "gel.2", "flav.gel"
+), row.names = c(NA, -9L), class = "data.frame")), .Names = c("contests",
+"predictors"))

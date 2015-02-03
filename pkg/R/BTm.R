@@ -21,8 +21,8 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
              "or \"cauchit\"")
     fcall <- as.list(match.call(expand.dots = FALSE))
     setup <- match(c("outcome", "player1", "player2", "formula", "id",
-                        "separate.ability", "refcat", "data", "weights",
-                        "subset", "offset", "contrasts"), names(fcall), 0L)
+                     "separate.ability", "refcat", "data", "weights",
+                     "subset", "offset", "contrasts"), names(fcall), 0L)
     if (is.null(formula)) env <- parent.frame()
     else env <- environment(formula)
     setup <- do.call(BTm.setup, fcall[setup], envir = env)
@@ -82,6 +82,7 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
     fit$call <- call
     fit$id <- id
     fit$separate.ability <- separate.ability
+    fit$contrasts <- setup$contrasts
     fit$refcat <- setup$refcat
     fit$formula <- setup$formula
     fit$player1 <- setup$player1

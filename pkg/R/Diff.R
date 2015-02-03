@@ -8,6 +8,10 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
         !identical(levels(player.one), levels(player.two)))
         stop("'player1$", id, "' and 'player2$", id,
              "' must be factors with the same levels")
+    if (!identical(attr(player.one, "contrasts"),
+                   attr(player.two, "contrasts")))
+        stop("'player1$", id, "' and 'player2$", id,
+             "' must have the same contrasts attribute")
     if(is.null(formula)) formula <- reformulate(id)
 
     players <- levels(player.one)
@@ -68,9 +72,13 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
             if (!is.null(refcat)) {
                 mf1[[id]] <- relevel(mf1[[id]], refcat)
                 mf2[[id]] <- relevel(mf2[[id]], refcat)
+                if (!missing(contrasts)) contrasts[[id]] <- "contr.treatment"
+            } else {
+                ## 'else' defined by contrasts arg/contrasts attr of id factor
+                ## leave refcat NULL
+                if (is.null(contrasts))
+                    contrasts[[id]] <- attr(player.one, "contrasts")
             }
-            else
-                refcat <- levels(mf1[[id]])[1]
         }
         offset <- model.offset(mf1)
         if (!is.null(offset)) offset <- offset - model.offset(mf2)
@@ -118,6 +126,7 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
             random <- D[,!sep[[id]], drop = FALSE]
     }
     list(X = X, random = random, offset = offset,
-         term.labels = term.labels, refcat = refcat, saturated = saturated)
+         term.labels = term.labels, refcat = refcat, contrasts = contrasts,
+         saturated = saturated)
 }
 

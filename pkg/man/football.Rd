@@ -46,12 +46,16 @@ if (require(gnm)) {
     football.tri$at.home <- !logical(nrow(football.tri))
 
     ### fit Davidson model for ties
+    ###  - subset to first and last season for illustration
     Davidson <- gnm(count ~
         GenDavidson(result == 1, result == 0, result == -1,
                     home:season, away:season,
                     home.adv = ~1, tie.max = ~1,
                     at.home1 = at.home, at.home2 = !at.home) - 1,
-        eliminate = match, family = poisson, data = football.tri)
+        eliminate = match, family = poisson, data = football.tri,
+        subset = season \%in\% c("2008-9", "2012-13"))
+
+    ### see ?GenDavidson for further analysis
 }
 }
 \keyword{datasets}

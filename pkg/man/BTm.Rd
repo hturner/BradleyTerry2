@@ -36,9 +36,11 @@ BTm(outcome, player1, player2, formula = NULL, id = "..",
     factor as a separate term) a character vector giving the names of
     players whose abilities are to be modelled individually rather than
     using the specification given by \code{formula}. }
-  \item{refcat}{(if \code{formula} does include the ID factor as a separate
+  \item{refcat}{(if \code{formula} includes the ID factor as a separate
     term) a character specifying which player to use as a
-    reference. Default is the first level of the ID factor.} 
+    reference, with the first level of the ID factor as the
+    default. Overrides any other contrast specification for the ID
+    factor.} 
   \item{family}{ a description of the error distribution and link
     function to be used in the model. Only the binomial family is
     implemented, with either\code{"logit"}, \code{"probit"} , or \code{"cauchit"} link. (See
@@ -74,8 +76,9 @@ BTm(outcome, player1, player2, formula = NULL, id = "..",
   \item{model}{logical: whether or not to return the model frame.}
   \item{x}{logical: whether or not to return the design matrix for
     the fixed effects.}
-  \item{contrasts}{an optional list. See the \code{contrasts.arg} of
-    \code{\link{model.matrix}}.} 
+  \item{contrasts}{an optional list specifying contrasts for the factors
+    in \code{formula}. See the \code{contrasts.arg} of
+    \code{\link{model.matrix}}.}  
   \item{\dots}{other arguments for fitting function (currently either
     \code{\link{glm}}, \code{\link[brglm]{brglm}}, or \code{\link{glmmPQL}}) }
 }

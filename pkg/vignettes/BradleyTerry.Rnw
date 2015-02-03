@@ -1,6 +1,11 @@
 % \VignetteIndexEntry{Bradley-Terry models in R}
-%\VignetteKeyword{generalized linear model, logistic regression, penalized quasi-likelihood, ranking, tournament analysis, working residuals}
-%\VignettePackage{BradleyTerry2}
+% \VignetteKeyword{generalized linear model}
+% \VignetteKeyword{logistic regression}
+% \VignetteKeyword{penalized quasi-likelihood}
+% \VignetteKeyword{ranking}
+% \VignetteKeyword{tournament analysis}
+% \VignetteKeyword{working residuals}
+% \VignettePackage{BradleyTerry2}
 
 %%% For jss:
 %% \documentclass{jss}
@@ -67,7 +72,7 @@ checking of the linear predictor.
 
 @
 <<set_options, echo = FALSE>>=
-options(prompt = "R> ", continue = "+  ", width = 70, 
+options(prompt = "R> ", continue = "+  ", width = 70,
         useFancyQuotes = FALSE, digits = 7)
 @ %def
 
@@ -107,8 +112,8 @@ range of models to be fitted. In particular, \BT\ allows the inclusion of
 simple random effects so that the ability parameters can be related to available
 explanatory variables through a linear predictor of the form
 \begin{equation}
-    \lambda_i=\sum_{r=1}^p\beta_rx_{ir} + U_i. 
-\end{equation}    
+    \lambda_i=\sum_{r=1}^p\beta_rx_{ir} + U_i.
+\end{equation}
 The inclusion of the prediction
 error $U_i$ allows for variability between players with equal covariate values
 and induces correlation between comparisons with a common player. \BT\ also
@@ -146,7 +151,7 @@ journals of statistics and are included the \BT\ package as the data set
 @
 <<LoadBradleyTerry2>>=
 library("BradleyTerry2")
-@ 
+@
 
 @
 <<CitationData>>=
@@ -533,7 +538,7 @@ of the theory and method of calculation see \citet{firt:04}.
 \label{sec:residuals}
 
 There are two main types of residuals available for a Bradley-Terry model
-object. 
+object.
 
 First, there are residuals obtained by the standard methods for models of class
 \code{"glm"}.  These all deliver one residual for each contest or type of
@@ -580,9 +585,9 @@ For example:
 
 @
 <<residualWLS>>=
-lm(res ~ throat.PC1, weights = attr(res, "weights"), 
+lm(res ~ throat.PC1, weights = attr(res, "weights"),
    data = flatlizards$predictors)
-lm(res ~ head.length, weights = attr(res, "weights"), 
+lm(res ~ head.length, weights = attr(res, "weights"),
    data = flatlizards$predictors)
 @ %def %$
 
@@ -743,9 +748,9 @@ variables and these variables are converted to factors:
 <<student-specific_data>>=
 library("prefmod")
 student <- cemspc[c("ENG", "SEX")]
-student$ENG <- factor(student$ENG, levels = 1:2, 
+student$ENG <- factor(student$ENG, levels = 1:2,
                       labels = c("good", "poor"))
-student$SEX <- factor(student$SEX, levels = 1:2, 
+student$SEX <- factor(student$SEX, levels = 1:2,
                       labels = c("female", "male"))
 @ %def
 This data frame is put into a list, which will eventually hold all the
@@ -773,7 +778,7 @@ comparison. The comparisons are in the order 1 vs.\ 2, 1 vs.\ 3, 2 vs.\ 3, 1
 vs.\ 4, \ldots, so the factors can be created as follows:
 @
 <<school_factors>>=
-lab <- c("London", "Paris", "Milano", "St. Gallen", "Barcelona", 
+lab <- c("London", "Paris", "Milano", "St. Gallen", "Barcelona",
          "Stockholm")
 contest$school1 <- factor(sequence(1:5), levels = 1:6, labels = lab)
 contest$school2 <- factor(rep(2:6, 1:5), levels = 1:6, labels = lab)

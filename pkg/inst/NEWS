@@ -1,3 +1,18 @@
+Changes in BradleyTerry2 1.0-6
+==============================
+
+Changes in behaviour
+--------------------
+
+    o	BTabilities now returns NA for unidentified abilities
+
+Bug fixes
+---------
+
+    o	BTabilities now respects contrasts argument and contrasts attributes of
+    	player1 and player2 factors.
+
+
 Changes in BradleyTerry2 1.0-5
 ==============================
 
