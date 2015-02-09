@@ -34,20 +34,23 @@ BTabilities <-  function (model)
         X[Xmiss, ] <- 0
         X <- X[, -1, drop = FALSE]
         separate.ability <- unique(union(players[Xmiss],
-                                        model$separate.ability))
+                                         model$separate.ability))
         ns <- length(separate.ability)
         if (ns) {
             S <- matrix(0, nrow = nrow(X), ncol = ns)
             S[cbind(which(players %in% separate.ability), seq(ns))] <- 1
             X <- cbind(S, X)
         }
-
-        kept <- model$assign %in% c(0, which(keep))
+        ## remove inestimable coef
+        est <- !is.na(model$coef)
+        X <- X[, est, drop = FALSE]
+        ## keep coef of player covariates
+        kept <- model$assign[est] %in% c(0, which(keep))
 
         sqrt.vcov <- chol(vcov(model)[kept, kept])
         V <- crossprod(sqrt.vcov %*% t(X))
         se <- sqrt(diag(V))
-        abilities <- cbind(X %*% coef(model)[kept] + offset, se)
+        abilities <- cbind(X %*% coef(model)[est][kept] + offset, se)
         attr(abilities, "vcov") <- V
         if (length(separate.ability)) {
             attr(abilities, "separate") <- separate.ability
@@ -68,7 +71,7 @@ BTabilities <-  function (model)
         coef <- na.exclude(coef(model)[coefs.to.include])
         vc <- vcov(model)[names(coef), names(coef), drop = FALSE]
         ## setup factor reflecting contrasts used ..
-        fac <- factor(player.names, player.names)
+        fac <- factor(player.names, paste0(model$id, player.names))
         if (!is.null(model$refcat)) {
             fac <- C(relevel(fac, model$refcat), "contr.treatment")
         } else fac <- C(fac, model$contrasts[[model$id]])
@@ -80,7 +83,8 @@ BTabilities <-  function (model)
         est <- contr %*% coef
         se <- sqrt(diag(contr %*% vc %*% t(contr)))
         if (!is.null(attr(coef, "na.action"))){
-            est[attr(coef, "na.action")] <- se[attr(coef, "na.action")] <- NA
+            id <- match(names(attr(coef, "na.action")), rownames(contr))
+            est[id] <- se[id] <- NA
         }
         abilities <- cbind(est, se)
         attr(abilities, "vcov") <- vc

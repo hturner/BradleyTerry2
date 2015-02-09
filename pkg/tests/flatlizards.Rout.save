@@ -1,7 +1,7 @@
 
-R version 3.0.1 (2013-05-16) -- "Good Sport"
-Copyright (C) 2013 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+R Under development (unstable) (2015-02-07 r67757) -- "Unsuffered Consequences"
+Copyright (C) 2015 The R Foundation for Statistical Computing
+Platform: x86_64-unknown-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -17,6 +17,9 @@ Type 'q()' to quit R.
 
 > options(digits = 4) ## only applies to this file
 > library(BradleyTerry2)
+Loading required package: lme4
+Loading required package: Matrix
+Loading required package: Rcpp
 > data(flatlizards, package = "BradleyTerry2")
 > ##
 > ##  Fit the standard Bradley-Terry model, using the bias-reduced
@@ -547,4 +550,4 @@ attr(,"weights")
 > 
 > proc.time()
    user  system elapsed 
-  3.004   0.084   3.081 
+  2.464   0.052   2.509 

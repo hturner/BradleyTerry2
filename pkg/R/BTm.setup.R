@@ -6,6 +6,8 @@ BTm.setup <- function(outcome = 1, player1, player2, formula = NULL,
         keep <- names(data) %in% c(deparse(substitute(player1)),
                                    deparse(substitute(player2)))
         if (!length(keep)) keep <- FALSE
+        ## save row names for checking against index variables (in Diff)
+        nm <- lapply(data, rownames)
         data <- c(data[keep], unlist(unname(data[!keep]), recursive = FALSE))
         if (any(dup <- duplicated(names(data))))
             warning("'data' argument specifies duplicate variable names: ",
@@ -36,7 +38,7 @@ BTm.setup <- function(outcome = 1, player1, player2, formula = NULL,
     else subset <- c(subset1, subset2)
     if (is.null(formula)) formula <- reformulate(id)
     diffModel <- Diff(player1, player2, formula, id, data, separate.ability,
-                      refcat, contrasts)
+                      refcat, contrasts, nm)
     offset <- withIfNecessary(substitute(offset), data, FALSE) #contest level
     if (!is.null(offset)) {
         if (is.null(diffModel$offset))  diffModel$offset <- offset

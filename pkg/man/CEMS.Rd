@@ -69,7 +69,7 @@ The variables \code{win1.adj} and \code{win2.adj} are provided in order
 }
 \source{
 Royal Statistical Society datasets website, at
-\url{http://www.blackwellpublishing.com/rss/Readmefiles/dittrich.htm}.
+\url{http://onlinelibrary.wiley.com/journal/10.1111/(ISSN)1467-9876/homepage/47_4.htm}.
  }
 
 

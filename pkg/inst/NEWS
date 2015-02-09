@@ -10,7 +10,8 @@ Bug fixes
 ---------
 
     o	BTabilities now respects contrasts argument and contrasts attributes of
-    	player1 and player2 factors.
+    	player1 and player2 factors. Also handle unidentified coefficients 
+	correctly.
 
 
 Changes in BradleyTerry2 1.0-5

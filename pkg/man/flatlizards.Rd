@@ -75,7 +75,7 @@
 }
 \source{
   The data were collected by Dr Martin Whiting, 
-  \url{http://galliform.psy.mq.edu.au/~cisab/WhitingIndividualStaff.html},
+  \url{http://whitinglab.com/?page_id=3380},
   and they appear here with his kind permission.
 }
 \references{
@@ -110,7 +110,7 @@ summary(BTmodel)
 ##  This reproduces results reported in Table 1 of Whiting et al. (2006):
 ##
 Whiting.model <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
-                     head.length[..] + SVL[..], family = binomial,
+                     head.length[..] + SVL[..],
                      data = list(contests, predictors))
 summary(Whiting.model)
 ##

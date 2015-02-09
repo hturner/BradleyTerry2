@@ -27,7 +27,9 @@ football results, from 2008/9 to 2012/13
   in 380 games per season.
 }
 \source{
-  \url{http://soccernet.espn.go.com/grid?league=eng.1&season=2011&view=n&cc=5739}
+  These data were downloaded from http://soccernet.espn.go.com in
+  2013. The site has since moved and the new site does not appear to
+  have an equivalent source. 
 }
 \references{
   Davidson, R. R. (1970). On extending the Bradley-Terry model to
