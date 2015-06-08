@@ -71,9 +71,10 @@ BTabilities <-  function (model)
         coef <- na.exclude(coef(model)[coefs.to.include])
         vc <- vcov(model)[names(coef), names(coef), drop = FALSE]
         ## setup factor reflecting contrasts used ..
-        fac <- factor(player.names, paste0(model$id, player.names))
+        fac <- factor(player.names, labels = paste0(model$id, player.names))
         if (!is.null(model$refcat)) {
-            fac <- C(relevel(fac, model$refcat), "contr.treatment")
+            fac <- C(relevel(fac, paste0(model$id, model$refcat)),
+                     "contr.treatment")
         } else fac <- C(fac, model$contrasts[[model$id]])
         contr <- contrasts(fac)
         ## calc abilities and s.e., fill in NA as necessary
@@ -87,10 +88,10 @@ BTabilities <-  function (model)
             est[id] <- se[id] <- NA
         }
         abilities <- cbind(est, se)
+        rownames(abilities) <- levels(fac)
         attr(abilities, "vcov") <- vc
     }
     colnames(abilities) <- c("ability", "s.e.")
-    rownames(abilities) <- player.names
     attr(abilities, "modelcall") <- model$call
     attr(abilities, "factorname") <- model$id
     class(abilities) <- c("BTabilities", "matrix")
