@@ -82,7 +82,9 @@ BTabilities <-  function (model)
             contr <- contr[, -attr(coef, "na.action"), drop = FALSE]
         }
         est <- contr %*% coef
-        se <- sqrt(diag(contr %*% vc %*% t(contr)))
+        ## vc of contrasts for use with qvcalc
+        vc <- contr %*% vc %*% t(contr)
+        se <- sqrt(diag(vc))
         if (!is.null(attr(coef, "na.action"))){
             id <- match(names(attr(coef, "na.action")), rownames(contr))
             est[id] <- se[id] <- NA
