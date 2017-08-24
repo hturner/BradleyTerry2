@@ -1,3 +1,4 @@
+#' @export
 print.summary.BTglmmPQL <- function(x, digits = max(3, getOption("digits") - 3),
                                    symbolic.cor = x$symbolic.cor,
                                    signif.stars = getOption("show.signif.stars"),

@@ -1,3 +1,4 @@
+#' @export
 vcov.BTglmmPQL <- function (object, ...)
 {
     so <- summary(object, corr = FALSE, ...)

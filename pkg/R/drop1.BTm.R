@@ -1,3 +1,4 @@
+#' @export
 drop1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
                       ...) {
     x <- model.matrix(object)

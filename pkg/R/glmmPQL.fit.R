@@ -1,3 +1,4 @@
+#' @importFrom utils flush.console
 glmmPQL.fit <- function(X, y, Z,  weights = rep(1, NROW(y)), start = NULL,
                         etastart = NULL, mustart = NULL,
                         offset = rep(0, NROW(y)), family = gaussian(),

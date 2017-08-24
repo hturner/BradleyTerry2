@@ -1,3 +1,4 @@
+#' @export
 print.BTglmmPQL <- function (x, digits = max(3, getOption("digits") - 3), ...)
 {
     if (identical(x$sigma, 0)){
