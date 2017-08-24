@@ -1,0 +1,114 @@
+
+R version 3.4.1 (2017-06-30) -- "Single Candle"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(BradleyTerry2)
+Loading required package: lme4
+Loading required package: Matrix
+> 
+> ## refcat is not the first level
+> 
+> ##  Convert frequencies to success/failure data
+> citations.sf <- countsToBinomial(citations)
+> names(citations.sf)[1:2] <- c("journal1", "journal2")
+> 
+> ##  First fit the "standard" Bradley-Terry model
+> citeModel <- BTm(cbind(win1, win2), journal1, journal2, data = citations.sf)
+> BTabilities(citeModel)
+                ability       s.e.
+Biometrika    0.0000000 0.00000000
+Comm Statist -2.9490725 0.10254534
+JASA         -0.4795698 0.06058873
+JRSS-B        0.2689541 0.07082997
+> 
+> ##  Now the same thing with a different "reference" journal
+> citeModel2 <- update(citeModel, refcat = "JASA")
+> BTabilities(citeModel2)
+                ability       s.e.
+Biometrika    0.4795698 0.06058873
+Comm Statist -2.4695027 0.09817049
+JASA          0.0000000 0.00000000
+JRSS-B        0.7485238 0.07294356
+> 
+> ## modelled by covariates where some parameters inestimable
+> 
+> summary(chameleon.model <- BTm(player1 = winner, player2 = loser,
++    formula = ~ prev.wins.2 + ch.res[ID] + prop.main[ID] + (1|ID), id = "ID",
++    data = chameleons))
+PQL algorithm converged to fixed effects model
+
+Call:
+BTm(player1 = winner, player2 = loser, formula = ~prev.wins.2 + 
+    ch.res[ID] + prop.main[ID] + (1 | ID), id = "ID", data = chameleons)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+0.06415  0.34234  0.58244  1.07561  2.80562  
+
+Coefficients:
+              Estimate Std. Error z value Pr(>|z|)    
+prev.wins.2    2.38130    0.48495   4.910 9.09e-07 ***
+ch.res[ID]     0.60931    0.27773   2.194   0.0282 *  
+prop.main[ID]  0.08928    0.04382   2.037   0.0416 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 146.947  on 106  degrees of freedom
+Residual deviance:  85.396  on 103  degrees of freedom
+AIC: 91.396
+
+Number of Fisher Scoring iterations: NA
+
+> head(BTabilities(chameleon.model))
+PQL algorithm converged to fixed effects model
+     ability     s.e.
+C01 3.757229 1.655205
+C02 2.404778 1.017782
+C03 2.319346 1.133959
+C04 1.892671 1.399391
+C05 2.253472 1.101628
+C06 2.015840 1.075806
+> 
+> ## sum to zero contrasts
+> 
+> mod3 <- BTm(cbind(win1, win2), journal1,
++             journal2, ~ journal, id = "journal", x = FALSE, 
++             contrasts = list(journal = "contr.sum"), data = citations.sf)
+> 
+> citations.sf$journal1 <- C(citations.sf$journal1, "contr.sum")
+> citations.sf$journal2 <- C(citations.sf$journal2, "contr.sum") 
+> mod3b <-
++     BTm(cbind(win1, win2), journal1, journal2, ~ journal, id = "journal", 
++         x = FALSE, data = citations.sf)
+> 
+> BTabilities(mod3) 
+                ability       s.e.
+Biometrika    0.7899221 0.04333047
+Comm Statist -2.1591504 0.07257974
+JASA          0.3103523 0.04164102
+JRSS-B        1.0588761 0.05304699
+> BTabilities(mod3b)
+                ability       s.e.
+Biometrika    0.7899221 0.04333047
+Comm Statist -2.1591504 0.07257974
+JASA          0.3103523 0.04164102
+JRSS-B        1.0588761 0.05304699
+> 
+> proc.time()
+   user  system elapsed 
+  1.452   0.036   1.495 
