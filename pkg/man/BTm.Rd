@@ -50,9 +50,10 @@ either\code{"logit"}, \code{"probit"} , or \code{"cauchit"} link. (See
 \item{data}{an optional object providing data required by the model. This
 may be a single data frame of contest-level data or a list of data frames.
 Names of data frames are ignored unless they refer to data frames specified
-by \code{player1} and \code{player2}.The rows of data frames that do not
+by \code{player1} and \code{player2}. The rows of data frames that do not
 contain contest-level data must correspond to the levels of a factor used
-for indexing. Objects are searched for first in the \code{data} object if
+for indexing, i.e. row 1 corresponds to level 1, etc. Note any rownames are 
+ignored. Objects are searched for first in the \code{data} object if
 provided, then in the environment of \code{formula}. If \code{data} is a
 list, the data frames are searched in the order given.}
 
@@ -153,7 +154,7 @@ function.
 ##  -- see also Agresti (2002, p448)
 ########################################################
 
-## Convert frequencies to success/failure data
+##  Convert frequencies to success/failure data
 citations.sf <- countsToBinomial(citations)
 names(citations.sf)[1:2] <- c("journal1", "journal2")
 
@@ -166,6 +167,7 @@ update(citeModel, refcat = "JASA")
 ##################################################################
 ##  Now an example with an order effect -- see Agresti (2002) p438
 ##################################################################
+data(baseball) # start with baseball data as provided by package
 
 ##  Simple Bradley-Terry model, ignoring home advantage:
 baseballModel1 <- BTm(cbind(home.wins, away.wins), home.team, away.team,

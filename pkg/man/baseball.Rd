@@ -32,6 +32,7 @@ This dataset is in a simpler format than the one described in Firth
 \examples{
 
 ##  This reproduces the analysis in Sec 10.6 of Agresti (2002).
+data(baseball) # start with baseball data as provided by package
 
 ##  Simple Bradley-Terry model, ignoring home advantage:
 baseballModel1 <- BTm(cbind(home.wins, away.wins), home.team, away.team,

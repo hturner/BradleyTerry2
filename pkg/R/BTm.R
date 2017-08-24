@@ -143,7 +143,7 @@
 #' ##  -- see also Agresti (2002, p448)
 #' ########################################################
 #' 
-#' ## Convert frequencies to success/failure data
+#' ##  Convert frequencies to success/failure data
 #' citations.sf <- countsToBinomial(citations)
 #' names(citations.sf)[1:2] <- c("journal1", "journal2")
 #' 
@@ -156,6 +156,7 @@
 #' ##################################################################
 #' ##  Now an example with an order effect -- see Agresti (2002) p438
 #' ##################################################################
+#' data(baseball) # start with baseball data as provided by package
 #' 
 #' ##  Simple Bradley-Terry model, ignoring home advantage:
 #' baseballModel1 <- BTm(cbind(home.wins, away.wins), home.team, away.team,

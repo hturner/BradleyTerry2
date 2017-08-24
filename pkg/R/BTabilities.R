@@ -38,7 +38,7 @@
 #' 
 #' ### citations example
 #' 
-#' ## Convert frequencies to success/failure data
+#' ##  Convert frequencies to success/failure data
 #' citations.sf <- countsToBinomial(citations)
 #' names(citations.sf)[1:2] <- c("journal1", "journal2")
 #' 
@@ -48,12 +48,15 @@
 #' 
 #' ### baseball example
 #' 
+#' data(baseball) # start with baseball data as provided by package
+#' 
+#' ##  Fit mode with home advantage
 #' baseball$home.team <- data.frame(team = baseball$home.team, at.home = 1)
 #' baseball$away.team <- data.frame(team = baseball$away.team, at.home = 0)
 #' baseballModel2 <- BTm(cbind(home.wins, away.wins), home.team, away.team,
 #'                       formula = ~ team + at.home, id = "team",
 #'                       data = baseball)
-#' ##  Estimated abilities for each team, relative to Baltimore, when
+#' ##  Estimate abilities for each team, relative to Baltimore, when
 #' ##  playing away from home:  
 #' BTabilities(baseballModel2)
 #' 
