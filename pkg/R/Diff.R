@@ -76,8 +76,11 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
             } else {
                 ## 'else' defined by contrasts arg/contrasts attr of id factor
                 ## leave refcat NULL
-                if (is.null(contrasts))
+                if (is.null(contrasts) & 
+                    !is.null(attr(player.one, "contrasts"))){
+                    contrasts <- list()
                     contrasts[[id]] <- attr(player.one, "contrasts")
+                }
             }
         }
         offset <- model.offset(mf1)

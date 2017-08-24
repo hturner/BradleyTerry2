@@ -162,7 +162,8 @@ names(citations.sf)[1:2] <- c("journal1", "journal2")
 citeModel <- BTm(cbind(win1, win2), journal1, journal2, data = citations.sf)
 
 ##  Now the same thing with a different "reference" journal
-update(citeModel, refcat = "JASA")
+citeModel2 <- update(citeModel, refcat = "JASA")
+BTabilities(citeModel2)
 
 ##################################################################
 ##  Now an example with an order effect -- see Agresti (2002) p438

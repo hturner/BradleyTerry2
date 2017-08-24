@@ -1,3 +1,18 @@
+Changes in BradleyTerry2 1.0-7
+==============================
+
+Bug fixes
+---------
+
+    o	BTabilities now works (again) for models where the reference category is
+        not the first player. Players are kept in their original order (levels 
+        of `player1` and `player2`), but the abilities are returned with the 
+        appropriate reference.
+        
+    o   BTabilities now works when ability is modelled by covariates and some
+        parameters are inestimable (e.g. as in `chameleons.model` on 
+        ?chameleons).
+	
 Changes in BradleyTerry2 1.0-6
 ==============================
 
@@ -11,7 +26,7 @@ Bug fixes
 
     o	BTabilities now respects contrasts argument and contrasts attributes of
     	player1 and player2 factors. Also handle unidentified coefficients 
-	correctly.
+	    correctly.
 
 
 Changes in BradleyTerry2 1.0-5

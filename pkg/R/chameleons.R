@@ -63,6 +63,7 @@
 #' summary(chameleon.model <- BTm(player1 = winner, player2 = loser,
 #'   formula = ~ prev.wins.2 + ch.res[ID] + prop.main[ID] + (1|ID), id = "ID",
 #'   data = chameleons))
+#' head(BTabilities(chameleon.model))
 #' ##
 #' ## Note that, although a per-chameleon random effect is specified as in the
 #' ## above [the term "+ (1|ID)"], the estimated variance for that random
