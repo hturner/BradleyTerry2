@@ -19,7 +19,7 @@ with random effects.}
 returned.  The Chisq test is a likelihood ratio test for models with no
 random effects, otherwise a Wald test. Options \code{"F"} and \code{"Cp"}
 are only applicable to models with no random effects, see
-\code{\link{stat.anova}}.}
+\code{\link[=stat.anova]{stat.anova()}}.}
 }
 \value{
 An object of class \code{"anova"} inheriting from class
@@ -32,7 +32,7 @@ tests of additional terms.
 }
 \details{
 For models with no random effects, an analysis of deviance table is computed
-using \code{\link{anova.glm}}. Otherwise, Wald tests are computed as
+using \code{\link[=anova.glm]{anova.glm()}}. Otherwise, Wald tests are computed as
 detailed here.
 
 If a single object is specified, terms are added sequentially and a Wald
@@ -71,7 +71,7 @@ anova(BTmodel)
 
 }
 \seealso{
-\code{\link{BTm}}, \code{\link{add1.BTm}}
+\code{\link[=BTm]{BTm()}}, \code{\link[=add1.BTm]{add1.BTm()}}
 }
 \author{
 Heather Turner

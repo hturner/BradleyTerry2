@@ -1,38 +1,38 @@
 #' Estimated Abilities from a Bradley-Terry Model
 #' 
 #' Computes the (baseline) ability of each player from a model object of class
-#' \code{"BTm"}.
+#' `"BTm"`.
 #' 
 #' 
 #' @aliases BTabilities print.BTabilities coef.BTabilities vcov.BTabilities
-#' @param model a model object for which \code{inherits(model, "BTm")} is
-#' \code{TRUE}
-#' @return A two-column numeric matrix (of class \code{c("BTabilities",
-#' "matrix")}, with columns named \code{"ability"} and \code{"se"}; has one row
-#' for each player; has attributes named \code{"vcov"}, \code{"modelcall"},
-#' \code{"factorname"} and (sometimes --- see below) \code{"separate"}.  The
+#' @param model a model object for which `inherits(model, "BTm")` is
+#' `TRUE`
+#' @return A two-column numeric matrix (of class `c("BTabilities",
+#' "matrix")`, with columns named `"ability"` and `"se"`; has one row
+#' for each player; has attributes named `"vcov"`, `"modelcall"`,
+#' `"factorname"` and (sometimes --- see below) `"separate"`.  The
 #' first three attributes are not printed by the method
-#' \code{print.BTabilities}.
+#' `print.BTabilities`.
 #' 
 #' The player abilities are either directly estimated by the model, in which
 #' case the appropriate parameter estimates are returned, otherwise the
 #' abilities are computed from the terms of the fitted model that involve
-#' player covariates only (those indexed by \code{model$id} in the model
+#' player covariates only (those indexed by `model$id` in the model
 #' formula). Thus parameters in any other terms are assumed to be zero.
 #' 
 #' If the abilities are structured according to a linear predictor, and if
 #' there are player covariates with missing values, the abilities for the
 #' corresponding players are estimated as separate parameters.  In this event
-#' the resultant matrix has an attribute, named \code{"separate"}, which
+#' the resultant matrix has an attribute, named `"separate"`, which
 #' identifies those players whose ability was estimated separately.  For an
-#' example, see \code{\link{flatlizards}}.
+#' example, see [flatlizards()].
 #' @author David Firth and Heather Turner
-#' @seealso \code{\link{BTm}}, \code{\link{residuals.BTm}}
-#' @references Firth, D. (2005) Bradley-Terry models in R.  \emph{Journal of
-#' Statistical Software}, \bold{12}(1), 1--12.
+#' @seealso [BTm()], [residuals.BTm()]
+#' @references Firth, D. (2005) Bradley-Terry models in R.  *Journal of
+#' Statistical Software*, **12**(1), 1--12.
 #' 
 #' Turner, H. and Firth, D. (2012) Bradley-Terry models in R: The BradleyTerry2
-#' package.  \emph{Journal of Statistical Software}, \bold{48}(9), 1--21.
+#' package.  *Journal of Statistical Software*, **48**(9), 1--21.
 #' @keywords models
 #' @examples
 #' 

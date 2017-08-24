@@ -1,10 +1,10 @@
 #' Specify a Generalised Davidson Term in a gnm Model Formula
 #' 
-#' GenDavidson is a function of class \code{"nonlin"} to specify a generalised
-#' Davidson term in the formula argument to \code{\link[gnm]{gnm}}, providing a
+#' GenDavidson is a function of class `"nonlin"` to specify a generalised
+#' Davidson term in the formula argument to [gnm::gnm()], providing a
 #' model for paired comparison data where ties are a possible outcome.
 #' 
-#' \code{GenDavidson} specifies a generalisation of the Davidson model (1970)
+#' `GenDavidson` specifies a generalisation of the Davidson model (1970)
 #' for paired comparisons where a tie is a possible outcome. It is designed for
 #' modelling trinomial counts corresponding to the win/draw/loss outcome for
 #' each contest, which are assumed Poisson conditional on the total count for
@@ -37,30 +37,30 @@
 #' zero and one (\eqn{\delta, \pi}), the logit is estimated, as illustrated in
 #' the example.
 #' 
-#' @param win a logical vector: \code{TRUE} if player1 wins, \code{FALSE}
+#' @param win a logical vector: `TRUE` if player1 wins, `FALSE`
 #' otherwise.
-#' @param tie a logical vector: \code{TRUE} if the outcome is a tie,
-#' \code{FALSE} otherwise.
-#' @param loss a logical vector: \code{TRUE} if player1 loses, \code{FALSE}
+#' @param tie a logical vector: `TRUE` if the outcome is a tie,
+#' `FALSE` otherwise.
+#' @param loss a logical vector: `TRUE` if player1 loses, `FALSE`
 #' otherwise.
 #' @param player1 an ID factor specifying the first player in each contest,
-#' with the same set of levels as \code{player2}.
+#' with the same set of levels as `player2`.
 #' @param player2 an ID factor specifying the second player in each contest,
-#' with the same set of levels as \code{player2}.
+#' with the same set of levels as `player2`.
 #' @param home.adv a formula for the paramter corresponding to the home
-#' advantage effect. If \code{NULL}, no home advantage effect is estimated.
+#' advantage effect. If `NULL`, no home advantage effect is estimated.
 #' @param tie.max a formula for the parameter corresponding to the maximum tie
 #' probability.
 #' @param tie.scale a formula for the parameter corresponding to the scale of
-#' dependence of the tie probability on the probability that \code{player1}
+#' dependence of the tie probability on the probability that `player1`
 #' wins, given the outcome is not a draw.
 #' @param tie.mode a formula for the parameter corresponding to the location of
-#' maximum tie probability, in terms of the probability that \code{player1}
+#' maximum tie probability, in terms of the probability that `player1`
 #' wins, given the outcome is not a draw.
-#' @param at.home1 a logical vector: \code{TRUE} if \code{player1} is at home,
-#' \code{FALSE} otherwise.
-#' @param at.home2 a logical vector: \code{TRUE} if \code{player2} is at home,
-#' \code{FALSE} otherwise.
+#' @param at.home1 a logical vector: `TRUE` if `player1` is at home,
+#' `FALSE` otherwise.
+#' @param at.home2 a logical vector: `TRUE` if `player2` is at home,
+#' `FALSE` otherwise.
 #' @return A list with the anticipated components of a "nonlin" function:
 #' \item{ predictors }{ the formulae for the different parameters and the ID
 #' factors for player 1 and player 2. } \item{ variables }{ the outcome
@@ -70,10 +70,10 @@
 #' expression of the term, given labels for the predictors.} \item{ start }{ a
 #' function to generate starting values for the parameters.}
 #' @author Heather Turner
-#' @seealso \code{\link{football}}, \code{\link{plotProportions}}
+#' @seealso [football()], [plotProportions()]
 #' @references Davidson, R. R. (1970). On extending the Bradley-Terry model to
-#' accommodate ties in paired comparison experiments. \emph{Journal of the
-#' American Statistical Association}, \bold{65}, 317--328.
+#' accommodate ties in paired comparison experiments. *Journal of the
+#' American Statistical Association*, **65**, 317--328.
 #' @keywords models nonlinear
 #' @examples
 #' 

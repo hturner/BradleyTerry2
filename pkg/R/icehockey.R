@@ -14,9 +14,9 @@
 #' There are six automatic bids that go to the conference tournament champions,
 #' the remaining 10 teams are selected based upon ranking under the NCAA's
 #' system of pairwise comparisons
-#' (\url{http://www.collegehockeynews.com/info/?d=pwcrpi}). Some have argued
+#' (http://www.collegehockeynews.com/info/?d=pwcrpi). Some have argued
 #' that Bradley-Terry rankings would be fairer
-#' (\url{http://www.collegehockeynews.com/info/?d=krach}).
+#' (http://www.collegehockeynews.com/info/?d=krach).
 #' 
 #' @name icehockey
 #' @docType data
@@ -24,26 +24,26 @@
 #' \describe{ 
 #' \item{date}{a numeric vector} 
 #' \item{visitor}{a
-#' factor with 58 levels \code{Alaska Anchorage} ... \code{Yale}}
+#' factor with 58 levels `Alaska Anchorage` ... `Yale`}
 #' \item{v_goals}{a numeric vector} 
 #' \item{opponent}{a factor
-#' with 58 levels \code{Alaska Anchorage} ... \code{Yale}}
+#' with 58 levels `Alaska Anchorage` ... `Yale`}
 #' \item{o_goals}{a numeric vector} 
 #' \item{conference}{a factor
-#' with levels \code{AH}, \code{CC}, \code{CH}, \code{EC}, \code{HE},
-#' \code{NC}, \code{WC}} 
+#' with levels `AH`, `CC`, `CH`, `EC`, `HE`,
+#' `NC`, `WC`} 
 #' \item{result}{a numeric vector: 1 if visitor
 #' won, 0.5 for a draw and 0 if visitor lost} 
 #' \item{home.ice}{a logical
 #' vector: 1 if opponent on home ice, 0 if game on neutral ground} }
 #' @references Schlobotnik, J. Build your own rankings.
-#' \url{http://slack.net/~whelan/tbrw/2010/rankings.diy.shtml}
+#' http://slack.net/~whelan/tbrw/2010/rankings.diy.shtml
 #' 
-#' \url{http://www.collegehockeynews.com}
+#' http://www.collegehockeynews.com
 #' 
 #' Selections for 2010 NCAA tournament.
-#' \url{http://sports.espn.go.com/ncaa/news/story?id=5012918}
-#' @source \url{http://www.collegehockeystats.net/0910/schedules/men}
+#' http://sports.espn.go.com/ncaa/news/story?id=5012918
+#' @source http://www.collegehockeystats.net/0910/schedules/men
 #' @keywords datasets
 #' @examples
 #' 

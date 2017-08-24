@@ -1,34 +1,34 @@
 #' Residuals from a Bradley-Terry Model
 #' 
-#' Computes residuals from a model object of class \code{"BTm"}. In additional
-#' to the usual options for objects inheriting from class \code{"glm"}, a
-#' \code{"grouped"} option is implemented to compute player-specific residuals
+#' Computes residuals from a model object of class `"BTm"`. In additional
+#' to the usual options for objects inheriting from class `"glm"`, a
+#' `"grouped"` option is implemented to compute player-specific residuals
 #' suitable for diagnostic checking of a predictor involving player-level
 #' covariates.
 #' 
-#' For \code{type} other than \code{"grouped"} see \code{\link{residuals.glm}}.
+#' For `type` other than `"grouped"` see [residuals.glm()].
 #' 
-#' For \code{type = "grouped"} the residuals returned are weighted means of
+#' For `type = "grouped"` the residuals returned are weighted means of
 #' working residuals, with weights equal to the binomial denominators in the
 #' fitted model.  These are suitable for diagnostic model checking, for example
 #' plotting against candidate predictors.
 #' 
-#' @param object a model object for which \code{inherits(model, "BTm")} is
-#' \code{TRUE}.
+#' @param object a model object for which `inherits(model, "BTm")` is
+#' `TRUE`.
 #' @param type the type of residuals which should be returned.  The
-#' alternatives are: \code{"deviance"} (default), \code{"pearson"},
-#' \code{"working"}, \code{"response"}, and \code{"partial"}.
-#' @param by the grouping factor to use when \code{type = "grouped"}.
+#' alternatives are: `"deviance"` (default), `"pearson"`,
+#' `"working"`, `"response"`, and `"partial"`.
+#' @param by the grouping factor to use when `type = "grouped"`.
 #' @param ... arguments to pass on other methods.
 #' @return A numeric vector of length equal to the number of players, with a
-#' \code{"weights"} attribute.
+#' `"weights"` attribute.
 #' @author David Firth and Heather Turner
-#' @seealso \code{\link{BTm}}, \code{\link{BTabilities}}
-#' @references Firth, D. (2005) Bradley-Terry models in R.  \emph{Journal of
-#' Statistical Software} \bold{12}(1), 1--12.
+#' @seealso [BTm()], [BTabilities()]
+#' @references Firth, D. (2005) Bradley-Terry models in R.  *Journal of
+#' Statistical Software* **12**(1), 1--12.
 #' 
 #' Turner, H. and Firth, D. (2012) Bradley-Terry models in R: The BradleyTerry2
-#' package.  \emph{Journal of Statistical Software}, \bold{48}(9), 1--21.
+#' package.  *Journal of Statistical Software*, **48**(9), 1--21.
 #' @keywords models
 #' @examples
 #' 

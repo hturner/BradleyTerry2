@@ -1,23 +1,23 @@
 #' Predict Method for BTglmmPQL Objects
 #' 
 #' Obtain predictions and optionally standard errors of those predictions from
-#' a \code{"BTglmmPQL"} object.
+#' a `"BTglmmPQL"` object.
 #' 
-#' If \code{newdata} is omitted the predictions are based on the data used for
+#' If `newdata` is omitted the predictions are based on the data used for
 #' the fit.  In that case how cases with missing values in the original fit are
-#' treated is determined by the \code{na.action} argument of that fit.  If
-#' \code{na.action = na.omit} omitted cases will not appear in the residuals,
-#' whereas if \code{na.action = na.exclude} they will appear (in predictions
-#' and standard errors), with residual value \code{NA}.  See also
-#' \code{napredict}.
+#' treated is determined by the `na.action` argument of that fit.  If
+#' `na.action = na.omit` omitted cases will not appear in the residuals,
+#' whereas if `na.action = na.exclude` they will appear (in predictions
+#' and standard errors), with residual value `NA`.  See also
+#' `napredict`.
 #' 
 #' Standard errors for the predictions are approximated assuming the variance
 #' of the random effects is known, see Booth and Hobert (1998).
 #' 
-#' @param object a fitted object of class \code{"BTglmmPQL"}
+#' @param object a fitted object of class `"BTglmmPQL"`
 #' @param newdata (optional) a data frame in which to look for variables with
 #' which to predict.  If omitted, the fitted linear predictors are used.
-#' @param newrandom if \code{newdata} is provided, a corresponding design
+#' @param newrandom if `newdata` is provided, a corresponding design
 #' matrix for the random effects, will columns corresponding to the random
 #' effects estimated in the original model.
 #' @param level an integer vector giving the level(s) at which predictions are
@@ -26,26 +26,26 @@
 #' predictions (full model) which are NA for contests involving individuals not
 #' in the original data.
 #' @param type the type of prediction required.  The default is on the scale of
-#' the linear predictors; the alternative \code{"response"} is on the scale of
+#' the linear predictors; the alternative `"response"` is on the scale of
 #' the response variable. Thus for a default binomial model the default
-#' predictions are of log-odds (probabilities on logit scale) and \code{type =
-#' "response"} gives the predicted probabilities. The \code{"terms"} option
+#' predictions are of log-odds (probabilities on logit scale) and `type =
+#' "response"` gives the predicted probabilities. The `"terms"` option
 #' returns a matrix giving the fitted values of each term in the model formula
 #' on the linear predictor scale (fixed effects only).
 #' @param se.fit logical switch indicating if standard errors are required.
-#' @param terms with \code{type ="terms"} by default all terms are returned.  A
+#' @param terms with `type ="terms"` by default all terms are returned.  A
 #' character vector specifies which terms are to be returned.
 #' @param na.action function determining what should be done with missing
-#' values in \code{newdata}.  The default is to predict \code{NA}.
+#' values in `newdata`.  The default is to predict `NA`.
 #' @param \dots further arguments passed to or from other methods.
-#' @return If \code{se.fit = FALSE}, a vector or matrix of predictions.  If
-#' \code{se = TRUE}, a list with components \item{fit }{Predictions}
+#' @return If `se.fit = FALSE`, a vector or matrix of predictions.  If
+#' `se = TRUE`, a list with components \item{fit }{Predictions}
 #' \item{se.fit }{Estimated standard errors}
 #' @author Heather Turner
-#' @seealso \code{\link{predict.glm}}, \code{\link{predict.BTm}}
+#' @seealso [predict.glm()], [predict.BTm()]
 #' @references Booth, J. G. and Hobert, J. P. (1998). Standard errors of
-#' prediction in Generalized Linear Mixed Models. \emph{Journal of the American
-#' Statistical Association} \bold{93}(441), 262 -- 272.
+#' prediction in Generalized Linear Mixed Models. *Journal of the American
+#' Statistical Association* **93**(441), 262 -- 272.
 #' @keywords models
 #' @examples
 #' 

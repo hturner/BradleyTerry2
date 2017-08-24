@@ -205,7 +205,7 @@ if (require(gnm)) {
 
 }
 \seealso{
-\code{\link{GenDavidson}}, \code{\link{BTm}}
+\code{\link[=GenDavidson]{GenDavidson()}}, \code{\link[=BTm]{BTm()}}
 }
 \author{
 Heather Turner

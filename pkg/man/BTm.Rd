@@ -45,14 +45,14 @@ specification for the ID factor.}
 \item{family}{a description of the error distribution and link function to
 be used in the model. Only the binomial family is implemented, with
 either\code{"logit"}, \code{"probit"} , or \code{"cauchit"} link. (See
-\code{\link{family}} for details of family functions.)}
+\code{\link[=family]{family()}} for details of family functions.)}
 
 \item{data}{an optional object providing data required by the model. This
 may be a single data frame of contest-level data or a list of data frames.
 Names of data frames are ignored unless they refer to data frames specified
 by \code{player1} and \code{player2}. The rows of data frames that do not
 contain contest-level data must correspond to the levels of a factor used
-for indexing, i.e. row 1 corresponds to level 1, etc. Note any rownames are 
+for indexing, i.e. row 1 corresponds to level 1, etc. Note any rownames are
 ignored. Objects are searched for first in the \code{data} object if
 provided, then in the environment of \code{formula}. If \code{data} is a
 list, the data frames are searched in the order given.}
@@ -77,8 +77,8 @@ missing values in other variables.}
 to the number of contests.}
 
 \item{br}{logical.  If \code{TRUE} fitting will be by penalized maximum
-likelihood as in Firth (1992, 1993), using \code{\link[brglm]{brglm}},
-rather than maximum likelihood using \code{\link{glm}}, when abilities are
+likelihood as in Firth (1992, 1993), using \code{\link[brglm:brglm]{brglm::brglm()}},
+rather than maximum likelihood using \code{\link[=glm]{glm()}}, when abilities are
 modelled exactly or when the abilities are modelled by covariates and the
 variance of the random effects is estimated as zero.}
 
@@ -88,10 +88,10 @@ variance of the random effects is estimated as zero.}
 effects.}
 
 \item{contrasts}{an optional list specifying contrasts for the factors in
-\code{formula}. See the \code{contrasts.arg} of \code{\link{model.matrix}}.}
+\code{formula}. See the \code{contrasts.arg} of \code{\link[=model.matrix]{model.matrix()}}.}
 
 \item{\dots}{other arguments for fitting function (currently either
-\code{\link{glm}}, \code{\link[brglm]{brglm}}, or \code{\link{glmmPQL}})}
+\code{\link[=glm]{glm()}}, \code{\link[brglm:brglm]{brglm::brglm()}}, or \code{\link[=glmmPQL]{glmmPQL()}})}
 }
 \value{
 An object of class \code{c("BTm", "x")}, where \code{"x"} is the
@@ -119,7 +119,7 @@ In each comparison to be modelled there is a 'first player' and a 'second
 player' and it is assumed that one player wins while the other loses (no
 allowance is made for tied comparisons).
 
-The \code{\link{countsToBinomial}} function is provided to convert a
+The \code{\link[=countsToBinomial]{countsToBinomial()}} function is provided to convert a
 contingency table of wins into a data frame of wins and losses for each pair
 of players.
 
@@ -129,7 +129,7 @@ applies to both the first player and the second player in each contest. If
 setting \code{formula = reformulate(id)}.
 
 Contest-level variables can be specified in the formula in the usual manner,
-see \code{\link{formula}}. Player covariates should be included as variables
+see \code{\link[=formula]{formula()}}. Player covariates should be included as variables
 indexed by \code{id}, see examples. Thus player covariates must be ordered
 according to the levels of the ID factor.
 
@@ -139,12 +139,12 @@ estimated for those players.
 
 When player abilities are modelled by covariates, then random player effects
 should be added to the model. These should be specified in the formula using
-the vertical bar notation of \code{\link[lme4]{lmer}}, see examples.
+the vertical bar notation of \code{\link[lme4:lmer]{lme4::lmer()}}, see examples.
 
 When specified, it is assumed that random player effects arise from a
 \eqn{N(0, }{N(0, sigma^2)}\eqn{ \sigma^2)}{N(0, sigma^2)} distribution and
 model parameters, including \eqn{\sigma}{sigma}, are estimated using PQL
-(Breslow and Clayton, 1993) as implemented in the \code{\link{glmmPQL}}
+(Breslow and Clayton, 1993) as implemented in the \code{\link[=glmmPQL]{glmmPQL()}}
 function.
 }
 \examples{
@@ -197,21 +197,21 @@ Firth, D. (1992) Bias reduction, the Jeffreys prior and GLIM. In
 Francis, B. J., Gilchrist, R. and Tutz, G., pp91--100. New York: Springer.
 
 Firth, D. (1993) Bias reduction of maximum likelihood estimates.
-\emph{Biometrika} \bold{80}, 27--38.
+\emph{Biometrika} \strong{80}, 27--38.
 
 Firth, D. (2005) Bradley-Terry models in R.  \emph{Journal of Statistical
-Software}, \bold{12}(1), 1--12.
+Software}, \strong{12}(1), 1--12.
 
 Stigler, S. (1994) Citation patterns in the journals of statistics and
-probability.  \emph{Statistical Science} \bold{9}, 94--108.
+probability.  \emph{Statistical Science} \strong{9}, 94--108.
 
 Turner, H. and Firth, D. (2012) Bradley-Terry models in R: The BradleyTerry2
-package.  \emph{Journal of Statistical Software}, \bold{48}(9), 1--21.
+package.  \emph{Journal of Statistical Software}, \strong{48}(9), 1--21.
 }
 \seealso{
-\code{\link{countsToBinomial}}, \code{\link{glmmPQL}},
-\code{\link{BTabilities}}, \code{\link{residuals.BTm}},
-\code{\link{add1.BTm}}, \code{\link{anova.BTm}}
+\code{\link[=countsToBinomial]{countsToBinomial()}}, \code{\link[=glmmPQL]{glmmPQL()}},
+\code{\link[=BTabilities]{BTabilities()}}, \code{\link[=residuals.BTm]{residuals.BTm()}},
+\code{\link[=add1.BTm]{add1.BTm()}}, \code{\link[=anova.BTm]{anova.BTm()}}
 }
 \author{
 Heather Turner, David Firth

@@ -27,7 +27,7 @@ Set control variables for the glmmPQL algorithm.
 }
 \details{
 This function provides an interface to control the PQL algorithm used by
-\code{\link{BTm}} for fitting Bradley Terry models with random effects.
+\code{\link[=BTm]{BTm()}} for fitting Bradley Terry models with random effects.
 
 The algorithm iterates between a series of iterated weighted least squares
 iterations to update the fixed effects and a single Fisher scoring iteration
@@ -57,10 +57,10 @@ summary(BTmodel)
 \references{
 Breslow, N. E. and Clayton, D. G. (1993), Approximate inference
 in Generalized Linear Mixed Models. \emph{Journal of the American
-Statistical Association} \bold{88}(421), 9--25.
+Statistical Association} \strong{88}(421), 9--25.
 }
 \seealso{
-\code{\link{glmmPQL}}, \code{\link{BTm}}
+\code{\link[=glmmPQL]{glmmPQL()}}, \code{\link[=BTm]{BTm()}}
 }
 \author{
 Heather Turner

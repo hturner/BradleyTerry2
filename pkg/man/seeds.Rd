@@ -7,13 +7,13 @@
 \format{A data frame with 21 observations on the following 4 variables.
 \describe{
 \item{r}{the number of germinated seeds.}
-\item{n}{the total number of seeds.} 
+\item{n}{the total number of seeds.}
 \item{seed}{the seed
-variety.} 
+variety.}
 \item{extract}{the type of root extract.} }}
 \source{
 Crowder, M. (1978) Beta-Binomial ANOVA for proportions.
-\emph{Applied Statistics}, \bold{27}, 34--37.
+\emph{Applied Statistics}, \strong{27}, 34--37.
 }
 \usage{
 seeds
@@ -35,9 +35,9 @@ summary(glmmPQL(cbind(r, n - r) ~ seed + extract,
 \references{
 Breslow, N. E. and Clayton, D. G. (1993) Approximate inference
 in Generalized Linear Mixed Models. \emph{Journal of the American
-Statistical Association}, \bold{88}(421), 9--25.
+Statistical Association}, \strong{88}(421), 9--25.
 }
 \seealso{
-\code{\link{glmmPQL}}
+\code{\link[=glmmPQL]{glmmPQL()}}
 }
 \keyword{datasets}

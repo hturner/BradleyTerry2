@@ -23,10 +23,10 @@ The Chisq test is a likelihood ratio test for models with no random effects,
 otherwise a Wald test.}
 
 \item{x}{a model matrix containing columns for all terms in the scope.
-Useful if \code{add1} is to be called repeatedly.  \bold{Warning:} no checks
+Useful if \code{add1} is to be called repeatedly.  \strong{Warning:} no checks
 are done on its validity.}
 
-\item{\dots}{further arguments passed to \code{\link{add1.glm}}.}
+\item{\dots}{further arguments passed to \code{\link[=add1.glm]{add1.glm()}}.}
 }
 \value{
 An object of class \code{"anova"} summarizing the differences in fit
@@ -76,7 +76,7 @@ drop1(BTmodel2, test = "Chisq")
 
 }
 \seealso{
-\code{\link{BTm}}, \code{\link{anova.BTm}}
+\code{\link[=BTm]{BTm()}}, \code{\link[=anova.BTm]{anova.BTm()}}
 }
 \author{
 Heather Turner

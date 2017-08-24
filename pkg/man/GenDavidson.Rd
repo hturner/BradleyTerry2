@@ -55,7 +55,7 @@ function to generate starting values for the parameters.}
 }
 \description{
 GenDavidson is a function of class \code{"nonlin"} to specify a generalised
-Davidson term in the formula argument to \code{\link[gnm]{gnm}}, providing a
+Davidson term in the formula argument to \code{\link[gnm:gnm]{gnm::gnm()}}, providing a
 model for paired comparison data where ties are a possible outcome.
 }
 \details{
@@ -195,10 +195,10 @@ for (i in 1:3) {
 \references{
 Davidson, R. R. (1970). On extending the Bradley-Terry model to
 accommodate ties in paired comparison experiments. \emph{Journal of the
-American Statistical Association}, \bold{65}, 317--328.
+American Statistical Association}, \strong{65}, 317--328.
 }
 \seealso{
-\code{\link{football}}, \code{\link{plotProportions}}
+\code{\link[=football]{football()}}, \code{\link[=plotProportions]{plotProportions()}}
 }
 \author{
 Heather Turner

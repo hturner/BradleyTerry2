@@ -9,26 +9,25 @@
 
 The \code{springall$contests} data frame has 36 observations (one for each
 possible pairwise comparison of the 9 treatments) on the following 7
-variables: \describe{ 
+variables: \describe{
 \item{row}{a factor with levels \code{1:9},
 the row number in Springall's dataset} #
 \item{col}{a factor with
 levels \code{1:9}, the column number in Springall's dataset}
 \item{win}{integer, the number of wins for column treatment over row
-treatment} 
+treatment}
 \item{loss}{integer, the number of wins for row treatment
-over column treatment} 
+over column treatment}
 \item{tie}{integer, the number of ties
-between row and column treatments} 
+between row and column treatments}
 \item{win.adj}{numeric, equal to
-\code{win + tie/2}} 
-\item{loss.adj}{numeric, equal to \code{loss +
-tie/2}} }
+\code{win + tie/2}}
+\item{loss.adj}{numeric, equal to \code{loss + tie/2}} }
 
 The \code{predictors} data frame has 9 observations (one for each treatment)
-on the following 5 variables: \describe{ 
+on the following 5 variables: \describe{
 \item{flav}{numeric, the
-flavour concentration} 
+flavour concentration}
 \item{gel}{numeric, the gel concentration}
 \item{flav.2}{numeric, equal to \code{flav^2}}
 \item{gel.2}{numeric, equal to \code{gel^2}}
@@ -36,7 +35,7 @@ flavour concentration}
 \source{
 Springall, A (1973) Response surface fitting using a generalization
 of the Bradley-Terry paired comparison method.  \emph{Applied Statistics}
-\bold{22}, 59--68.
+\strong{22}, 59--68.
 }
 \usage{
 springall
@@ -76,7 +75,7 @@ summary(springall.model <- BTm(cbind(win.adj, loss.adj), col, row,
 \references{
 Rao, P. V. and Kupper, L. L. (1967) Ties in paired-comparison
 experiments: a generalization of the Bradley-Terry model.  \emph{Journal of
-the American Statistical Association}, \bold{63}, 194--204.
+the American Statistical Association}, \strong{63}, 194--204.
 }
 \author{
 David Firth

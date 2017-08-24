@@ -41,15 +41,15 @@ citeModel <-  BTm(cbind(win1, win2), journal1, journal2,
 }
 \references{
 Firth, D. (2005) Bradley-Terry models in R.  \emph{Journal of
-Statistical Software} \bold{12}(1), 1--12.
+Statistical Software} \strong{12}(1), 1--12.
 
 Turner, H. and Firth, D. (2012) Bradley-Terry models in R: The BradleyTerry2
-package.  \emph{Journal of Statistical Software}, \bold{48}(9), 1--21.
+package.  \emph{Journal of Statistical Software}, \strong{48}(9), 1--21.
 
 Stigler, S. (1994) Citation patterns in the journals of statistics and
-probability.  \emph{Statistical Science} \bold{9}, 94--108.
+probability.  \emph{Statistical Science} \strong{9}, 94--108.
 }
 \seealso{
-\code{\link{BTm}}
+\code{\link[=BTm]{BTm()}}
 }
 \keyword{datasets}

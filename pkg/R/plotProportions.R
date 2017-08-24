@@ -25,13 +25,13 @@ GenDavidsonTie <- function(p){
 #' Add fitted lines for each set of matches, as given by the generalized
 #' Davidson model.
 #' 
-#' If \code{home.adv} is specified, the results are re-ordered if necessary so
+#' If `home.adv` is specified, the results are re-ordered if necessary so
 #' that the home player comes first; any matches played on neutral ground are
 #' omitted.
 #' 
 #' First the probability that the first player wins given that the match is not
 #' a tie is computed: \deqn{expit(home.adv + abilities[player1] -
-#' abilities[player2])} where \code{home.adv} and \code{abilities} are
+#' abilities[player2])} where `home.adv` and `abilities` are
 #' parameters from a generalized Davidson model that have been estimated on the
 #' log scale.
 #' 
@@ -45,22 +45,22 @@ GenDavidsonTie <- function(p){
 #' 
 #' Finally curves are added for the probability of a tie and the conditional
 #' probability of win given the match is not a tie, under a generalized
-#' Davidson model with parameters as specified by \code{tie.max},
-#' \code{tie.scale} and \code{tie.mode}.
+#' Davidson model with parameters as specified by `tie.max`,
+#' `tie.scale` and `tie.mode`.
 #' 
 #' The function can also be used to plot the proportions of wins along with the
 #' fitted probability of a win under the Bradley-Terry model.
 #' 
-#' @param win a logical vector: \code{TRUE} if player1 wins, \code{FALSE}
+#' @param win a logical vector: `TRUE` if player1 wins, `FALSE`
 #' otherwise.
-#' @param tie a logical vector: \code{TRUE} if the outcome is a tie,
-#' \code{FALSE} otherwise (\code{NULL} if there are no ties).
-#' @param loss a logical vector: \code{TRUE} if player1 loses, \code{FALSE}
+#' @param tie a logical vector: `TRUE` if the outcome is a tie,
+#' `FALSE` otherwise (`NULL` if there are no ties).
+#' @param loss a logical vector: `TRUE` if player1 loses, `FALSE`
 #' otherwise.
 #' @param player1 an ID factor specifying the first player in each contest,
-#' with the same set of levels as \code{player2}.
+#' with the same set of levels as `player2`.
 #' @param player2 an ID factor specifying the second player in each contest,
-#' with the same set of levels as \code{player2}.
+#' with the same set of levels as `player2`.
 #' @param abilities the fitted abilities from a generalized Davidson model (or
 #' a Bradley-Terry model).
 #' @param home.adv if applicable, the fitted home advantage parameter from a
@@ -69,16 +69,16 @@ GenDavidsonTie <- function(p){
 #' corresponding to the maximum tie probability.
 #' @param tie.scale if applicable, the fitted parameter from a generalized
 #' Davidson model corresponding to the scale of dependence of the tie
-#' probability on the probability that \code{player1} wins, given the outcome
+#' probability on the probability that `player1` wins, given the outcome
 #' is not a draw.
 #' @param tie.mode if applicable, the fitted parameter from a generalized
 #' Davidson model corresponding to the location of maximum tie probability, in
-#' terms of the probability that \code{player1} wins, given the outcome is not
+#' terms of the probability that `player1` wins, given the outcome is not
 #' a draw.
-#' @param at.home1 a logical vector: \code{TRUE} if \code{player1} is at home,
-#' \code{FALSE} otherwise.
-#' @param at.home2 a logical vector: \code{TRUE} if \code{player2} is at home,
-#' \code{FALSE} otherwise.
+#' @param at.home1 a logical vector: `TRUE` if `player1` is at home,
+#' `FALSE` otherwise.
+#' @param at.home2 a logical vector: `TRUE` if `player2` is at home,
+#' `FALSE` otherwise.
 #' @param data an optional data frame providing variables required by the
 #' model, with one observation per match.
 #' @param subset an optional logical or numeric vector specifying a subset of
@@ -91,15 +91,15 @@ GenDavidsonTie <- function(p){
 #' matches won and the proportion of tied matches.
 #' @param \dots further arguments passed to plot.
 #' @return A list of data frames: \item{win}{ a data frame comprising
-#' \code{prop.win}, the proportion of non-tied matches won by the first player
-#' in each bin and \code{bin.win}, the mid-point of each bin. } \item{tie}{
-#' (when ties are present) a data frame comprising \code{prop.tie}, the
-#' proportion of tied matches in each bin and \code{bin.tie}, the mid-point of
+#' `prop.win`, the proportion of non-tied matches won by the first player
+#' in each bin and `bin.win`, the mid-point of each bin. } \item{tie}{
+#' (when ties are present) a data frame comprising `prop.tie`, the
+#' proportion of tied matches in each bin and `bin.tie`, the mid-point of
 #' each bin. }
 #' @note This function is designed for single match outcomes, therefore data
 #' aggregated over player pairs will need to be expanded.
 #' @author Heather Turner
-#' @seealso \code{\link{GenDavidson}}, \code{\link{BTm}}
+#' @seealso [GenDavidson()], [BTm()]
 #' @keywords models nonlinear
 #' @examples
 #' 

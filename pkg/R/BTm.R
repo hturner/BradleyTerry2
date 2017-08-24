@@ -10,32 +10,32 @@
 #' player' and it is assumed that one player wins while the other loses (no
 #' allowance is made for tied comparisons).
 #' 
-#' The \code{\link{countsToBinomial}} function is provided to convert a
+#' The [countsToBinomial()] function is provided to convert a
 #' contingency table of wins into a data frame of wins and losses for each pair
 #' of players.
 #' 
-#' The \code{formula} argument specifies the model for player ability and
+#' The `formula` argument specifies the model for player ability and
 #' applies to both the first player and the second player in each contest. If
-#' \code{NULL} a separate ability is estimated for each player, equivalent to
-#' setting \code{formula = reformulate(id)}.
+#' `NULL` a separate ability is estimated for each player, equivalent to
+#' setting `formula = reformulate(id)`.
 #' 
 #' Contest-level variables can be specified in the formula in the usual manner,
-#' see \code{\link{formula}}. Player covariates should be included as variables
-#' indexed by \code{id}, see examples. Thus player covariates must be ordered
+#' see [formula()]. Player covariates should be included as variables
+#' indexed by `id`, see examples. Thus player covariates must be ordered
 #' according to the levels of the ID factor.
 #' 
-#' If \code{formula} includes player covariates and there are players with
+#' If `formula` includes player covariates and there are players with
 #' missing values over these covariates, then a separate ability will be
 #' estimated for those players.
 #' 
 #' When player abilities are modelled by covariates, then random player effects
 #' should be added to the model. These should be specified in the formula using
-#' the vertical bar notation of \code{\link[lme4]{lmer}}, see examples.
+#' the vertical bar notation of [lme4::lmer()], see examples.
 #' 
 #' When specified, it is assumed that random player effects arise from a
 #' \eqn{N(0, }{N(0, sigma^2)}\eqn{ \sigma^2)}{N(0, sigma^2)} distribution and
 #' model parameters, including \eqn{\sigma}{sigma}, are estimated using PQL
-#' (Breslow and Clayton, 1993) as implemented in the \code{\link{glmmPQL}}
+#' (Breslow and Clayton, 1993) as implemented in the [glmmPQL()]
 #' function.
 #' 
 #' @param outcome the binomial response: either a numeric vector, a factor in
@@ -45,96 +45,96 @@
 #' @param player1 either an ID factor specifying the first player in each
 #' contest, or a data.frame containing such a factor and possibly other
 #' contest-level variables that are specific to the first player. If given in a
-#' data.frame, the ID factor must have the name given in the \code{id}
+#' data.frame, the ID factor must have the name given in the `id`
 #' argument. If a factor is specified it will be used to create such a
 #' data.frame.
-#' @param player2 an object corresponding to that given in \code{player1} for
+#' @param player2 an object corresponding to that given in `player1` for
 #' the second player in each contest, with identical structure -- in particular
 #' factors must have identical levels.
 #' @param formula a formula with no left-hand-side, specifying the model for
 #' player ability. See details for more information.
 #' @param id the name of the ID factor.
-#' @param separate.ability (if \code{formula} does not include the ID factor as
+#' @param separate.ability (if `formula` does not include the ID factor as
 #' a separate term) a character vector giving the names of players whose
 #' abilities are to be modelled individually rather than using the
-#' specification given by \code{formula}.
-#' @param refcat (if \code{formula} includes the ID factor as a separate term)
+#' specification given by `formula`.
+#' @param refcat (if `formula` includes the ID factor as a separate term)
 #' a character specifying which player to use as a reference, with the first
 #' level of the ID factor as the default. Overrides any other contrast
 #' specification for the ID factor.
 #' @param family a description of the error distribution and link function to
 #' be used in the model. Only the binomial family is implemented, with
-#' either\code{"logit"}, \code{"probit"} , or \code{"cauchit"} link. (See
-#' \code{\link{family}} for details of family functions.)
+#' either`"logit"`, `"probit"` , or `"cauchit"` link. (See
+#' [family()] for details of family functions.)
 #' @param data an optional object providing data required by the model. This
 #' may be a single data frame of contest-level data or a list of data frames.
 #' Names of data frames are ignored unless they refer to data frames specified
-#' by \code{player1} and \code{player2}. The rows of data frames that do not
+#' by `player1` and `player2`. The rows of data frames that do not
 #' contain contest-level data must correspond to the levels of a factor used
 #' for indexing, i.e. row 1 corresponds to level 1, etc. Note any rownames are 
-#' ignored. Objects are searched for first in the \code{data} object if
-#' provided, then in the environment of \code{formula}. If \code{data} is a
+#' ignored. Objects are searched for first in the `data` object if
+#' provided, then in the environment of `formula`. If `data` is a
 #' list, the data frames are searched in the order given.
 #' @param weights an optional numeric vector of \sQuote{prior weights}.
 #' @param subset an optional logical or numeric vector specifying a subset of
 #' observations to be used in the fitting process.
 #' @param na.action a function which indicates what should happen when any
-#' contest-level variables contain \code{NA}s. The default is the
-#' \code{na.action} setting of \code{options}. See details for the handling of
+#' contest-level variables contain `NA`s. The default is the
+#' `na.action` setting of `options`. See details for the handling of
 #' missing values in other variables.
 #' @param start a vector of starting values for the fixed effects.
 #' @param etastart a vector of starting values for the linear predictor.
 #' @param mustart a vector of starting values for the vector of means.
 #' @param offset an optional offset term in the model. A vector of length equal
 #' to the number of contests.
-#' @param br logical.  If \code{TRUE} fitting will be by penalized maximum
-#' likelihood as in Firth (1992, 1993), using \code{\link[brglm]{brglm}},
-#' rather than maximum likelihood using \code{\link{glm}}, when abilities are
+#' @param br logical.  If `TRUE` fitting will be by penalized maximum
+#' likelihood as in Firth (1992, 1993), using [brglm::brglm()],
+#' rather than maximum likelihood using [glm()], when abilities are
 #' modelled exactly or when the abilities are modelled by covariates and the
 #' variance of the random effects is estimated as zero.
 #' @param model logical: whether or not to return the model frame.
 #' @param x logical: whether or not to return the design matrix for the fixed
 #' effects.
 #' @param contrasts an optional list specifying contrasts for the factors in
-#' \code{formula}. See the \code{contrasts.arg} of \code{\link{model.matrix}}.
+#' `formula`. See the `contrasts.arg` of [model.matrix()].
 #' @param \dots other arguments for fitting function (currently either
-#' \code{\link{glm}}, \code{\link[brglm]{brglm}}, or \code{\link{glmmPQL}})
-#' @return An object of class \code{c("BTm", "x")}, where \code{"x"} is the
-#' class of object returned by the model fitting function (e.g. \code{glm}).
-#' Components are as for objects of class \code{"x"}, with additionally
-#' \item{id}{the \code{id} argument.} \item{separate.ability}{the
-#' \code{separate.ability} argument.} \item{refcat}{the \code{refcat}
+#' [glm()], [brglm::brglm()], or [glmmPQL()])
+#' @return An object of class `c("BTm", "x")`, where `"x"` is the
+#' class of object returned by the model fitting function (e.g. `glm`).
+#' Components are as for objects of class `"x"`, with additionally
+#' \item{id}{the `id` argument.} \item{separate.ability}{the
+#' `separate.ability` argument.} \item{refcat}{the `refcat`
 #' argument.} \item{player1}{a data frame for the first player containing the
 #' ID factor and any player-specific contest-level variables.} \item{player2}{a
-#' data frame corresponding to that for \code{player1}.} \item{assign}{a
+#' data frame corresponding to that for `player1`.} \item{assign}{a
 #' numeric vector indicating which coefficients correspond to which terms in
 #' the model.} \item{term.labels}{labels for the model terms.}
 #' \item{random}{for models with random effects, the design matrix for the
 #' random effects. }
 #' @author Heather Turner, David Firth
-#' @seealso \code{\link{countsToBinomial}}, \code{\link{glmmPQL}},
-#' \code{\link{BTabilities}}, \code{\link{residuals.BTm}},
-#' \code{\link{add1.BTm}}, \code{\link{anova.BTm}}
+#' @seealso [countsToBinomial()], [glmmPQL()],
+#' [BTabilities()], [residuals.BTm()],
+#' [add1.BTm()], [anova.BTm()]
 #' @references
 #' 
-#' Agresti, A. (2002) \emph{Categorical Data Analysis} (2nd ed).  New York:
+#' Agresti, A. (2002) *Categorical Data Analysis* (2nd ed).  New York:
 #' Wiley.
 #' 
 #' Firth, D. (1992) Bias reduction, the Jeffreys prior and GLIM. In
-#' \emph{Advances in GLIM and Statistical Modelling}, Eds. Fahrmeir, L.,
+#' *Advances in GLIM and Statistical Modelling*, Eds. Fahrmeir, L.,
 #' Francis, B. J., Gilchrist, R. and Tutz, G., pp91--100. New York: Springer.
 #' 
 #' Firth, D. (1993) Bias reduction of maximum likelihood estimates.
-#' \emph{Biometrika} \bold{80}, 27--38.
+#' *Biometrika* **80**, 27--38.
 #' 
-#' Firth, D. (2005) Bradley-Terry models in R.  \emph{Journal of Statistical
-#' Software}, \bold{12}(1), 1--12.
+#' Firth, D. (2005) Bradley-Terry models in R.  *Journal of Statistical
+#' Software*, **12**(1), 1--12.
 #' 
 #' Stigler, S. (1994) Citation patterns in the journals of statistics and
-#' probability.  \emph{Statistical Science} \bold{9}, 94--108.
+#' probability.  *Statistical Science* **9**, 94--108.
 #' 
 #' Turner, H. and Firth, D. (2012) Bradley-Terry models in R: The BradleyTerry2
-#' package.  \emph{Journal of Statistical Software}, \bold{48}(9), 1--21.
+#' package.  *Journal of Statistical Software*, **48**(9), 1--21.
 #' @keywords models
 #' @examples
 #' 

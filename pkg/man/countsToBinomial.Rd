@@ -35,7 +35,7 @@ citations.sf
 
 }
 \seealso{
-\code{\link{BTm}}
+\code{\link[=BTm]{BTm()}}
 }
 \author{
 Heather Turner

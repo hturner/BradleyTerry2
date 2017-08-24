@@ -8,40 +8,40 @@
 \code{flatlizards$contests} and \code{flatlizards$predictors}.
 
 The \code{flatlizards$contests} data frame has 100 observations on the
-following 2 variables: \describe{ 
+following 2 variables: \describe{
 \item{winner}{a factor with 77
-levels \code{lizard003} ... \code{lizard189}.} 
+levels \code{lizard003} ... \code{lizard189}.}
 \item{loser}{a factor
 with the same 77 levels \code{lizard003} ... \code{lizard189}.} }
 
 The \code{flatlizards$predictors} data frame has 77 observations (one for
 each of the 77 lizards) on the following 18 variables: \describe{
 \item{id}{factor with 77 levels (3 5 6 ... 189), the lizard
-identifiers.} 
+identifiers.}
 \item{throat.PC1}{numeric, the first principal
-component of the throat spectrum.} 
+component of the throat spectrum.}
 \item{throat.PC2}{numeric, the
 second principal component of the throat spectrum.}
 \item{throat.PC3}{numeric, the third principal component of the
-throat spectrum.} 
+throat spectrum.}
 \item{frontleg.PC1}{numeric, the first principal
-component of the front-leg spectrum.} 
+component of the front-leg spectrum.}
 \item{frontleg.PC2}{numeric,
 the second principal component of the front-leg spectrum.}
 \item{frontleg.PC3}{numeric, the third principal component of the
-front-leg spectrum.} 
+front-leg spectrum.}
 \item{badge.PC1}{numeric, the first principal
 component of the ventral colour patch spectrum.}
 \item{badge.PC2}{numeric, the second principal component of the
-ventral colour patch spectrum.} 
+ventral colour patch spectrum.}
 \item{badge.PC3}{numeric, the third
 principal component of the ventral colour patch spectrum.}
 \item{badge.size}{numeric, a measure of the area of the ventral
-colour patch.} 
+colour patch.}
 \item{testosterone}{numeric, a measure of blood
-testosterone concentration.} 
+testosterone concentration.}
 \item{SVL}{numeric, the snout-vent
-length of the lizard.} 
+length of the lizard.}
 \item{head.length}{numeric, head length.}
 \item{head.width}{numeric, head width.}
 \item{head.height}{numeric, head height.}
@@ -50,7 +50,7 @@ length of the lizard.}
 are \code{resident} and \code{floater}.} }}
 \source{
 The data were collected by Dr Martin Whiting,
-\url{http://whitinglab.com/?page_id=3380}, and they appear here with his
+http://whitinglab.com/?page_id=3380, and they appear here with his
 kind permission.
 }
 \usage{
@@ -150,13 +150,13 @@ BTabilities(Whiting.model3)
 \references{
 Turner, H. and Firth, D. (2012) Bradley-Terry models in R: The
 BradleyTerry2 package.  \emph{Journal of Statistical Software},
-\bold{48}(9), 1--21.
+\strong{48}(9), 1--21.
 
 Whiting, M. J., Stuart-Fox, D. M., O'Connor, D., Firth, D., Bennett, N. C.
 and Blomberg, S. P. (2006). Ultraviolet signals ultra-aggression in a
-lizard. \emph{Animal Behaviour} \bold{72}, 353--363.
+lizard. \emph{Animal Behaviour} \strong{72}, 353--363.
 }
 \seealso{
-\code{\link{BTm}}
+\code{\link[=BTm]{BTm()}}
 }
 \keyword{datasets}

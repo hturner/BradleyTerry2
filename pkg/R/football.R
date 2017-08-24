@@ -11,18 +11,18 @@
 #' @docType data
 #' @format A data frame with 1881 observations on the following 4 variables.
 #' \describe{ 
-#' \item{season}{a factor with levels \code{2008-9},
-#' \code{2009-10}, \code{2010-11}, \code{2011-12}, \code{2012-13}}
+#' \item{season}{a factor with levels `2008-9`,
+#' `2009-10`, `2010-11`, `2011-12`, `2012-13`}
 #' \item{home}{a factor specifying the home team, with 29 levels
-#' \code{Ars} (Arsenal), ... , \code{Wol} (Wolverhampton)}
+#' `Ars` (Arsenal), ... , `Wol` (Wolverhampton)}
 #' \item{away}{a factor specifying the away team, with the same levels
-#' as \code{home}.} 
+#' as `home`.} 
 #' \item{result}{a numeric vector giving the result
 #' for the home team: 1 for a win, 0 for a draw, -1 for a loss.} }
-#' @seealso \code{\link{GenDavidson}}
+#' @seealso [GenDavidson()]
 #' @references Davidson, R. R. (1970). On extending the Bradley-Terry model to
-#' accommodate ties in paired comparison experiments. \emph{Journal of the
-#' American Statistical Association}, \bold{65}, 317--328.
+#' accommodate ties in paired comparison experiments. *Journal of the
+#' American Statistical Association*, **65**, 317--328.
 #' @source These data were downloaded from http://soccernet.espn.go.com in
 #' 2013. The site has since moved and the new site does not appear to have an
 #' equivalent source.

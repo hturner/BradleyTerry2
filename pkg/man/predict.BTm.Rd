@@ -23,8 +23,7 @@ contests involving players not in the original data.}
 \item{type}{the type of prediction required.  The default is on the scale of
 the linear predictors; the alternative \code{"response"} is on the scale of
 the response variable. Thus for a default Bradley-Terry model the default
-predictions are of log-odds (probabilities on logit scale) and \code{type =
-"response"} gives the predicted probabilities. The \code{"terms"} option
+predictions are of log-odds (probabilities on logit scale) and \code{type = "response"`` gives the predicted probabilities. The}"terms"` option
 returns a matrix giving the fitted values of each term in the model formula
 on the linear predictor scale (fixed effects only).}
 
@@ -104,7 +103,7 @@ predict(Whiting.model3, level = 0:1, se.fit = TRUE, newdata = newdata)
 
 }
 \seealso{
-\code{\link{predict.glm}}, \code{\link{predict.glmmPQL}}
+\code{\link[=predict.glm]{predict.glm()}}, \code{\link[=predict.glmmPQL]{predict.glmmPQL()}}
 }
 \author{
 Heather Turner

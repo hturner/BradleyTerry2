@@ -31,7 +31,7 @@ suitable for diagnostic checking of a predictor involving player-level
 covariates.
 }
 \details{
-For \code{type} other than \code{"grouped"} see \code{\link{residuals.glm}}.
+For \code{type} other than \code{"grouped"} see \code{\link[=residuals.glm]{residuals.glm()}}.
 
 For \code{type = "grouped"} the residuals returned are weighted means of
 working residuals, with weights equal to the binomial denominators in the
@@ -61,13 +61,13 @@ lm(res ~ gel, weights = attr(res, "weights"),
 }
 \references{
 Firth, D. (2005) Bradley-Terry models in R.  \emph{Journal of
-Statistical Software} \bold{12}(1), 1--12.
+Statistical Software} \strong{12}(1), 1--12.
 
 Turner, H. and Firth, D. (2012) Bradley-Terry models in R: The BradleyTerry2
-package.  \emph{Journal of Statistical Software}, \bold{48}(9), 1--21.
+package.  \emph{Journal of Statistical Software}, \strong{48}(9), 1--21.
 }
 \seealso{
-\code{\link{BTm}}, \code{\link{BTabilities}}
+\code{\link[=BTm]{BTm()}}, \code{\link[=BTabilities]{BTabilities()}}
 }
 \author{
 David Firth and Heather Turner

@@ -10,18 +10,18 @@
 #' @name citations
 #' @docType data
 #' @format A 4 by 4 contingency table of citations, cross-classifed by the
-#' factors \code{cited} and \code{citing} each with levels \code{Biometrika},
-#' \code{Comm Statist}, \code{JASA}, and \code{JRSS-B}.
-#' @seealso \code{\link{BTm}}
-#' @references Firth, D. (2005) Bradley-Terry models in R.  \emph{Journal of
-#' Statistical Software} \bold{12}(1), 1--12.
+#' factors `cited` and `citing` each with levels `Biometrika`,
+#' `Comm Statist`, `JASA`, and `JRSS-B`.
+#' @seealso [BTm()]
+#' @references Firth, D. (2005) Bradley-Terry models in R.  *Journal of
+#' Statistical Software* **12**(1), 1--12.
 #' 
 #' Turner, H. and Firth, D. (2012) Bradley-Terry models in R: The BradleyTerry2
-#' package.  \emph{Journal of Statistical Software}, \bold{48}(9), 1--21.
+#' package.  *Journal of Statistical Software*, **48**(9), 1--21.
 #' 
 #' Stigler, S. (1994) Citation patterns in the journals of statistics and
-#' probability.  \emph{Statistical Science} \bold{9}, 94--108.
-#' @source Agresti, A. (2002) \emph{Categorical Data Analysis} (2nd ed).  New
+#' probability.  *Statistical Science* **9**, 94--108.
+#' @source Agresti, A. (2002) *Categorical Data Analysis* (2nd ed).  New
 #' York: Wiley.
 #' @keywords datasets
 #' @examples

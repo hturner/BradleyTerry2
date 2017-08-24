@@ -2,7 +2,7 @@
 #' 
 #' Data collected at Augrabies Falls National Park (South Africa) in
 #' September-October 2002, on the contest performance and background attributes
-#' of 77 male flat lizards (\emph{Platysaurus broadleyi}).  The results of
+#' of 77 male flat lizards (*Platysaurus broadleyi*).  The results of
 #' exactly 100 contests were recorded, along with various measurements made on
 #' each lizard.  Full details of the study are in Whiting et al. (2006).
 #' 
@@ -10,28 +10,28 @@
 #' than once), and there were no tied contests (the result of each contest was
 #' clear).
 #' 
-#' The variables \code{head.length}, \code{head.width}, \code{head.height} and
-#' \code{condition} were all computed as residuals (of directly measured head
+#' The variables `head.length`, `head.width`, `head.height` and
+#' `condition` were all computed as residuals (of directly measured head
 #' length, head width, head height and body mass index, respectively) from
-#' simple least-squares regressions on \code{SVL}.
+#' simple least-squares regressions on `SVL`.
 #' 
-#' Values of some predictors are missing (\code{NA}) for some lizards,
+#' Values of some predictors are missing (`NA`) for some lizards,
 #' \sQuote{at random}, because of instrument problems unconnected with the
 #' value of the measurement being made.
 #' 
 #' @name flatlizards
 #' @docType data
 #' @format This dataset is a list containing two data frames:
-#' \code{flatlizards$contests} and \code{flatlizards$predictors}.
+#' `flatlizards$contests` and `flatlizards$predictors`.
 #' 
-#' The \code{flatlizards$contests} data frame has 100 observations on the
+#' The `flatlizards$contests` data frame has 100 observations on the
 #' following 2 variables: \describe{ 
 #' \item{winner}{a factor with 77
-#' levels \code{lizard003} ... \code{lizard189}.} 
+#' levels `lizard003` ... `lizard189`.} 
 #' \item{loser}{a factor
-#' with the same 77 levels \code{lizard003} ... \code{lizard189}.} }
+#' with the same 77 levels `lizard003` ... `lizard189`.} }
 #' 
-#' The \code{flatlizards$predictors} data frame has 77 observations (one for
+#' The `flatlizards$predictors` data frame has 77 observations (one for
 #' each of the 77 lizards) on the following 18 variables: \describe{
 #' \item{id}{factor with 77 levels (3 5 6 ... 189), the lizard
 #' identifiers.} 
@@ -64,17 +64,17 @@
 #' \item{head.height}{numeric, head height.}
 #' \item{condition}{numeric, a measure of body condition.}
 #' \item{repro.tactic}{a factor indicating reproductive tactic; levels
-#' are \code{resident} and \code{floater}.} }
-#' @seealso \code{\link{BTm}}
+#' are `resident` and `floater`.} }
+#' @seealso [BTm()]
 #' @references Turner, H. and Firth, D. (2012) Bradley-Terry models in R: The
-#' BradleyTerry2 package.  \emph{Journal of Statistical Software},
-#' \bold{48}(9), 1--21.
+#' BradleyTerry2 package.  *Journal of Statistical Software*,
+#' **48**(9), 1--21.
 #' 
 #' Whiting, M. J., Stuart-Fox, D. M., O'Connor, D., Firth, D., Bennett, N. C.
 #' and Blomberg, S. P. (2006). Ultraviolet signals ultra-aggression in a
-#' lizard. \emph{Animal Behaviour} \bold{72}, 353--363.
+#' lizard. *Animal Behaviour* **72**, 353--363.
 #' @source The data were collected by Dr Martin Whiting,
-#' \url{http://whitinglab.com/?page_id=3380}, and they appear here with his
+#' http://whitinglab.com/?page_id=3380, and they appear here with his
 #' kind permission.
 #' @keywords datasets
 #' @examples

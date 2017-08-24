@@ -5,23 +5,23 @@
 \alias{icehockey}
 \title{College Hockey Men's Division I 2009-10 results}
 \format{A data frame with 1083 observations on the following 6 variables.
-\describe{ 
-\item{date}{a numeric vector} 
+\describe{
+\item{date}{a numeric vector}
 \item{visitor}{a
 factor with 58 levels \code{Alaska Anchorage} ... \code{Yale}}
-\item{v_goals}{a numeric vector} 
+\item{v_goals}{a numeric vector}
 \item{opponent}{a factor
 with 58 levels \code{Alaska Anchorage} ... \code{Yale}}
-\item{o_goals}{a numeric vector} 
+\item{o_goals}{a numeric vector}
 \item{conference}{a factor
 with levels \code{AH}, \code{CC}, \code{CH}, \code{EC}, \code{HE},
-\code{NC}, \code{WC}} 
+\code{NC}, \code{WC}}
 \item{result}{a numeric vector: 1 if visitor
-won, 0.5 for a draw and 0 if visitor lost} 
+won, 0.5 for a draw and 0 if visitor lost}
 \item{home.ice}{a logical
 vector: 1 if opponent on home ice, 0 if game on neutral ground} }}
 \source{
-\url{http://www.collegehockeystats.net/0910/schedules/men}
+http://www.collegehockeystats.net/0910/schedules/men
 }
 \usage{
 icehockey
@@ -42,9 +42,9 @@ of which determine the teams that play in the NCAA national tournament.
 There are six automatic bids that go to the conference tournament champions,
 the remaining 10 teams are selected based upon ranking under the NCAA's
 system of pairwise comparisons
-(\url{http://www.collegehockeynews.com/info/?d=pwcrpi}). Some have argued
+(http://www.collegehockeynews.com/info/?d=pwcrpi). Some have argued
 that Bradley-Terry rankings would be fairer
-(\url{http://www.collegehockeynews.com/info/?d=krach}).
+(http://www.collegehockeynews.com/info/?d=krach).
 }
 \examples{
 
@@ -112,11 +112,11 @@ cbind(names(sort(ranks, decr = TRUE)[1:10]),
 }
 \references{
 Schlobotnik, J. Build your own rankings.
-\url{http://slack.net/~whelan/tbrw/2010/rankings.diy.shtml}
+http://slack.net/~whelan/tbrw/2010/rankings.diy.shtml
 
-\url{http://www.collegehockeynews.com}
+http://www.collegehockeynews.com
 
 Selections for 2010 NCAA tournament.
-\url{http://sports.espn.go.com/ncaa/news/story?id=5012918}
+http://sports.espn.go.com/ncaa/news/story?id=5012918
 }
 \keyword{datasets}

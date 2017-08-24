@@ -19,10 +19,10 @@ equal to the length of variables in \code{formula}.}
 \item{family}{a description of the error distribution and link function to
 be used in the model. This can be a character string naming a family
 function, a family function or the result of a call to a family function.
-(See \code{\link{family}} for details of family functions.)}
+(See \code{\link[=family]{family()}} for details of family functions.)}
 
 \item{data}{an optional data frame, list or environment (or object coercible
-by \code{\link{as.data.frame}} to a data frame) containing the variables in
+by \code{\link[=as.data.frame]{as.data.frame()}} to a data frame) containing the variables in
 the model.  If not found in \code{data}, the variables are taken from
 \code{environment(formula)}, typically the environment from which
 \code{glmmPQL} called.}
@@ -36,11 +36,11 @@ the fitting process.}
 \item{offset}{an optional numeric vector to be added to the linear predictor
 during fitting. One or more \code{offset} terms can be included in the
 formula instead or as well, and if more than one is specified their sum is
-used.  See \code{\link{model.offset}}.}
+used.  See \code{\link[=model.offset]{model.offset()}}.}
 
 \item{na.action}{a function which indicates what should happen when the data
 contain \code{NA}s.  The default is set by the \code{na.action} setting of
-\code{\link{options}}, and is \code{\link{na.fail}} if that is unset.}
+\code{\link[=options]{options()}}, and is \code{\link[=na.fail]{na.fail()}} if that is unset.}
 
 \item{start}{starting values for the parameters in the linear predictor.}
 
@@ -49,7 +49,7 @@ contain \code{NA}s.  The default is set by the \code{na.action} setting of
 \item{mustart}{starting values for the vector of means.}
 
 \item{control}{a list of parameters for controlling the fitting process.
-See the \code{\link{glmmPQL.control}} for details.}
+See the \code{\link[=glmmPQL.control]{glmmPQL.control()}} for details.}
 
 \item{sigma}{a starting value for the standard deviation of the random
 effects.}
@@ -63,9 +63,9 @@ random effects should be fixed at its starting value.}
 should be returned.}
 
 \item{contrasts}{an optional list. See the \code{contrasts.arg} argument of
-\code{\link{model.matrix}}.}
+\code{\link[=model.matrix]{model.matrix()}}.}
 
-\item{\dots}{arguments to be passed to \code{\link{glmmPQL.control}}.}
+\item{\dots}{arguments to be passed to \code{\link[=glmmPQL.control]{glmmPQL.control()}}.}
 }
 \value{
 An object of class \code{"BTglmmPQL"} which inherits from
@@ -137,14 +137,14 @@ summary(glmmPQL(cbind(r, n - r) ~ seed*extract,
 \references{
 Breslow, N. E. and Clayton, D. G. (1993) Approximate inference
 in Generalized Linear Mixed Models. \emph{Journal of the American
-Statistical Association} \bold{88}(421), 9--25.
+Statistical Association} \strong{88}(421), 9--25.
 
 Harville, D. A. (1977) Maximum likelihood approaches to variance component
 estimation and to related problems. \emph{Journal of the American
-Statistical Association} \bold{72}(358), 320--338.
+Statistical Association} \strong{72}(358), 320--338.
 }
 \seealso{
-\code{\link{predict.BTglmmPQL}},\code{\link{glmmPQL.control}},\code{\link{BTm}}
+\code{\link[=predict.BTglmmPQL]{predict.BTglmmPQL()}},\code{\link[=glmmPQL.control]{glmmPQL.control()}},\code{\link[=BTm]{BTm()}}
 }
 \author{
 Heather Turner

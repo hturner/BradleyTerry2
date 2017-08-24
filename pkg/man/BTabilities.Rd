@@ -14,8 +14,7 @@ BTabilities(model)
 \code{TRUE}}
 }
 \value{
-A two-column numeric matrix (of class \code{c("BTabilities",
-"matrix")}, with columns named \code{"ability"} and \code{"se"}; has one row
+A two-column numeric matrix (of class \code{c("BTabilities", "matrix")}, with columns named \code{"ability"} and \code{"se"}; has one row
 for each player; has attributes named \code{"vcov"}, \code{"modelcall"},
 \code{"factorname"} and (sometimes --- see below) \code{"separate"}.  The
 first three attributes are not printed by the method
@@ -32,7 +31,7 @@ there are player covariates with missing values, the abilities for the
 corresponding players are estimated as separate parameters.  In this event
 the resultant matrix has an attribute, named \code{"separate"}, which
 identifies those players whose ability was estimated separately.  For an
-example, see \code{\link{flatlizards}}.
+example, see \code{\link[=flatlizards]{flatlizards()}}.
 }
 \description{
 Computes the (baseline) ability of each player from a model object of class
@@ -67,13 +66,13 @@ BTabilities(baseballModel2)
 }
 \references{
 Firth, D. (2005) Bradley-Terry models in R.  \emph{Journal of
-Statistical Software}, \bold{12}(1), 1--12.
+Statistical Software}, \strong{12}(1), 1--12.
 
 Turner, H. and Firth, D. (2012) Bradley-Terry models in R: The BradleyTerry2
-package.  \emph{Journal of Statistical Software}, \bold{48}(9), 1--21.
+package.  \emph{Journal of Statistical Software}, \strong{48}(9), 1--21.
 }
 \seealso{
-\code{\link{BTm}}, \code{\link{residuals.BTm}}
+\code{\link[=BTm]{BTm()}}, \code{\link[=residuals.BTm]{residuals.BTm()}}
 }
 \author{
 David Firth and Heather Turner

@@ -9,10 +9,10 @@
 
 The \code{chameleons$winner} and \code{chameleons$loser} data frames each
 have 106 observations (one per contest) on the following 4 variables:
-\describe{ 
+\describe{
 \item{ID}{a factor with 35 levels \code{C01}, \code{C02},
 ... , \code{C43}, the identity of the winning (or losing) male in each
-contest} 
+contest}
 \item{prev.wins.1}{integer (values 0 or 1), did the
 winner/loser of this contest win in an immediately previous contest?}
 \item{prev.wins.2}{integer (values 0, 1 or 2), how many of his
@@ -21,13 +21,13 @@ winner/loser of this contest win in an immediately previous contest?}
 male won?} }
 
 The \code{chameleons$predictors} data frame has 35 observations, one for
-each male involved in the contests, on the following 7 variables: 
+each male involved in the contests, on the following 7 variables:
 \describe{
 \item{ch.res}{numeric, residuals of casque height regression on
 \code{SVL}, i.e. relative height of the bony part on the top of the
-chameleons' heads} 
+chameleons' heads}
 \item{jl.res}{numeric, residuals of jaw length
-regression on \code{SVL}} 
+regression on \code{SVL}}
 \item{tl.res}{numeric, residuals of tail
 length regression on \code{SVL}}
 \item{mass.res}{numeric, residuals
@@ -39,14 +39,14 @@ the flank occupied by the main pink patch on the flank}
 of the flank occupied by the entire flank patch} }}
 \source{
 The data were obtained by Dr Devi Stuart-Fox,
-\url{http://www.zoology.unimelb.edu.au/research/groups/animal/labs/stuart-fox/index.php},
+http://www.zoology.unimelb.edu.au/research/groups/animal/labs/stuart-fox/index.php,
 and they are reproduced here with her kind permission.
 
 These are the same data that were used in
 
 Stuart-Fox, D. M., Firth, D., Moussalli, A. and Whiting, M. J. (2006)
 Multiple signals in chameleon contests: designing and analysing animal
-contests as a tournament. \emph{Animal Behaviour} \bold{71}, 1263--1271.
+contests as a tournament. \emph{Animal Behaviour} \strong{71}, 1263--1271.
 }
 \usage{
 chameleons

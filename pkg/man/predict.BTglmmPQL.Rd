@@ -27,8 +27,7 @@ in the original data.}
 \item{type}{the type of prediction required.  The default is on the scale of
 the linear predictors; the alternative \code{"response"} is on the scale of
 the response variable. Thus for a default binomial model the default
-predictions are of log-odds (probabilities on logit scale) and \code{type =
-"response"} gives the predicted probabilities. The \code{"terms"} option
+predictions are of log-odds (probabilities on logit scale) and \code{type = "response"} gives the predicted probabilities. The \code{"terms"} option
 returns a matrix giving the fitted values of each term in the model formula
 on the linear predictor scale (fixed effects only).}
 
@@ -80,10 +79,10 @@ all.equal(pred, rowSums(predTerms) + attr(predTerms, "constant"))
 \references{
 Booth, J. G. and Hobert, J. P. (1998). Standard errors of
 prediction in Generalized Linear Mixed Models. \emph{Journal of the American
-Statistical Association} \bold{93}(441), 262 -- 272.
+Statistical Association} \strong{93}(441), 262 -- 272.
 }
 \seealso{
-\code{\link{predict.glm}}, \code{\link{predict.BTm}}
+\code{\link[=predict.glm]{predict.glm()}}, \code{\link[=predict.BTm]{predict.BTm()}}
 }
 \author{
 Heather Turner

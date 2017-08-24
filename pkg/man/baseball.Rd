@@ -5,14 +5,13 @@
 \alias{baseball}
 \title{Baseball Data from Agresti (2002)}
 \format{A data frame with 42 observations on the following 4 variables.
-\describe{ 
+\describe{
 \item{home.team}{a factor with levels \code{Baltimore},
-\code{Boston}, \code{Cleveland}, \code{Detroit}, \code{Milwaukee}, \code{New
-York}, \code{Toronto}.} 
+\code{Boston}, \code{Cleveland}, \code{Detroit}, \code{Milwaukee}, \code{New York}, \code{Toronto}.}
 \item{away.team}{a factor with levels
 \code{Baltimore}, \code{Boston}, \code{Cleveland}, \code{Detroit},
 \code{Milwaukee}, \code{New York}, \code{Toronto}.}
-\item{home.wins}{a numeric vector.} 
+\item{home.wins}{a numeric vector.}
 \item{away.wins}{a numeric vector.} }}
 \source{
 Page 438 of Agresti, A. (2002) \emph{Categorical Data Analysis} (2nd
@@ -50,12 +49,12 @@ anova(baseballModel1, baseballModel2)
 }
 \references{
 Firth, D. (2005) Bradley-Terry models in R.  \emph{Journal of
-Statistical Software}, \bold{12}(1), 1--12.
+Statistical Software}, \strong{12}(1), 1--12.
 
 Turner, H. and Firth, D. (2012) Bradley-Terry models in R: The BradleyTerry2
-package.  \emph{Journal of Statistical Software}, \bold{48}(9), 1--21.
+package.  \emph{Journal of Statistical Software}, \strong{48}(9), 1--21.
 }
 \seealso{
-\code{\link{BTm}}
+\code{\link[=BTm]{BTm()}}
 }
 \keyword{datasets}

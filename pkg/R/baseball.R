@@ -8,23 +8,22 @@
 #' @docType data
 #' @format A data frame with 42 observations on the following 4 variables.
 #' \describe{ 
-#' \item{home.team}{a factor with levels \code{Baltimore},
-#' \code{Boston}, \code{Cleveland}, \code{Detroit}, \code{Milwaukee}, \code{New
-#' York}, \code{Toronto}.} 
+#' \item{home.team}{a factor with levels `Baltimore`,
+#' `Boston`, `Cleveland`, `Detroit`, `Milwaukee`, `New York`, `Toronto`.} 
 #' \item{away.team}{a factor with levels
-#' \code{Baltimore}, \code{Boston}, \code{Cleveland}, \code{Detroit},
-#' \code{Milwaukee}, \code{New York}, \code{Toronto}.}
+#' `Baltimore`, `Boston`, `Cleveland`, `Detroit`,
+#' `Milwaukee`, `New York`, `Toronto`.}
 #' \item{home.wins}{a numeric vector.} 
 #' \item{away.wins}{a numeric vector.} }
 #' @note This dataset is in a simpler format than the one described in Firth
 #' (2005).
-#' @seealso \code{\link{BTm}}
-#' @references Firth, D. (2005) Bradley-Terry models in R.  \emph{Journal of
-#' Statistical Software}, \bold{12}(1), 1--12.
+#' @seealso [BTm()]
+#' @references Firth, D. (2005) Bradley-Terry models in R.  *Journal of
+#' Statistical Software*, **12**(1), 1--12.
 #' 
 #' Turner, H. and Firth, D. (2012) Bradley-Terry models in R: The BradleyTerry2
-#' package.  \emph{Journal of Statistical Software}, \bold{48}(9), 1--21.
-#' @source Page 438 of Agresti, A. (2002) \emph{Categorical Data Analysis} (2nd
+#' package.  *Journal of Statistical Software*, **48**(9), 1--21.
+#' @source Page 438 of Agresti, A. (2002) *Categorical Data Analysis* (2nd
 #' Edn.). New York: Wiley.
 #' @keywords datasets
 #' @examples

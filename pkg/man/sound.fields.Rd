@@ -8,30 +8,28 @@
 and \code{sound.fields$design}.
 
 The \code{sound.fields$comparisons} data frame has 84 observations on the
-following 8 variables: \describe{ 
+following 8 variables: \describe{
 \item{field1}{a factor with levels
 \code{c("000", "001", "010", "011", "100", "101", "110", "111")}, the first
-sound field in a comparison} 
+sound field in a comparison}
 \item{field2}{a factor with the same
 levels as \code{field1}; the second sound field in a comparison}
 \item{win1}{integer, the number of times that \code{field1} was
-preferred to \code{field2}} 
+preferred to \code{field2}}
 \item{tie}{integer, the number of times
 that no preference was expressed when comparing \code{field1} and
-\code{field2}} 
+\code{field2}}
 \item{win2}{integer, the number of times that
 \code{field2} was preferred to \code{field1}}
 \item{win1.adj}{numeric, equal to \code{win1 + tie/2}}
 \item{win2.adj}{numeric, equal to \code{win2 + tie/2}}
-\item{instrument}{a factor with 3 levels, \code{c("cello", "flute",
-"violin")}} }
+\item{instrument}{a factor with 3 levels, \code{c("cello", "flute", "violin")}} }
 
 The \code{sound.fields$design} data frame has 8 observations (one for each
 of the sound fields compared in the experiment) on the following 3
-variables: \describe{ 
-\item{a")}{a factor with levels \code{c("0",
-"1")}, the \emph{direct sound} factor (0 for \emph{obstructed sight line}, 1
-for \emph{free sight line}); contrasts are sum contrasts} 
+variables: \describe{
+\item{a")}{a factor with levels \code{c("0", "1")}, the \emph{direct sound} factor (0 for \emph{obstructed sight line}, 1
+for \emph{free sight line}); contrasts are sum contrasts}
 \item{b}{a
 factor with levels \code{c("0", "1")}, the \emph{reflection} factor (0 for
 \emph{-26dB}, 1 for \emph{-20dB}); contrasts are sum contrasts}
@@ -41,7 +39,7 @@ contrasts are sum contrasts} }}
 \source{
 Kousgaard, N. (1984) Analysis of a Sound Field Experiment by a Model
 for Paired Comparisons with Explanatory Variables.  \emph{Scandinavian
-Journal of Statistics} \bold{11}, 51--57.
+Journal of Statistics} \strong{11}, 51--57.
 }
 \usage{
 sound.fields
@@ -88,7 +86,7 @@ abline(lm(table5.flutes ~ coef(flutes.model.reparam)))
 \references{
 Davidson, R. R. (1970) Extending the Bradley-Terry model to
 accommodate ties in paired comparison experiments.  \emph{Journal of the
-American Statistical Association} \bold{65}, 317--328.
+American Statistical Association} \strong{65}, 317--328.
 }
 \author{
 David Firth

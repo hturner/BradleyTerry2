@@ -5,13 +5,13 @@
 \alias{football}
 \title{English Premier League Football Results 2008/9 to 2012/13}
 \format{A data frame with 1881 observations on the following 4 variables.
-\describe{ 
+\describe{
 \item{season}{a factor with levels \code{2008-9},
 \code{2009-10}, \code{2010-11}, \code{2011-12}, \code{2012-13}}
 \item{home}{a factor specifying the home team, with 29 levels
 \code{Ars} (Arsenal), ... , \code{Wol} (Wolverhampton)}
 \item{away}{a factor specifying the away team, with the same levels
-as \code{home}.} 
+as \code{home}.}
 \item{result}{a numeric vector giving the result
 for the home team: 1 for a win, 0 for a draw, -1 for a loss.} }}
 \source{
@@ -59,9 +59,9 @@ if (require(gnm)) {
 \references{
 Davidson, R. R. (1970). On extending the Bradley-Terry model to
 accommodate ties in paired comparison experiments. \emph{Journal of the
-American Statistical Association}, \bold{65}, 317--328.
+American Statistical Association}, \strong{65}, 317--328.
 }
 \seealso{
-\code{\link{GenDavidson}}
+\code{\link[=GenDavidson]{GenDavidson()}}
 }
 \keyword{datasets}

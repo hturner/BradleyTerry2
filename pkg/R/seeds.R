@@ -14,12 +14,12 @@
 #' \item{seed}{the seed
 #' variety.} 
 #' \item{extract}{the type of root extract.} }
-#' @seealso \code{\link{glmmPQL}}
+#' @seealso [glmmPQL()]
 #' @references Breslow, N. E. and Clayton, D. G. (1993) Approximate inference
-#' in Generalized Linear Mixed Models. \emph{Journal of the American
-#' Statistical Association}, \bold{88}(421), 9--25.
+#' in Generalized Linear Mixed Models. *Journal of the American
+#' Statistical Association*, **88**(421), 9--25.
 #' @source Crowder, M. (1978) Beta-Binomial ANOVA for proportions.
-#' \emph{Applied Statistics}, \bold{27}, 34--37.
+#' *Applied Statistics*, **27**, 34--37.
 #' @keywords datasets
 #' @examples
 #' 

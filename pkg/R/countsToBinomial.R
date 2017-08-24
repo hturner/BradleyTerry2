@@ -8,10 +8,10 @@
 #' and \dQuote{loser}
 #' @return A data frame with four columns \item{player1 }{ the first player in
 #' the contest. } \item{player2 }{ the second player in the contest. }
-#' \item{win1 }{ the number of times \code{player1} won. } \item{win2 }{ the
-#' number of times \code{player2} won. }
+#' \item{win1 }{ the number of times `player1` won. } \item{win2 }{ the
+#' number of times `player2` won. }
 #' @author Heather Turner
-#' @seealso \code{\link{BTm}}
+#' @seealso [BTm()]
 #' @keywords models
 #' @examples
 #' 
