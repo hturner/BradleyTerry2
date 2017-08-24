@@ -7,8 +7,9 @@
 \method{anova}{BTm}(object, ..., dispersion = NULL, test = NULL)
 }
 \arguments{
-\item{object, }{a fitted object of class inheriting from \code{"BTm"}, or a
-list of such objects.}
+\item{object}{a fitted object of class inheriting from \code{"BTm"}.}
+
+\item{...}{additional \code{"BTm"} objects.}
 
 \item{dispersion}{a value for the dispersion. Not implemented for models
 with random effects.}
@@ -19,9 +20,6 @@ returned.  The Chisq test is a likelihood ratio test for models with no
 random effects, otherwise a Wald test. Options \code{"F"} and \code{"Cp"}
 are only applicable to models with no random effects, see
 \code{\link{stat.anova}}.}
-
-\item{list()}{a fitted object of class inheriting from \code{"BTm"}, or a
-list of such objects.}
 }
 \value{
 An object of class \code{"anova"} inheriting from class
