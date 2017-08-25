@@ -6,10 +6,13 @@ glmmPQL.fit <- function(X, y, Z,  weights = rep(1, NROW(y)), start = NULL,
                         sigma = NULL, sigma.fixed = FALSE, ...) {
     matchCall <- as.list(match.call(expand.dots = FALSE))
     dots <- names(matchCall[["..."]])
-    dots <- intersect(dots, names(formals(glm)))
+    dots <- intersect(dots, setdiff(names(formals(glm)), "control"))
     fit0 <- do.call("glm.fit", c(list(X, y, weights, start = start,
                                       etastart = etastart, mustart = mustart,
-                                      offset = offset, family = family),
+                                      offset = offset, family = family,
+                                      control = list(maxit = control$maxiter,
+                                                     epsilon = control$tol,
+                                                     trace = control$trace)),
                                  matchCall[dots]))
     w <- fit0$prior.weights
     # QR missing from glm.fit if ncol(X) = 0

@@ -140,6 +140,11 @@ glmmPQL <- function(fixed, random = NULL, family = binomial, data = NULL,
                                              drop.unused.levels = TRUE),
                            modelCall[argPos]))
     modelData <- eval(modelData, parent.frame())
+    
+    if (!is.matrix(random) || nrow(random) != nrow(modelData)) {
+        stop("`random` should be a matrix object, with ", nrow(modelData), 
+             " rows.")
+    }
 
     if (!is.null(modelCall$subset))
         Z <- random[eval(modelCall$subset, data, parent.frame()),]
@@ -192,7 +197,7 @@ glmmPQL <- function(fixed, random = NULL, family = binomial, data = NULL,
     if (sum(offset) && attr(modelTerms, "intercept") > 0) {
         fit$null.deviance <- glm.fit(x = X[, "(Intercept)", drop = FALSE],
             y = y, weights = weights, offset = offset, family = family,
-            control = control, intercept = TRUE)$deviance
+            control = glm.control(), intercept = TRUE)$deviance
     }
     if (model)
         fit$model <- modelData
