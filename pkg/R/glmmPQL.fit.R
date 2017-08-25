@@ -10,9 +10,7 @@ glmmPQL.fit <- function(X, y, Z,  weights = rep(1, NROW(y)), start = NULL,
     fit0 <- do.call("glm.fit", c(list(X, y, weights, start = start,
                                       etastart = etastart, mustart = mustart,
                                       offset = offset, family = family,
-                                      control = list(maxit = control$maxiter,
-                                                     epsilon = control$tol,
-                                                     trace = control$trace)),
+                                      control = glm.control()),
                                  matchCall[dots]))
     w <- fit0$prior.weights
     # QR missing from glm.fit if ncol(X) = 0

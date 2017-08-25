@@ -3,17 +3,6 @@
 #' Computes the (baseline) ability of each player from a model object of class
 #' `"BTm"`.
 #' 
-#' 
-#' @aliases BTabilities print.BTabilities coef.BTabilities vcov.BTabilities
-#' @param model a model object for which `inherits(model, "BTm")` is
-#' `TRUE`
-#' @return A two-column numeric matrix (of class `c("BTabilities",
-#' "matrix")`, with columns named `"ability"` and `"se"`; has one row
-#' for each player; has attributes named `"vcov"`, `"modelcall"`,
-#' `"factorname"` and (sometimes --- see below) `"separate"`.  The
-#' first three attributes are not printed by the method
-#' `print.BTabilities`.
-#' 
 #' The player abilities are either directly estimated by the model, in which
 #' case the appropriate parameter estimates are returned, otherwise the
 #' abilities are computed from the terms of the fitted model that involve
@@ -21,14 +10,25 @@
 #' formula). Thus parameters in any other terms are assumed to be zero. If one
 #' player has been set as the reference, then `predict.BTm()` can be used to 
 #' obtain ability estimates with non-player covariates set to other values,
-#' see examples at [`?predict.BTm`][predict.BTm()].
+#' see examples for [predict.BTm()].
 #' 
 #' If the abilities are structured according to a linear predictor, and if
 #' there are player covariates with missing values, the abilities for the
 #' corresponding players are estimated as separate parameters.  In this event
 #' the resultant matrix has an attribute, named `"separate"`, which
 #' identifies those players whose ability was estimated separately.  For an
-#' example, see [flatlizards()].
+#' example, see [flatlizards()]. 
+#' 
+#' @aliases BTabilities print.BTabilities coef.BTabilities vcov.BTabilities
+#' @param model a model object for which `inherits(model, "BTm")` is
+#' `TRUE`
+#' @return A two-column numeric matrix of class `c("BTabilities",
+#' "matrix")`, with columns named `"ability"` and `"se"`; has one row
+#' for each player; has attributes named `"vcov"`, `"modelcall"`,
+#' `"factorname"` and (sometimes --- see below) `"separate"`.  The
+#' first three attributes are not printed by the method
+#' `print.BTabilities`.
+#' 
 #' @author David Firth and Heather Turner
 #' @seealso [BTm()], [residuals.BTm()]
 #' @references Firth, D. (2005) Bradley-Terry models in R.  *Journal of
