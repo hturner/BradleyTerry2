@@ -24,7 +24,8 @@
 #' required. Level zero corresponds to population-level predictions (fixed
 #' effects only), whilst level one corresponds to the individual-level
 #' predictions (full model) which are NA for contests involving individuals not
-#' in the original data.
+#' in the original data. By default `level = 0` if the model converged to a 
+#' fixed effects model, `1` otherwise.
 #' @param type the type of prediction required.  The default is on the scale of
 #' the linear predictors; the alternative `"response"` is on the scale of
 #' the response variable. Thus for a default binomial model the default
@@ -61,10 +62,11 @@
 #' all.equal(pred, rowSums(predTerms) + attr(predTerms, "constant"))
 #' 
 #' @export
-predict.BTglmmPQL <- function (object, newdata = NULL, newrandom = NULL,
-                             level = 1, type = c("link", "response", "terms"),
-                             se.fit = FALSE, terms = NULL,
-                             na.action = na.pass, ...) {
+predict.BTglmmPQL <- function(object, newdata = NULL, newrandom = NULL,
+                              level = ifelse(object$sigma == 0, 0, 1), 
+                              type = c("link", "response", "terms"),
+                              se.fit = FALSE, terms = NULL,
+                              na.action = na.pass, ...) {
     ## only pass on if a glm
     if (object$sigma == 0) {
         if (level != 0) warning("Fixed effects model: setting level to 0")
@@ -96,17 +98,16 @@ predict.BTglmmPQL <- function (object, newdata = NULL, newrandom = NULL,
         na.action <- object$na.action
         offset <- object$offset
     }
+    cf <- coef(object)
+    keep <- !is.na(cf)
+    aa <- attr(D, "assign")[keep]
+    cf <- cf[keep]
+    D <- D[, keep, drop = FALSE]
     if (se.fit == TRUE) {
         sigma <- object$sigma
         w <- sqrt(object$weights)
-        if (!is.null(newdata)) {
-            wX <- w * model.matrix(object)
-            wZ <- w * object$random
-        }
-        else {
-            wX <- w * D
-            wZ <- w * newrandom
-        }
+        wX <- w * model.matrix(object)[, keep]
+        wZ <- w * object$random
         XWX <- crossprod(wX)
         XWZ <- crossprod(wX, wZ)
         ZWZ <- crossprod(wZ, wZ)
@@ -122,8 +123,6 @@ predict.BTglmmPQL <- function (object, newdata = NULL, newrandom = NULL,
     if (type == "terms") { # ignore level
         if (1 %in% level)
             warning("type = \"terms\": setting level to 0", call. = FALSE)
-        coef <- coef(object) #fixef
-        aa <- attr(D, "assign")
         ll <- attr(tt, "term.labels")
         if (!is.null(terms)) {
             include <- ll %in% terms
@@ -132,7 +131,7 @@ predict.BTglmmPQL <- function (object, newdata = NULL, newrandom = NULL,
         hasintercept <- attr(tt, "intercept") > 0L
         if (hasintercept) {
             avx <- colMeans(model.matrix(object))
-            termsconst <- sum(avx * coef) #NA coefs?
+            termsconst <- sum(avx * cf) #NA coefs?
             D <- sweep(D, 2, avx)
         }
         pred0 <- matrix(ncol = length(ll), nrow = NROW(D))
@@ -143,7 +142,7 @@ predict.BTglmmPQL <- function (object, newdata = NULL, newrandom = NULL,
         }
         for (i in seq(length.out = length(ll))){
             ind <- aa == which(attr(tt, "term.labels") == ll[i])
-            pred0[, i] <- D[, ind, drop = FALSE] %*% coef[ind]
+            pred0[, i] <- D[, ind, drop = FALSE] %*% cf[ind]
             if (se.fit) {
                 se.pred0[, i] <-  sqrt(diag(D[, ind] %*%
                                             tcrossprod(A[ind, ind], D[, ind])))
@@ -154,7 +153,7 @@ predict.BTglmmPQL <- function (object, newdata = NULL, newrandom = NULL,
         return(pred0)
     }
     if (0 %in% level) {
-        pred0 <- napredict(na.action, c(D %*% coef(object)) + offset)
+        pred0 <- napredict(na.action, c(D %*% cf) + offset)
         if (type == "response")
             pred0 <- family(object)$linkinv(pred0)
         if (se.fit == TRUE) {
@@ -181,8 +180,8 @@ predict.BTglmmPQL <- function (object, newdata = NULL, newrandom = NULL,
         stop("newrandom should have ", r, " rows and ",
              ncol(object$random), " columns")
     D <- cbind(D, newrandom)
-    coef <- c(coef(object), attr(coef(object), "random"))
-    pred <- napredict(na.action, c(D %*% coef) + offset)
+    cf <- c(cf, attr(coef(object), "random"))
+    pred <- napredict(na.action, c(D %*% cf) + offset)
     if (type == "response")
         pred <- family(object)$linkinv(pred)
     if (se.fit == TRUE) {

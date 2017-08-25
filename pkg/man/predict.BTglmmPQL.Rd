@@ -5,8 +5,8 @@
 \title{Predict Method for BTglmmPQL Objects}
 \usage{
 \method{predict}{BTglmmPQL}(object, newdata = NULL, newrandom = NULL,
-  level = 1, type = c("link", "response", "terms"), se.fit = FALSE,
-  terms = NULL, na.action = na.pass, ...)
+  level = ifelse(object$sigma == 0, 0, 1), type = c("link", "response",
+  "terms"), se.fit = FALSE, terms = NULL, na.action = na.pass, ...)
 }
 \arguments{
 \item{object}{a fitted object of class \code{"BTglmmPQL"}}
@@ -22,7 +22,8 @@ effects estimated in the original model.}
 required. Level zero corresponds to population-level predictions (fixed
 effects only), whilst level one corresponds to the individual-level
 predictions (full model) which are NA for contests involving individuals not
-in the original data.}
+in the original data. By default \code{level = 0} if the model converged to a
+fixed effects model, \code{1} otherwise.}
 
 \item{type}{the type of prediction required.  The default is on the scale of
 the linear predictors; the alternative \code{"response"} is on the scale of

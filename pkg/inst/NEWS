@@ -1,6 +1,19 @@
 Changes in BradleyTerry2 1.0-7
 ==============================
 
+Improvements
+------------
+
+    o	new examples of prediction added, including using `predict.BTm` to 
+        estimate abilities with non-player abilities set to non-zero values
+        (for models with a fixed reference category).
+
+Changes in behaviour
+--------------------
+
+    o	default `level` in `predict.BTm` and `predict.glmmPQL` is 0 if a fixed
+        effects model has been fitted, 1 otherwise.
+        
 Bug fixes
 ---------
 
@@ -12,6 +25,8 @@ Bug fixes
     o   BTabilities now works when ability is modelled by covariates and some
         parameters are inestimable (e.g. as in `chameleons.model` on 
         ?chameleons).
+        
+    o   predict.BTglmmPQL.R now works for models with inestimable paramters
 	
 Changes in BradleyTerry2 1.0-6
 ==============================
@@ -104,7 +119,7 @@ Improvements
 
     o	updated vignette, including example of bias-reduction, a 
     	new example incorporating random effects and a new example
-	on preparing data for use with package
+	    on preparing data for use with package
 
 
 Changes in BradleyTerry2 0.9-6

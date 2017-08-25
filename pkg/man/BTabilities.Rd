@@ -24,7 +24,10 @@ The player abilities are either directly estimated by the model, in which
 case the appropriate parameter estimates are returned, otherwise the
 abilities are computed from the terms of the fitted model that involve
 player covariates only (those indexed by \code{model$id} in the model
-formula). Thus parameters in any other terms are assumed to be zero.
+formula). Thus parameters in any other terms are assumed to be zero. If one
+player has been set as the reference, then \code{predict.BTm()} can be used to
+obtain ability estimates with non-player covariates set to other values,
+see examples at \code{\link[=predict.BTm]{?predict.BTm}}.
 
 If the abilities are structured according to a linear predictor, and if
 there are player covariates with missing values, the abilities for the

@@ -18,7 +18,8 @@
 #' level(s) at which predictions are required. Level zero corresponds to
 #' population-level predictions (fixed effects only), whilst level one
 #' corresponds to the player-level predictions (full model) which are NA for
-#' contests involving players not in the original data.
+#' contests involving players not in the original data. By default, `level = 0`
+#' for a fixed effects model, `1` otherwise.
 #' @param type the type of prediction required.  The default is on the scale of
 #' the linear predictors; the alternative `"response"` is on the scale of
 #' the response variable. Thus for a default Bradley-Terry model the default
@@ -83,8 +84,79 @@
 #' ## can only predict at population level for contest with new lizard
 #' predict(Whiting.model3, level = 0:1, se.fit = TRUE, newdata = newdata)
 #' 
+#' ## predicting at specific levels of covariates
+#' 
+#' ## consider a model from example(CEMS)
+#' table6.model <-  BTm(outcome = cbind(win1.adj, win2.adj),
+#'                      player1 = school1, player2 = school2,
+#'                      formula = ~ .. +
+#'                          WOR[student] * Paris[..] +
+#'                          WOR[student] * Milano[..] +
+#'                          WOR[student] * Barcelona[..] +
+#'                          DEG[student] * St.Gallen[..] +
+#'                          STUD[student] * Paris[..] +
+#'                          STUD[student] * St.Gallen[..] +
+#'                          ENG[student] * St.Gallen[..] +
+#'                          FRA[student] * London[..] +
+#'                          FRA[student] * Paris[..] +
+#'                          SPA[student] * Barcelona[..] +
+#'                          ITA[student] * London[..] +
+#'                          ITA[student] * Milano[..] +
+#'                          SEX[student] * Milano[..],
+#'                      refcat = "Stockholm",
+#'                      data = CEMS)
+#'                      
+#' ## estimate abilities for a combination not seen in the original data
+#' 
+#' ## same schools
+#' schools <- levels(CEMS$preferences$school1)
+#' ## new student data
+#' students <- data.frame(STUD = "other", ENG = "good", FRA = "good", 
+#'                        SPA = "good", ITA = "good", WOR = "yes", DEG = "no",
+#'                        SEX = "female", stringsAsFactors = FALSE)
+#' ## set levels to be the same as original data    
+#' for (i in seq_len(ncol(students))){
+#'     students[,i] <- factor(students[,i], levels(CEMS$students[,i]))
+#' }
+#' newdata <- list(preferences = 
+#'     data.frame(student = factor(500), # new student id matching 1st rows of `students`
+#'                school1 = factor("London", levels = schools),
+#'                school2 = factor("Paris", levels = schools)),
+#'     students = students,
+#'     schools = CEMS$schools)
+#' 
+#' ## warning can be ignored as model specification was over-parameterized
+#' predict(table6.model, newdata = newdata)
+#' 
+#' ## if treatment contrasts are use (i.e. one player is set as the reference
+#' ## category), then predicting the outcome of contests against the reference
+#' ## is equivalent to estimating abilities with specific covariate values
+#' 
+#' ## add student with all values at reference levels 
+#' students <- rbind(students,
+#'     data.frame(STUD = "other", ENG = "good", FRA = "good", 
+#'                SPA = "good", ITA = "good", WOR = "no", DEG = "no",
+#'                SEX = "female", stringsAsFactors = FALSE))
+#' ## set levels to be the same as original data    
+#' for (i in seq_len(ncol(students))){
+#'     students[,i] <- factor(students[,i], levels(CEMS$students[,i]))
+#' }
+#' newdata <- list(preferences = 
+#'     data.frame(student = factor(rep(c(500, 502), each = 6)), 
+#'                school1 = factor(schools, levels = schools),
+#'                school2 = factor("Stockholm", levels = schools)),
+#'     students = students,
+#'     schools = CEMS$schools)
+#'     
+#' predict(table6.model, newdata = newdata, se.fit = TRUE)
+#' 
+#' ## the second set of predictions (elements 7-12) are equivalent to the output 
+#' ## of BTabilities; the first set are adjust for `WOR` being equal to "yes"
+#' BTabilities(table6.model)
+#' 
 #' @export
-predict.BTm <- function (object, newdata = NULL, level = 1,
+predict.BTm <- function (object, newdata = NULL, 
+                         level = ifelse(is.null(object$random), 0, 1),
                          type = c("link", "response", "terms"), se.fit = FALSE,
                          dispersion = NULL, terms = NULL,
                          na.action = na.pass, ...) {
@@ -117,7 +189,7 @@ predict.BTm <- function (object, newdata = NULL, level = 1,
         }
         else newdata$X <- setup$X
         nran <- length(attr(object$coefficients, "random"))
-        if (1 %in% level && type != "terms"){
+        if (1 %in% level && !is.null(object$random) && type != "terms"){
             if (ncol(setup$random) != nran) {
                 ## expand to give col for every random effect
                 Z <- matrix(0, nrow(setup$random), nran,
