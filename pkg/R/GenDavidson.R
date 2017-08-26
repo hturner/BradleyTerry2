@@ -47,7 +47,7 @@
 #' with the same set of levels as `player2`.
 #' @param player2 an ID factor specifying the second player in each contest,
 #' with the same set of levels as `player2`.
-#' @param home.adv a formula for the paramter corresponding to the home
+#' @param home.adv a formula for the parameter corresponding to the home
 #' advantage effect. If `NULL`, no home advantage effect is estimated.
 #' @param tie.max a formula for the parameter corresponding to the maximum tie
 #' probability.
