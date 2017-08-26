@@ -1,11 +1,10 @@
 library(BradleyTerry2)
 data(flatlizards, package = "BradleyTerry2")
 
-attach(flatlizards)
-result <- rep(1, nrow(contests))
+result <- rep(1, nrow(flatlizards$contests))
 BTmodel1 <- BTm(result, winner, loser,
                 ~ throat.PC1[..] + throat.PC3[..] + (1|..),
-                data = list(contests, predictors),
+                data = flatlizards,
                 tol = 1e-4, sigma = 2, trace = TRUE)
 
 drop1(BTmodel1)

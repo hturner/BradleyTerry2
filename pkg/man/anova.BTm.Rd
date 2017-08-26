@@ -62,10 +62,9 @@ warning is given in this case.
 
 \examples{
 
-attach(flatlizards)
-result <- rep(1, nrow(contests))
+result <- rep(1, nrow(flatlizards$contests))
 BTmodel <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
-               head.length[..] + (1|..), data = list(contests, predictors),
+               head.length[..] + (1|..), data = flatlizards,
                trace = TRUE)
 anova(BTmodel)
 

@@ -44,11 +44,10 @@
 #' @keywords models
 #' @examples
 #' 
-#' attach(flatlizards)
-#' result <- rep(1, nrow(contests))
+#' result <- rep(1, nrow(flatlizards$contests))
 #' BTmodel1 <- BTm(result, winner, loser,
 #'                 ~ throat.PC1[..] + throat.PC3[..] + (1|..),
-#'                 data = list(contests, predictors),
+#'                 data = flatlizards,
 #'                 tol = 1e-4, sigma = 2, trace = TRUE)
 #' 
 #' drop1(BTmodel1)
@@ -59,6 +58,7 @@
 #' 
 #' drop1(BTmodel2, test = "Chisq")
 #' 
+#' @importFrom stats add.scope coef model.frame model.offset model.response model.weights formula pchisq pf reformulate terms update update.formula vcov
 #' @importFrom lme4 findbars nobars
 #' @export
 add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
@@ -70,7 +70,8 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
         orandom <- findbars(old.form[[2]])
         srandom <- findbars(new.form[[2]])
         if (length(srandom) && !identical(orandom, srandom))
-            stop("Random effects structure of object and scope must be identical.")
+            stop("Random effects structure of object and scope must be ",
+                 "identical.")
         scope <- add.scope(old.form, new.form)
     }
     if (!length(scope))
@@ -136,8 +137,9 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
     Terms <- attr(terms(nobars(new.form)), "term.labels")
     ousex <- asgn %in% c(0, which(Terms %in% oTerms))
 
-    sTerms <- sapply(strsplit(Terms, ":", fixed = TRUE),
-                     function(x) paste(sort(x), collapse = ":"))
+    sTerms <- vapply(strsplit(Terms, ":", fixed = TRUE), 
+                     function(x) paste(sort(x), collapse = ":"),
+                     character(1))
 
     method <- switch(object$method,
                      glmmPQL.fit)
@@ -163,7 +165,7 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
         ind <- (usex & !ousex)[usex]
         trystat <- try(t(coef(fit)[ind]) %*%
             chol2inv(chol(vcov(fit, dispersion = dispersion)[ind, ind])) %*%
-                coef(fit)[ind], silent = TRUE) #vcov should deal with dispersion != 1
+                coef(fit)[ind], silent = TRUE) #vcov should handle disp != 1
         if (inherits(trystat, "try-error")) {
             stat[i] <- df[i] <- NA
             tryerror <- TRUE
@@ -195,9 +197,12 @@ add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
         if (df.dispersion == Inf) {
             fam <- object[[1]]$family$family
             if (fam == "binomial" || fam == "poisson")
-                warning(gettextf("using F test with a '%s' family is inappropriate",
-                                 fam), domain = NA, call. = FALSE)
-            else warning("using F test with a fixed dispersion is inappropriate")
+                warning(gettextf(
+                    "using F test with a '%s' family is inappropriate",
+                    fam), domain = NA, call. = FALSE)
+            else {
+                warning("using F test with a fixed dispersion is inappropriate")
+            }
         }
         dfs <- table[, "Df"]
         Fvalue <- table[, "Statistic"]/abs(dfs)

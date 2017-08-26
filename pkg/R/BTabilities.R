@@ -63,6 +63,7 @@
 #' ##  playing away from home:  
 #' BTabilities(baseballModel2)
 #' 
+#' @importFrom stats C contrasts model.frame model.matrix model.offset na.exclude na.pass terms reformulate relevel vcov
 #' @export
 BTabilities <-  function (model)
 {

@@ -1,3 +1,4 @@
+#' @importFrom stats coef fitted formula na.omit pchisq pf terms vcov
 anova.BTmlist <- function (object, ..., dispersion = NULL, test = NULL) {
     ## Pass on if no random effects
     fixed <- unlist(lapply(object, function(x) is.null(x$random)))
@@ -13,12 +14,13 @@ anova.BTmlist <- function (object, ..., dispersion = NULL, test = NULL) {
         warning("models with response ", deparse(responses[!sameresp]),
                 " removed because response differs from model 1")
     }
-    ns <- sapply(object, function(x) length(fitted(x)))
+    ns <- vapply(object, function(x) length(fitted(x)), numeric(1))
     if (any(ns != ns[1]))
         stop("models were not all fitted to the same size of dataset")
     nmodels <- length(object)
 
-    ncoefs <- sapply(object, function(x) length(na.omit(coef(x)))) #omit aliased
+    ncoefs <- vapply(object, function(x) length(na.omit(coef(x))),
+                     numeric(1)) #omit aliased
     labels <- lapply(object, function(x) x$term.labels)
     stat <- numeric(nmodels)
     for (i in 2:nmodels) {
@@ -29,8 +31,9 @@ anova.BTmlist <- function (object, ..., dispersion = NULL, test = NULL) {
             stop("models are not nested")
         ind <- !(labels[[bigger]] %in% labels[[smaller]])
         stat[i] <- t(coef(object[[bigger]])[ind]) %*%
-            chol2inv(chol(vcov(object[[bigger]], dispersion = dispersion)[ind, ind])) %*%
-                coef(object[[bigger]])[ind] #vcov should deal with dispersion != 1
+            chol2inv(chol(vcov(object[[bigger]], 
+                               dispersion = dispersion)[ind, ind])) %*%
+                coef(object[[bigger]])[ind] #vcov should handle dispersion != 1
     }
     stat[1] <- NA
     table <- data.frame(stat, c(NA, diff(ncoefs)))
@@ -48,15 +51,19 @@ anova.BTmlist <- function (object, ..., dispersion = NULL, test = NULL) {
         if (test == "F" && df.dispersion == Inf) {
             fam <- object[[1]]$family$family
             if (fam == "binomial" || fam == "poisson")
-                warning(gettextf("using F test with a '%s' family is inappropriate",
+                warning(gettextf(
+                    "using F test with a '%s' family is inappropriate",
                   fam), domain = NA, call. = FALSE)
-            else warning("using F test with a fixed dispersion is inappropriate")
+            else {
+                warning("using F test with a fixed dispersion is inappropriate")
+            }
         }
         table <- switch(test, Chisq = {
             dfs <- table[, "Df"]
             vals <- table[, "Statistic"]
             vals[dfs %in% 0] <- NA
-            cbind(table, `P(>|Chi|)` = pchisq(vals, abs(dfs), lower.tail = FALSE))
+            cbind(table, 
+                  `P(>|Chi|)` = pchisq(vals, abs(dfs), lower.tail = FALSE))
         }, F = {
             dfs <- table[, "Df"]
             Fvalue <- table[, "Statistic"]/abs(dfs)

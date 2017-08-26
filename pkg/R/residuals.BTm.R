@@ -50,6 +50,7 @@
 #' lm(res ~ gel, weights = attr(res, "weights"),
 #'    data = springall$predictors)
 #' 
+#' @importFrom stats as.formula model.frame model.matrix terms 
 #' @export
 residuals.BTm <- function(object, type = c("deviance", "pearson", "working",
                           "response", "partial", "grouped"), by = object$id,

@@ -7,7 +7,8 @@ Improvements
     o	new examples of prediction added, including using `predict.BTm` to 
         estimate abilities with non-player abilities set to non-zero values
         (for models with a fixed reference category).
-    o   `qvalc.BTabilities` moved over from package **qvcalc**
+    o   `qvalc.BTabilities` moved over from package **qvcalc**.
+    o   package imports rather than depends on lme4.
 
 Changes in behaviour
 --------------------

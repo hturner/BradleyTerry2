@@ -1,3 +1,4 @@
+#' @importFrom stats reformulate
 BTm.setup <- function(outcome = 1, player1, player2, formula = NULL,
                             id = "..", separate.ability = NULL, refcat = NULL,
                             data = NULL, weights = NULL, subset = NULL,
@@ -45,5 +46,6 @@ BTm.setup <- function(outcome = 1, player1, player2, formula = NULL,
         else diffModel$offset <- diffModel$offset + offset
     }
     res <- c(diffModel, list(data = data, player1 = player1, player2 = player2,
-                             Y = Y, weights = weights, subset = subset, formula = formula))
+                             Y = Y, weights = weights, subset = subset, 
+                             formula = formula))
 }

@@ -1,7 +1,7 @@
 
-R version 2.10.1 (2009-12-14)
-Copyright (C) 2009 The R Foundation for Statistical Computing
-ISBN 3-900051-07-0
+R version 3.4.1 (2017-06-30) -- "Single Candle"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -16,13 +16,14 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > library(BradleyTerry2)
+Loading required package: lme4
+Loading required package: Matrix
 > data(flatlizards, package = "BradleyTerry2")
 > 
-> attach(flatlizards)
-> result <- rep(1, nrow(contests))
+> result <- rep(1, nrow(flatlizards$contests))
 > BTmodel1 <- BTm(result, winner, loser,
 +                 ~ throat.PC1[..] + throat.PC3[..] + (1|..),
-+                 data = list(contests, predictors),
++                 data = flatlizards,
 +                 tol = 1e-4, sigma = 2, trace = TRUE)
 Iteration 1. Score = 5.077924
 Iteration 2. Score = 1.087963
@@ -47,7 +48,7 @@ Model:  ~throat.PC1[..] + throat.PC3[..] + (1 | ..)
 head.length[..]    4.4730  1   0.03443 *
 SVL[..]            2.6624  1   0.10275  
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 > 
 > BTmodel2 <- update(BTmodel1, formula = ~ . + head.length[..])
 Iteration 1. Score = 4.513682
@@ -66,5 +67,8 @@ Model: ~throat.PC1[..] + throat.PC3[..] + (1 | ..) + head.length[..]
 `throat.PC3[..]`     7.2577  1   0.00706 **
 `head.length[..]`    4.4730  1   0.03443 * 
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 > 
+> proc.time()
+   user  system elapsed 
+  1.824   0.024   1.852 

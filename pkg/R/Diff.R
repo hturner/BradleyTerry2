@@ -1,3 +1,4 @@
+#' @importFrom stats is.empty.model model.frame model.matrix model.offset na.omit na.pass reformulate relevel terms
 Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
                  separate.ability = NULL, refcat = NULL, contrasts = NULL,
                  subset = NULL) {
@@ -57,7 +58,8 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
             }
             if (length(sep)) {
                 fixed <- reformulate(c(names(sep), attr(mt, "term.labels"),
-                                       rownames(attr(mt, "factors"))[attr(mt, "offset")]))
+                                       rownames(attr(mt, "factors"))[
+                                           attr(mt, "offset")]))
                 mt <- terms(fixed)
             }
         }
@@ -105,7 +107,8 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
         ## will need to check for saturation in each set of indexed var
         ## - however as only allowing (1|..) just consider player id for now
 
-        saturated <- qr(na.omit(X))$rank == qr(na.omit(cbind(D, X)))$rank && !idterm
+        saturated <- 
+            qr(na.omit(X))$rank == qr(na.omit(cbind(D, X)))$rank && !idterm
         if (all(X[,1] == 0)) X <- X[, -1, drop = FALSE]
         attr(X, "assign") <- attr(X1, "assign")[-1]
     }

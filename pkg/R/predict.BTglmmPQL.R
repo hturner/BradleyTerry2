@@ -50,17 +50,17 @@
 #' @keywords models
 #' @examples
 #' 
-#' attach(seeds)
-#' 
 #' seedsModel <- glmmPQL(cbind(r, n - r) ~ seed + extract,
-#'                       random = diag(length(r)),
-#'                       family = binomial)
+#'                       random = diag(nrow(seeds)),
+#'                       family = binomial,
+#'                       data = seeds)
 #' 
 #' pred <- predict(seedsModel, level = 0)
 #' predTerms <- predict(seedsModel, type = "terms")
 #' 
 #' all.equal(pred, rowSums(predTerms) + attr(predTerms, "constant"))
 #' 
+#' @importFrom stats .checkMFClasses coef delete.response family model.frame model.matrix na.exclude na.pass napredict
 #' @export
 predict.BTglmmPQL <- function(object, newdata = NULL, newrandom = NULL,
                               level = ifelse(object$sigma == 0, 0, 1), 
@@ -112,10 +112,10 @@ predict.BTglmmPQL <- function(object, newdata = NULL, newrandom = NULL,
         XWZ <- crossprod(wX, wZ)
         ZWZ <- crossprod(wZ, wZ)
         diag(ZWZ) <- diag(ZWZ) + 1/sigma^2
-        C <- cbind(XWX, XWZ)
-        C <- chol(rbind(C, cbind(t(XWZ), ZWZ)))
+        K <- cbind(XWX, XWZ)
+        K <- chol(rbind(K, cbind(t(XWZ), ZWZ)))
         if (type == "terms" || level == 0){
-            ## work out (chol of inverse of) topleft of C-inv directly
+            ## work out (chol of inverse of) topleft of K-inv directly
             A <- backsolve(chol(ZWZ), t(XWZ), transpose = TRUE)
             A <- chol(XWX - t(A) %*% A)
         }
@@ -159,8 +159,10 @@ predict.BTglmmPQL <- function(object, newdata = NULL, newrandom = NULL,
         if (se.fit == TRUE) {
             na.act <- attr(na.exclude(pred0), "na.action")
             H <- backsolve(A, t(na.exclude(D)), transpose = TRUE)
-            ## se.pred0 <- sqrt(diag(D %*% chol2inv(C)[1:ncol(D), 1:ncol(D)] %*% t(D)))
-            se.pred0 <- napredict(na.action, napredict(na.act, sqrt(colSums(H^2))))
+            ## se.pred0 <- 
+            ## sqrt(diag(D %*% chol2inv(K)[1:ncol(D), 1:ncol(D)] %*% t(D)))
+            se.pred0 <- napredict(na.action, 
+                                  napredict(na.act, sqrt(colSums(H^2))))
            if (type == "response")
                se.pred0 <- se.pred0*abs(family(object)$mu.eta(pred0))
             pred0 <- list(fit = pred0, se.fit = se.pred0)
@@ -185,9 +187,9 @@ predict.BTglmmPQL <- function(object, newdata = NULL, newrandom = NULL,
     if (type == "response")
         pred <- family(object)$linkinv(pred)
     if (se.fit == TRUE) {
-        ##se.pred <- sqrt(diag(D %*% chol2inv(C) %*% t(D)))
+        ##se.pred <- sqrt(diag(D %*% chol2inv(K) %*% t(D)))
         na.act <- attr(na.exclude(pred), "na.action")
-        H <- backsolve(C, t(na.exclude(D)), transpose = TRUE)
+        H <- backsolve(K, t(na.exclude(D)), transpose = TRUE)
         se.pred <- napredict(na.action, napredict(na.act, sqrt(colSums(H^2))))
         if (type == "response")
             se.pred <- se.pred*abs(family(object)$mu.eta(pred))

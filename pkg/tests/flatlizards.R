@@ -5,9 +5,8 @@ data(flatlizards, package = "BradleyTerry2")
 ##  Fit the standard Bradley-Terry model, using the bias-reduced
 ##  maximum likelihood method:
 ##
-attach(flatlizards)
-result <- rep(1, nrow(contests))
-BTmodel <- BTm(result, winner, loser, br = TRUE, data = contests)
+result <- rep(1, nrow(flatlizards$contests))
+BTmodel <- BTm(result, winner, loser, br = TRUE, data = flatlizards$contests)
 summary(BTmodel)
 ##
 ##  That's fairly useless, though, because of the rather small
@@ -23,14 +22,14 @@ summary(BTmodel)
 ##
 Whiting.model <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
                      head.length[..] + SVL[..], family = binomial,
-                     data = list(contests, predictors))
+                     data = flatlizards)
 summary(Whiting.model)
 ##
 ##  Equivalently, fit the same model using glmmPQL:
 ##
 Whiting.model <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
                      head.length[..] + SVL[..] + (1|..), sigma = 0,
-                     sigma.fixed = TRUE, data = list(contests, predictors))
+                     sigma.fixed = TRUE, data = flatlizards)
 summary(Whiting.model)
 ##
 ##  But that analysis assumes that the linear predictor formula for
@@ -43,7 +42,7 @@ summary(Whiting.model)
 ##
 Whiting.model2 <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
                       head.length[..] + SVL[..] + (1|..),
-                      data = list(contests, predictors), trace = TRUE)
+                      data = flatlizards, trace = TRUE)
 summary(Whiting.model2)
 ##
 ##  The estimated coefficients (of throat.PC1, throat.PC3,
@@ -59,7 +58,7 @@ summary(Whiting.model2)
 Whiting.model3 <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
                       head.length[..] + SVL[..] + (1|..),
                       family = binomial(link = "probit"),
-                      data = list(contests, predictors), trace = TRUE)
+                      data = flatlizards, trace = TRUE)
 summary(Whiting.model3)
 BTabilities(Whiting.model3)
 residuals(Whiting.model3, "grouped")

@@ -174,6 +174,7 @@
 #' }
 #' }
 #' 
+#' @importFrom stats coef plogis runif
 #' @export
 GenDavidson <- function(win, # TRUE/FALSE
                         tie, # TRUE/FALSE
@@ -206,13 +207,15 @@ GenDavidson <- function(win, # TRUE/FALSE
                          list(tie.max = tie.max,
                               substitute(player1), # player1 & 2 are homogeneous
                               substitute(player2)))},
-         ## substitutes "result" for "outcome", but also substitutes all of code vector
+         ## substitutes "result" for "outcome", but also substitutes all of 
+         ## code vector
          variables = {c(list(loss = substitute(loss),
                              tie = substitute(tie),
                              win = substitute(win)),
                         list(at.home1 = substitute(at.home1),
                              at.home2 = substitute(at.home2))[adv])},
-         common =  c(1[has.home.adv], 2[has.tie.mode], 3[has.tie.scale], 4, 5, 5),
+         common =  c(1[has.home.adv], 2[has.tie.mode], 3[has.tie.scale], 
+                     4, 5, 5),
          term = function(predLabels, varLabels){
              if (has.home.adv) {
                  ability1 <- paste("(", predLabels[a], ") * ", varLabels[4],

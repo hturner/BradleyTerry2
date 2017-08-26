@@ -34,14 +34,13 @@
 #' @examples
 #' 
 #' ## Variation on example(flatlizards)
-#' attach(flatlizards)
-#' result <- rep(1, nrow(contests))
+#' result <- rep(1, nrow(flatlizards$contests))
 #' 
 #' ## BTm passes arguments on to glmmPQL.control()
 #' args(BTm)
 #' BTmodel <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
 #'                head.length[..] + SVL[..] + (1|..),
-#'                data = list(contests, predictors), tol = 1e-3, trace = TRUE)
+#'                data = flatlizards, tol = 1e-3, trace = TRUE)
 #' summary(BTmodel)
 #' 
 #' @export

@@ -42,10 +42,10 @@ glmmPQL.fit <- function(X, y, Z,  weights = rep(1, NROW(y)), start = NULL,
         XWX <- crossprod(wX, wX)
         ZWX <- crossprod(wZ, wX)
         E <- chol(XWX)
-        F <- backsolve(E, t(ZWX), transpose = TRUE)
+        J <- backsolve(E, t(ZWX), transpose = TRUE)
         f <- backsolve(E, XWy, transpose = TRUE)
-        ZSy <- ZWy - crossprod(F, f)
-        ZSZ <- ZWZ - crossprod(F, F)
+        ZSy <- ZWy - crossprod(J, f)
+        ZSZ <- ZWZ - crossprod(J, J)
     }
     if (is.null(sigma)) sigma <- 0.1
     logtheta <- log(sigma^2)
@@ -64,11 +64,11 @@ glmmPQL.fit <- function(X, y, Z,  weights = rep(1, NROW(y)), start = NULL,
                 v <- backsolve(G, g)
 
                 B <- backsolve(A, sigma * ZWX, transpose = TRUE)
-                C <- chol(XWX - crossprod(B, B))
+                K <- chol(XWX - crossprod(B, B))
                 b <- backsolve(A, sigma * ZWy, transpose = TRUE)
-                c <- backsolve(C, XWy - t(B) %*% b, transpose = TRUE)
+                c <- backsolve(K, XWy - t(B) %*% b, transpose = TRUE)
 
-                alpha <- backsolve(C, c)
+                alpha <- backsolve(K, c)
                 Xa <- X %*% alpha
                 beta <- sigma^2 * v
             }
@@ -98,17 +98,18 @@ glmmPQL.fit <- function(X, y, Z,  weights = rep(1, NROW(y)), start = NULL,
                 XWX <- crossprod(wX, wX)
                 ZWX <- crossprod(wZ, wX)
                 E <- chol(XWX)
-                F <- backsolve(E, t(ZWX), transpose = TRUE)
+                J <- backsolve(E, t(ZWX), transpose = TRUE)
                 f <- backsolve(E, XWy, transpose = TRUE)
-                ZSy <- ZWy - crossprod(F, f)
-                ZSZ <- ZWZ - crossprod(F, F)
+                ZSy <- ZWy - crossprod(J, f)
+                ZSZ <- ZWZ - crossprod(J, J)
 
                 score <- c(crossprod(X, wy * residuals),
                            crossprod(Z, wy * residuals) - v)
                 diagInfo <- c(diag(XWX), diag(ZWZ))
 
                 if (all(diagInfo < 1e-20) ||
-                    all(abs(score) < control$tol * sqrt(control$tol + diagInfo))) {
+                    all(abs(score) < 
+                        control$tol * sqrt(control$tol + diagInfo))) {
                     if (sigma.fixed) conv <- TRUE
                     break
                 }
@@ -117,7 +118,8 @@ glmmPQL.fit <- function(X, y, Z,  weights = rep(1, NROW(y)), start = NULL,
                 score <- crossprod(Z, wy * residuals) - v
                 diagInfo <- diag(ZWZ)
                 if (all(diagInfo < 1e-20) ||
-                    all(abs(score) < control$tol * sqrt(control$tol + diagInfo))) {
+                    all(abs(score) < 
+                        control$tol * sqrt(control$tol + diagInfo))) {
                     if (sigma.fixed) conv <- TRUE
                     break
                 }
@@ -153,7 +155,7 @@ glmmPQL.fit <- function(X, y, Z,  weights = rep(1, NROW(y)), start = NULL,
             Info <- 0.5 * sum(H^2) * sigma^4
 
              if (control$trace) {
-                 ##B & C eq 5 - still not consistently increasing
+                 ##B & K eq 5 - still not consistently increasing
                  cat("Iteration ", i,
                      ". Score = ", abs(score) ,
                      "\n", sep = "")
@@ -177,11 +179,13 @@ glmmPQL.fit <- function(X, y, Z,  weights = rep(1, NROW(y)), start = NULL,
                     IZSZD <- ZSZ * exp(logtheta)
                     diag(IZSZD) <- 1 + diag(IZSZD)
                     G <- chol(IZSZD)
-                    d <- backsolve(A, sqrt(exp(logtheta)) * ZWYXa, transpose = TRUE)
+                    d <- backsolve(A, sqrt(exp(logtheta)) * ZWYXa, 
+                                   transpose = TRUE)
                     sum(log(diag(G))) - 0.5 * crossprod(d, d)
                 }
                 else {
-                    d <- backsolve(A, sqrt(exp(logtheta)) * ZWy, transpose = TRUE)
+                    d <- backsolve(A, sqrt(exp(logtheta)) * ZWy,
+                                   transpose = TRUE)
                     sum(log(diag(A))) - 0.5 * crossprod(d, d)
                 }
             }
@@ -199,7 +203,7 @@ glmmPQL.fit <- function(X, y, Z,  weights = rep(1, NROW(y)), start = NULL,
         else if (conv)
             break
     }
-    if (!empty) varFix <- chol2inv(C)
+    if (!empty) varFix <- chol2inv(K)
     else varFix <- matrix(, 0, 0)
     rownames(varFix) <- colnames(varFix) <- colnames(X)
     fit0$coef[nm] <- alpha
@@ -224,7 +228,8 @@ glmmPQL.fit <- function(X, y, Z,  weights = rep(1, NROW(y)), start = NULL,
          linear.predictors = eta,
          deviance = if (glm) sum(family$dev.resids(y, mu, w)),
          aic = if (glm)
-         family$aic(y, length(y), mu, w, sum(family$dev.resids(y, mu, w))) + 2 * rank,
+         family$aic(y, length(y), mu, w, sum(family$dev.resids(y, mu, w))) + 
+             2 * rank,
          null.deviance = if (glm) {
              wtdmu <- family$linkinv(offset)
              sum(family$dev.resids(y, wtdmu, w))

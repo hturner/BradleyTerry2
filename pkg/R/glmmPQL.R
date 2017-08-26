@@ -102,18 +102,18 @@
 #' ###############################################
 #' ## Crowder seeds example from Breslow & Clayton
 #' ###############################################
-#' attach(seeds)
 #' 
 #' summary(glmmPQL(cbind(r, n - r) ~ seed + extract,
-#'         random = diag(length(r)),
-#'         family = binomial, data = seeds))
+#'         random = diag(nrow(seeds)),
+#'         family = "binomial", data = seeds))
 #' 
 #' summary(glmmPQL(cbind(r, n - r) ~ seed*extract,
-#'                 random = diag(length(r)),
-#'                 family = binomial, data = seeds))
+#'                 random = diag(nrow(seeds)),
+#'                 family = "binomial", data = seeds))
 #' 
+#' @importFrom stats gaussian .getXlevels glm.control is.empty.model glm.control glm.fit model.frame model.matrix model.offset model.response model.weights optimize terms
 #' @export
-glmmPQL <- function(fixed, random = NULL, family = binomial, data = NULL,
+glmmPQL <- function(fixed, random = NULL, family = "binomial", data = NULL,
                     subset = NULL, weights = NULL, offset = NULL,
                     na.action = NULL,  start = NULL, etastart = NULL,
                     mustart = NULL, control = glmmPQL.control(...),

@@ -4,7 +4,7 @@
 \alias{glmmPQL}
 \title{PQL Estimation of Generalized Linear Mixed Models}
 \usage{
-glmmPQL(fixed, random = NULL, family = binomial, data = NULL,
+glmmPQL(fixed, random = NULL, family = "binomial", data = NULL,
   subset = NULL, weights = NULL, offset = NULL, na.action = NULL,
   start = NULL, etastart = NULL, mustart = NULL,
   control = glmmPQL.control(...), sigma = 0.1, sigma.fixed = FALSE,
@@ -123,15 +123,14 @@ N(0, sigma^2)}}.
 ###############################################
 ## Crowder seeds example from Breslow & Clayton
 ###############################################
-attach(seeds)
 
 summary(glmmPQL(cbind(r, n - r) ~ seed + extract,
-        random = diag(length(r)),
-        family = binomial, data = seeds))
+        random = diag(nrow(seeds)),
+        family = "binomial", data = seeds))
 
 summary(glmmPQL(cbind(r, n - r) ~ seed*extract,
-                random = diag(length(r)),
-                family = binomial, data = seeds))
+                random = diag(nrow(seeds)),
+                family = "binomial", data = seeds))
 
 }
 \references{

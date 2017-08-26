@@ -189,6 +189,7 @@ GenDavidsonTie <- function(p){
 #' }
 #' 
 #' @importFrom graphics curve plot points
+#' @importFrom stats na.omit
 #' @export
 plotProportions <- function(win, tie = NULL, loss,
                             player1,
@@ -212,7 +213,7 @@ plotProportions <- function(win, tie = NULL, loss,
     var <- intersect(names(call), c("win", "tie", "loss",
                                     "player1", "player2",
                                     "at.home1", "at.home2"))
-    var <- var[!sapply(call[var], is.null)]
+    var <- var[!vapply(call[var], is.null, logical(1))]
 
     dat <- with(data, do.call("data.frame", call[var]))
     if (!missing(subset)){

@@ -65,7 +65,7 @@
 #' @param family a description of the error distribution and link function to
 #' be used in the model. Only the binomial family is implemented, with
 #' either`"logit"`, `"probit"` , or `"cauchit"` link. (See
-#' [family()] for details of family functions.)
+#' [stats::family()] for details of family functions.)
 #' @param data an optional object providing data required by the model. This
 #' may be a single data frame of contest-level data or a list of data frames.
 #' Names of data frames are ignored unless they refer to data frames specified
@@ -176,12 +176,11 @@
 #' ## predictor variables, see help(chameleons).
 #' ##
 #' 
-#' @import stats
 #' @importFrom brglm brglm
 #' @export
 BTm <- function(outcome = 1, player1, player2, formula = NULL,
                 id = "..", separate.ability = NULL, refcat = NULL,
-                family = binomial, data = NULL, weights = NULL, subset = NULL,
+                family = "binomial", data = NULL, weights = NULL, subset = NULL,
                 na.action = NULL, start = NULL, etastart = NULL, mustart = NULL,
                 offset = NULL, br = FALSE, model = TRUE, x = FALSE,
                 contrasts = NULL, ...){
@@ -233,7 +232,8 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
         fit <- as.call(c(method, fcall[argPos],
                          list(formula, setup$random, family = family,
                               data = mf, offset = setup$offset,
-                              subset = setup$subset, weights = setup$weights), dotArgs))
+                              subset = setup$subset, weights = setup$weights), 
+                         dotArgs))
         fit <- eval(fit, parent.frame())
         if (br) {
             if (identical(fit$sigma, 0)){

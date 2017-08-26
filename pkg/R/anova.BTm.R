@@ -47,10 +47,9 @@
 #' @keywords models
 #' @examples
 #' 
-#' attach(flatlizards)
-#' result <- rep(1, nrow(contests))
+#' result <- rep(1, nrow(flatlizards$contests))
 #' BTmodel <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
-#'                head.length[..] + (1|..), data = list(contests, predictors),
+#'                head.length[..] + (1|..), data = flatlizards,
 #'                trace = TRUE)
 #' anova(BTmodel)
 #' 
@@ -63,8 +62,9 @@ anova.BTm <- function (object, ..., dispersion = NULL, test = NULL)
         rep(FALSE, length(dotargs))
     else (names(dotargs) != "")
     if (any(named))
-        warning("the following arguments to 'anova.BTm' are invalid and dropped: ",
-            paste(deparse(dotargs[named]), collapse = ", "))
+        warning("the following arguments to 'anova.BTm' are invalid and ",
+                "dropped: ",
+                paste(deparse(dotargs[named]), collapse = ", "))
     dotargs <- dotargs[!named]
     is.BTm <- unlist(lapply(dotargs, function(x) inherits(x, "BTm")))
     dotargs <- dotargs[is.BTm]
@@ -81,10 +81,12 @@ anova.BTm <- function (object, ..., dispersion = NULL, test = NULL)
                 class(x) <- setdiff(class(x), "BTm")
                 x})
             call <- match.call()
-            anova.table <- do.call("anova", c(models, call$dispersion, call$test))
+            anova.table <- do.call("anova", 
+                                   c(models, call$dispersion, call$test))
             attr(anova.table, "heading") <-
                 c(paste("Analysis of Deviance Table\n\n",
-                        "Response: ", deparse(object$call$outcome, 500), "\n", sep = ""),
+                        "Response: ", 
+                        deparse(object$call$outcome, 500), "\n", sep = ""),
                   paste("Model ", format(seq(models)), ": ", variables,
                         sep = "", collapse = "\n"))
             return(anova.table)
@@ -141,9 +143,12 @@ anova.BTm <- function (object, ..., dispersion = NULL, test = NULL)
                           sigma.fixed = object$sigma.fixed)
             class(fit) <- oldClass(object)
             ind <- (varseq == i)[varseq <= i]
-            trystat <- try(t(coef(fit)[ind]) %*%
-                           chol2inv(chol(suppressMessages(vcov(fit, dispersion = dispersion))[ind, ind])) %*%
-                           coef(fit)[ind], silent = TRUE) #vcov should deal with dispersion != 1
+            trystat <- 
+                try(t(coef(fit)[ind]) %*%
+                        chol2inv(chol(suppressMessages(
+                            #vcov should deal with dispersion != 1
+                            vcov(fit, dispersion = dispersion))[ind, ind])) %*%
+                        coef(fit)[ind], silent = TRUE) 
             if (inherits(trystat, "try-error")) {
                 stat[i] <- df[i] <- NA
                 tryerror <- TRUE
@@ -155,8 +160,9 @@ anova.BTm <- function (object, ..., dispersion = NULL, test = NULL)
         }
     }
     ind <- varseq == nvars
-    trystat <- try(t(coef(object)[ind]) %*% chol2inv(chol(object$varFix[ind, ind])) %*%
-                   coef(object)[ind], silent = TRUE)
+    trystat <- try(t(coef(object)[ind]) %*% 
+                       chol2inv(chol(object$varFix[ind, ind])) %*%
+                       coef(object)[ind], silent = TRUE)
     if (inherits(trystat, "try-error")) {
         stat[nvars] <- df[nvars] <- NA
         tryerror <- TRUE
@@ -183,9 +189,11 @@ anova.BTm <- function (object, ..., dispersion = NULL, test = NULL)
         if (test == "F" && df.dispersion == Inf) {
             fam <- object$family$family
             if (fam == "binomial" || fam == "poisson")
-                warning(gettextf("using F test with a %s family is inappropriate",
-                  fam), domain = NA)
-            else warning("using F test with a fixed dispersion is inappropriate")
+                warning(gettextf("using F test with a %s family is ", 
+                                 "inappropriate", fam), domain = NA)
+            else {
+                warning("using F test with a fixed dispersion is inappropriate")
+            }
         }
         table <- switch(test, Chisq = {
             dfs <- table[, "Df"]

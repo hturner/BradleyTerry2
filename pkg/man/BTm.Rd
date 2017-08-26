@@ -5,7 +5,7 @@
 \title{Bradley-Terry Model and Extensions}
 \usage{
 BTm(outcome = 1, player1, player2, formula = NULL, id = "..",
-  separate.ability = NULL, refcat = NULL, family = binomial,
+  separate.ability = NULL, refcat = NULL, family = "binomial",
   data = NULL, weights = NULL, subset = NULL, na.action = NULL,
   start = NULL, etastart = NULL, mustart = NULL, offset = NULL,
   br = FALSE, model = TRUE, x = FALSE, contrasts = NULL, ...)
@@ -45,7 +45,7 @@ specification for the ID factor.}
 \item{family}{a description of the error distribution and link function to
 be used in the model. Only the binomial family is implemented, with
 either\code{"logit"}, \code{"probit"} , or \code{"cauchit"} link. (See
-\code{\link[=family]{family()}} for details of family functions.)}
+\code{\link[stats:family]{stats::family()}} for details of family functions.)}
 
 \item{data}{an optional object providing data required by the model. This
 may be a single data frame of contest-level data or a list of data frames.

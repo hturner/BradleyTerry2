@@ -23,10 +23,9 @@
 #' @keywords datasets
 #' @examples
 #' 
-#' attach(seeds)
-#' 
 #' summary(glmmPQL(cbind(r, n - r) ~ seed + extract,
-#'         random = diag(length(r)),
-#'         family = binomial))
+#'                 random = diag(nrow(seeds)),
+#'                 family = binomial, 
+#'                 data = seeds))
 #' 
 "seeds"

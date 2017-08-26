@@ -24,13 +24,12 @@ Loading required package: Matrix
 > ##  Fit the standard Bradley-Terry model, using the bias-reduced
 > ##  maximum likelihood method:
 > ##
-> attach(flatlizards)
-> result <- rep(1, nrow(contests))
-> BTmodel <- BTm(result, winner, loser, br = TRUE, data = contests)
+> result <- rep(1, nrow(flatlizards$contests))
+> BTmodel <- BTm(result, winner, loser, br = TRUE, data = flatlizards$contests)
 > summary(BTmodel)
 
 Call:
-BTm(outcome = result, player1 = winner, player2 = loser, data = contests, 
+BTm(outcome = result, player1 = winner, player2 = loser, data = flatlizards$contests, 
     br = TRUE)
 
 
@@ -134,13 +133,13 @@ AIC:  196.2
 > ##
 > Whiting.model <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
 +                      head.length[..] + SVL[..], family = binomial,
-+                      data = list(contests, predictors))
++                      data = flatlizards)
 > summary(Whiting.model)
 
 Call:
 BTm(outcome = result, player1 = winner, player2 = loser, formula = ~throat.PC1[..] + 
     throat.PC3[..] + head.length[..] + SVL[..], family = binomial, 
-    data = list(contests, predictors))
+    data = flatlizards)
 
 Deviance Residuals: 
    Min      1Q  Median      3Q     Max  
@@ -170,14 +169,14 @@ Number of Fisher Scoring iterations: 15
 > ##
 > Whiting.model <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
 +                      head.length[..] + SVL[..] + (1|..), sigma = 0,
-+                      sigma.fixed = TRUE, data = list(contests, predictors))
++                      sigma.fixed = TRUE, data = flatlizards)
 > summary(Whiting.model)
 PQL algorithm converged to fixed effects model
 
 Call:
 BTm(outcome = result, player1 = winner, player2 = loser, formula = ~throat.PC1[..] + 
-    throat.PC3[..] + head.length[..] + SVL[..] + (1 | ..), data = list(contests, 
-    predictors), sigma = 0, sigma.fixed = TRUE)
+    throat.PC3[..] + head.length[..] + SVL[..] + (1 | ..), data = flatlizards, 
+    sigma = 0, sigma.fixed = TRUE)
 
 Deviance Residuals: 
    Min      1Q  Median      3Q     Max  
@@ -213,7 +212,7 @@ Number of Fisher Scoring iterations: NA
 > ##
 > Whiting.model2 <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
 +                       head.length[..] + SVL[..] + (1|..),
-+                       data = list(contests, predictors), trace = TRUE)
++                       data = flatlizards, trace = TRUE)
 Iteration 1. Score = 0.1424
 Iteration 2. Score = 0.8836
 Iteration 3. Score = 0.3226
@@ -227,8 +226,8 @@ Iteration 8. Score = 3.962e-07
 Call:
 
 BTm(outcome = result, player1 = winner, player2 = loser, formula = ~throat.PC1[..] + 
-    throat.PC3[..] + head.length[..] + SVL[..] + (1 | ..), data = list(contests, 
-    predictors), trace = TRUE)
+    throat.PC3[..] + head.length[..] + SVL[..] + (1 | ..), data = flatlizards, 
+    trace = TRUE)
 
 Fixed Effects:
                  Estimate Std. Error z value Pr(>|z|)  
@@ -265,7 +264,7 @@ Number of iterations: 8
 > Whiting.model3 <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
 +                       head.length[..] + SVL[..] + (1|..),
 +                       family = binomial(link = "probit"),
-+                       data = list(contests, predictors), trace = TRUE)
++                       data = flatlizards, trace = TRUE)
 Iteration 1. Score = 0.3606
 Iteration 2. Score = 0.799
 Iteration 3. Score = 0.2863
@@ -279,7 +278,7 @@ Call:
 
 BTm(outcome = result, player1 = winner, player2 = loser, formula = ~throat.PC1[..] + 
     throat.PC3[..] + head.length[..] + SVL[..] + (1 | ..), family = binomial(link = "probit"), 
-    data = list(contests, predictors), trace = TRUE)
+    data = flatlizards, trace = TRUE)
 
 Fixed Effects:
                  Estimate Std. Error z value Pr(>|z|)   
@@ -549,4 +548,4 @@ attr(,"weights")
 > 
 > proc.time()
    user  system elapsed 
-  2.032   0.024   2.098 
+  1.836   0.048   1.904 

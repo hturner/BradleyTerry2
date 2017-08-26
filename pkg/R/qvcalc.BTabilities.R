@@ -1,4 +1,5 @@
 #' @method qvcalc BTabilities
+#' @importFrom stats coef vcov
 #' @export
 qvcalc.BTabilities <- function(object, ...){
     vc <- vcov(object)

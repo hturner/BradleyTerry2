@@ -45,22 +45,24 @@
 #' @examples
 #' 
 #' ## The final model in example(flatlizards)
-#' attach(flatlizards)
+#' result <- rep(1, nrow(flatlizards$contests))
 #' Whiting.model3 <- BTm(1, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
 #'                       head.length[..] + SVL[..] + (1|..),
 #'                       family = binomial(link = "probit"),
-#'                       data = list(contests, predictors), trace = TRUE)
+#'                       data = flatlizards, trace = TRUE)
 #' 
 #' ## `new' data for contests between four of the original lizards
 #' ## factor levels must correspond to original levels, but unused levels
 #' ## can be dropped - levels must match rows of predictors
 #' newdata  <- list(contests = data.frame(
 #'                  winner = factor(c("lizard048", "lizard060"),
-#'                  levels = c("lizard006", "lizard011", "lizard048", "lizard060")),
+#'                  levels = c("lizard006", "lizard011", 
+#'                             "lizard048", "lizard060")),
 #'                  loser = factor(c("lizard006", "lizard011"),
-#'                  levels = c("lizard006", "lizard011", "lizard048", "lizard060"))
+#'                  levels = c("lizard006", "lizard011", 
+#'                             "lizard048", "lizard060"))
 #'                  ),
-#'                  predictors = predictors[c(3, 6, 27, 33), ])
+#'                  predictors = flatlizards$predictors[c(3, 6, 27, 33), ])
 #' 
 #' predict(Whiting.model3, level = 1, newdata = newdata)
 #' 
@@ -68,16 +70,18 @@
 #' predict(Whiting.model3, level = 1)[1:2]
 #' 
 #' ## introducing a new lizard
-#' newpred <- rbind(predictors[c(3, 6, 27),
+#' newpred <- rbind(flatlizards$predictors[c(3, 6, 27),
 #'                      c("throat.PC1","throat.PC3", "SVL", "head.length")],
 #'                  c(-5, 1.5, 1, 0.1))
 #' rownames(newpred)[4] <- "lizard059"
 #' 
 #' newdata  <- list(contests = data.frame(
 #'                  winner = factor(c("lizard048", "lizard059"),
-#'                  levels = c("lizard006", "lizard011", "lizard048", "lizard059")),
+#'                  levels = c("lizard006", "lizard011", 
+#'                             "lizard048", "lizard059")),
 #'                  loser = factor(c("lizard006", "lizard011"),
-#'                  levels = c("lizard006", "lizard011", "lizard048", "lizard059"))
+#'                  levels = c("lizard006", "lizard011", 
+#'                             "lizard048", "lizard059"))
 #'                  ),
 #'                  predictors = newpred)
 #' 
@@ -119,7 +123,7 @@
 #'     students[,i] <- factor(students[,i], levels(CEMS$students[,i]))
 #' }
 #' newdata <- list(preferences = 
-#'     data.frame(student = factor(500), # new student id matching 1st rows of `students`
+#'     data.frame(student = factor(500), # new id matching with `students[1,]`
 #'                school1 = factor("London", levels = schools),
 #'                school2 = factor("Paris", levels = schools)),
 #'     students = students,
@@ -154,6 +158,7 @@
 #' ## of BTabilities; the first set are adjust for `WOR` being equal to "yes"
 #' BTabilities(table6.model)
 #' 
+#' @importFrom stats model.matrix na.pass reformulate
 #' @export
 predict.BTm <- function (object, newdata = NULL, 
                          level = ifelse(is.null(object$random), 0, 1),
@@ -165,7 +170,8 @@ predict.BTm <- function (object, newdata = NULL,
         ## need to define X so will work with model terms
         setup <- match(c("player1", "player2", "formula", "id",
                         "separate.ability", "refcat", "weights",
-                        "subset", "offset", "contrasts"), names(object$call), 0L)
+                        "subset", "offset", "contrasts"), names(object$call),
+                       0L)
         setup <- do.call(BTm.setup,
                          c(as.list(object$call)[setup], list(data = newdata)),
                          envir = environment(object$formula))
@@ -195,7 +201,8 @@ predict.BTm <- function (object, newdata = NULL,
                 Z <- matrix(0, nrow(setup$random), nran,
                             dimnames = list(rownames(setup$random),
                             colnames(object$random))) #ranef need names!!
-                ## set to NA for contests with new players (with predictors present)
+                ## set to NA for contests with new players 
+                ## (with predictors present)
                 miss <- !colnames(setup$random) %in% colnames(Z)
                 Z[, colnames(setup$random)[!miss]] <- setup$random[,!miss]
                 if (any(miss)) {

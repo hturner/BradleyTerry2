@@ -65,11 +65,10 @@ of the random effects is known, see Booth and Hobert (1998).
 }
 \examples{
 
-attach(seeds)
-
 seedsModel <- glmmPQL(cbind(r, n - r) ~ seed + extract,
-                      random = diag(length(r)),
-                      family = binomial)
+                      random = diag(nrow(seeds)),
+                      family = binomial,
+                      data = seeds)
 
 pred <- predict(seedsModel, level = 0)
 predTerms <- predict(seedsModel, type = "terms")

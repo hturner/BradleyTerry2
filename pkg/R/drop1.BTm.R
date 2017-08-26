@@ -1,3 +1,4 @@
+#' @importFrom stats coef drop.scope model.matrix formula pchisq pf terms update.formula vcov
 #' @export
 drop1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
                       ...) {
@@ -32,12 +33,13 @@ drop1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
     coefs <- coef(object)
     if (scale == 0) dispersion <- 1
     else dispersion <- scale
-    vc <- vcov(object, dispersion = dispersion) #vcov should deal with dispersion != 1
+    vc <- vcov(object, dispersion = dispersion) #vcov should handle disp != 1
 
-    sTerms <- sapply(strsplit(scope, ":", fixed = TRUE),
-                     function(x) paste(sort(x), collapse = ":"))
+    sTerms <- vapply(strsplit(scope, ":", fixed = TRUE), 
+                     function(x) paste(sort(x), collapse = ":"),
+                     character(1))
     stat <- df <- numeric(length(scope))
-    names(stat) <- names(df) <- as.character(sapply(scope, as.name))
+    names(stat) <- names(df) <- as.character(lapply(scope, as.name))
     tryerror <- FALSE
     for (i in seq(scope)) {
         stt <- paste(sort(strsplit(scope[i], ":")[[1]]), collapse = ":")
@@ -78,9 +80,12 @@ drop1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
         if (df.dispersion == Inf) {
             fam <- object[[1]]$family$family
             if (fam == "binomial" || fam == "poisson")
-                warning(gettextf("using F test with a '%s' family is inappropriate",
+                warning(gettextf("using F test with a '%s' family is ",
+                                 "inappropriate",
                                  fam), domain = NA, call. = FALSE)
-            else warning("using F test with a fixed dispersion is inappropriate")
+            else {
+                warning("using F test with a fixed dispersion is inappropriate")
+            }
         }
         dfs <- table[, "Df"]
         Fvalue <- table[, "Statistic"]/abs(dfs)
