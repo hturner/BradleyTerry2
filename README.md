@@ -3,6 +3,8 @@
 BradleyTerry2
 =============
 
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/BradleyTerry2)](https://cran.r-project.org/package=BradleyTerry2) [![Travis-CI Build Status](https://travis-ci.org/hturner/BradleyTerry2.svg?branch=master)](https://travis-ci.org/hturner/BradleyTerry2)
+
 Specify and fit the Bradley-Terry model, including structured versions in which the parameters are related to explanatory variables through a linear predictor and versions with contest-specific effects, such as a home advantage.
 
 Installation
