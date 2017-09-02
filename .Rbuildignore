@@ -6,3 +6,4 @@ tmp
 ^cran-comments\.md$
 ^\.travis\.yml$
 ^appveyor\.yml$
+^CONDUCT\.md$
