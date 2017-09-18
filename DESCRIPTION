@@ -1,8 +1,9 @@
 Package: BradleyTerry2
 Version: 1.0-7
 Title: Bradley-Terry Models
-Author: Heather Turner and David Firth
-Maintainer: Heather Turner <ht@heatherturner.net>
+Authors@R: c(person("Heather", "Turner", role = c("aut", "cre"),
+                    email = "ht@heatherturner.net"),
+             person("David", "Firth", role = "aut"))
 URL: https://github.com/hturner/BradleyTerry2
 BugReports: https://github.com/hturner/BradleyTerry2/issues
 Description: Specify and fit the Bradley-Terry model, including structured versions in which the parameters are related to explanatory variables through a linear predictor and versions with contest-specific effects, such as a home advantage.
