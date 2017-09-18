@@ -5,6 +5,9 @@ submitted to CRAN at the same time. The CRAN version of BradleyTerry2 (1.0-7)
 will still pass check with qvcalc 0.9-1, but the new version of qvcalc reveals
 a bug in BradleyTerry2 1.0-7 which is fixed in this update.
 
+This update depends on qvcalc 0.9-1 exporting the S3 method qvcalc.default, so
+qvcalc 0.9-1 should be released before BradleyTerry2 1.0-8.
+
 ## Test environments
 
 * Local (with qvcalc 0.9-1 installed)
