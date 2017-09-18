@@ -4,7 +4,7 @@
 \name{citations}
 \alias{citations}
 \title{Statistics Journal Citation Data from Stigler (1994)}
-\format{A 4 by 4 contingency table of citations, cross-classifed by the
+\format{A 4 by 4 contingency table of citations, cross-classified by the
 factors \code{cited} and \code{citing} each with levels \code{Biometrika},
 \code{Comm Statist}, \code{JASA}, and \code{JRSS-B}.}
 \source{

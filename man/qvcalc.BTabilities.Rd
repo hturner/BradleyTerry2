@@ -63,7 +63,7 @@ Firth, D. (2003) Overcoming the reference category problem in the
 presentation of statistical models. \emph{Sociological Methodology}
 \strong{33}, 1--18.
 
-Firth, D. and de Mezezes, R. X. (2004)  Quasi-variances.
+Firth, D. and de Menezes, R. X. (2004)  Quasi-variances.
 \emph{Biometrika} \strong{91}, 65--80.
 
 Menezes, R. X. de (1999)  More useful standard errors for group and factor

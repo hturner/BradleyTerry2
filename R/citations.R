@@ -9,7 +9,7 @@
 #' 
 #' @name citations
 #' @docType data
-#' @format A 4 by 4 contingency table of citations, cross-classifed by the
+#' @format A 4 by 4 contingency table of citations, cross-classified by the
 #' factors `cited` and `citing` each with levels `Biometrika`,
 #' `Comm Statist`, `JASA`, and `JRSS-B`.
 #' @seealso [BTm()]

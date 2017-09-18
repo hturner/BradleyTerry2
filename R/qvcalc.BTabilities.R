@@ -42,7 +42,7 @@
 #' presentation of statistical models. *Sociological Methodology*
 #' **33**, 1--18.
 #' 
-#' Firth, D. and de Mezezes, R. X. (2004)  Quasi-variances.  
+#' Firth, D. and de Menezes, R. X. (2004)  Quasi-variances.  
 #' *Biometrika* **91**, 65--80.  
 #' 
 #' Menezes, R. X. de (1999)  More useful standard errors for group and factor
