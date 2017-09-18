@@ -23,7 +23,7 @@ with the same set of levels as \code{player2}.}
 \item{player2}{an ID factor specifying the second player in each contest,
 with the same set of levels as \code{player2}.}
 
-\item{home.adv}{a formula for the paramter corresponding to the home
+\item{home.adv}{a formula for the parameter corresponding to the home
 advantage effect. If \code{NULL}, no home advantage effect is estimated.}
 
 \item{tie.max}{a formula for the parameter corresponding to the maximum tie
