@@ -1,3 +1,8 @@
+Changes in BradleyTerry2 1.0-8
+==============================
+
+ * fix bug in `qvcalc.BTabilities`
+ 
 Changes in BradleyTerry2 1.0-7
 ==============================
 
