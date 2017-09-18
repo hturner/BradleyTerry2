@@ -8,6 +8,12 @@ a bug in BradleyTerry2 1.0-7 which is fixed in this update.
 This update depends on qvcalc 0.9-1 exporting the S3 method qvcalc.default, so
 qvcalc 0.9-1 should be released before BradleyTerry2 1.0-8.
 
+I could not reproduce the error reported for r-devel-linux-x86_64-debian-clang
+in the package check summary, either using R-hub or a docker container. However
+it may be related to recent changes in `base::deparse`. I have modified 
+`BTabilities` so that it works regardless of whether the `backtick` argument
+to `base::deparse` is `TRUE` or `FALSE`.
+
 ## Test environments
 
 * Local (with qvcalc 0.9-1 installed)

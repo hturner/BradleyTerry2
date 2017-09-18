@@ -96,7 +96,7 @@ BTabilities <-  function (model)
         if (is.null(offset)) offset <- 0
         predvars <- setdiff(seq(ncol(mf)),
                             attr(attr(mf, "terms"), "offset"))
-        predvars <- terms(~ . ,data = mf[, predvars, drop = FALSE])
+        predvars <- reformulate(colnames(mf)[predvars])
         X <- model.matrix(predvars, mf)
         Xmiss <- is.na(rowSums(X)) |  players %in% model$separate.ability
         X[Xmiss, ] <- 0
