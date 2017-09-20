@@ -13,7 +13,7 @@
 
 %%% uncomment for vignette version
 \documentclass[nojss]{jss}
-\newcommand{\pkginfo}{\small \\[12pt]For \pkg{BradleyTerry2} version \Sexpr{packageDescription("BradleyTerry2")[["Version"]]}, \Sexpr{Sys.Date()}\\\url{http://bradleyterry2.r-forge.r-project.org/}\\[-12pt]}
+\newcommand{\pkginfo}{\small \\[12pt]For \pkg{BradleyTerry2} version \Sexpr{packageDescription("BradleyTerry2")[["Version"]]}, \Sexpr{Sys.Date()}\\\url{https://github.com/hturner/BradleyTerry2}\\[-12pt]}
 
 %% need no \usepackage{Sweave.sty}
 
@@ -891,7 +891,156 @@ This work was supported by the UK Engineering and Physical Sciences Research
 Council.
 
 
-\bibliography{BradleyTerry}
+\begin{thebibliography}{22}
+\newcommand{\enquote}[1]{``#1''}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+\providecommand{\eprint}[2][]{\url{#2}}
+
+\bibitem[{Agresti(2002)}]{agre:02}
+Agresti A (2002).
+\newblock \emph{Categorical Data Analysis}.
+\newblock 2nd edition. John Wiley \& Sons.
+
+\bibitem[{Bates \emph{et~al.}(2011)Bates, M\"achler, and Bolker}]{bate:11}
+Bates D, M\"achler M, Bolker B (2011).
+\newblock \emph{\pkg{lme4}: Linear Mixed-Effects Models Using \proglang{S}4
+  Classes}.
+\newblock \proglang{R}~package version~0.999375-42,
+  \urlprefix\url{http://CRAN.R-project.org/package=lme4}.
+
+\bibitem[{B\"ockenholt(2001)}]{bock:01}
+B\"ockenholt U (2001).
+\newblock \enquote{Hierarchical Modeling of Paired Comparison Data.}
+\newblock \emph{Psychological Methods}, \textbf{6}(1), 49--66.
+
+\bibitem[{Bradley(1984)}]{brad:84}
+Bradley RA (1984).
+\newblock \enquote{Paired Comparisons: Some Basic Procedures and Examples.}
+\newblock In PR~Krishnaiah, PK~Sen (eds.), \emph{Nonparametric Methods},
+  volume~4 of \emph{Handbook of Statistics}, pp. 299 -- 326. Elsevier.
+
+\bibitem[{Bradley and Terry(1952)}]{brad:terr:52}
+Bradley RA, Terry ME (1952).
+\newblock \enquote{Rank Analysis of Incomplete Block Designs {I}: {T}he Method
+  of Paired Comparisons.}
+\newblock \emph{Biometrika}, \textbf{39}, 324--45.
+
+\bibitem[{Breslow and Clayton(1993)}]{bres:93}
+Breslow NE, Clayton DG (1993).
+\newblock \enquote{Approximate Inference in Generalized Linear Mixed Models.}
+\newblock \emph{Journal of the American Statistical Association},
+  \textbf{88}(421), 9--25.
+
+\bibitem[{Davidson(1970)}]{davi:70}
+Davidson RR (1970).
+\newblock \enquote{On Extending the {B}radley-{T}erry Model to Accommodate Ties
+  in Paired Comparison Experiments.}
+\newblock \emph{Journal of the American Statistical Association}, \textbf{65},
+  317--328.
+
+\bibitem[{Dittrich \emph{et~al.}(2001)Dittrich, Hatzinger, and
+  Katzenbeisser}]{ditt:01}
+Dittrich R, Hatzinger R, Katzenbeisser W (2001).
+\newblock \enquote{Corrigendum: {M}odelling the Effect of Subject-Specific
+  Covariates in Paired Comparison Studies with an Application to University
+  Rankings.}
+\newblock \emph{Applied Statistics}, \textbf{50}, 247--249.
+
+\bibitem[{Firth(1993)}]{firt:93}
+Firth D (1993).
+\newblock \enquote{Bias Reduction of Maximum Likelihood Estimates.}
+\newblock \emph{Biometrika}, \textbf{80}, 27--38.
+
+\bibitem[{Firth(2005)}]{firt:05}
+Firth D (2005).
+\newblock \enquote{Bradley-Terry Models in \proglang{R}.}
+\newblock \emph{Journal of Statistical Software}, \textbf{12}(1), 1--12.
+\newblock \urlprefix\url{http://www.jstatsoft.org/v12/i01/}.
+
+\bibitem[{Firth(2010)}]{firt:10}
+Firth D (2010).
+\newblock \emph{\pkg{qvcalc}: Quasi-Variances for Factor Effects in Statistical
+  Models}.
+\newblock \proglang{R}~package version~0.8-7,
+  \urlprefix\url{http://CRAN.R-project.org/package=qvcalc}.
+
+\bibitem[{Firth and {de Menezes}(2004)}]{firt:04}
+Firth D, {de Menezes} RX (2004).
+\newblock \enquote{Quasi-Variances.}
+\newblock \emph{Biometrika}, \textbf{91}, 65--80.
+
+\bibitem[{Hatzinger and Dittrich(2012)}]{hatz:12}
+Hatzinger R, Dittrich R (2012).
+\newblock \enquote{\pkg{prefmod}: An \proglang{R} Package for Modeling
+  Preferences Based on Paired Comparisons, Rankings, or Ratings.}
+\newblock \emph{Journal of Statistical Software}, \textbf{48}(10), 1--31.
+\newblock \urlprefix\url{http://www.jstatsoft.org/v48/i10/}.
+
+\bibitem[{Heinze and Schemper(2002)}]{hein:sche:02}
+Heinze G, Schemper M (2002).
+\newblock \enquote{A Solution to the Problem of Separation in Logistic
+  Regression.}
+\newblock \emph{Statistics in Medicine}, \textbf{21}, 2409--2419.
+
+\bibitem[{Ihaka and Gentleman(1996)}]{ihak:gent:96}
+Ihaka R, Gentleman R (1996).
+\newblock \enquote{\proglang{R}: A Language for Data Analysis and Graphics.}
+\newblock \emph{Journal of Computational and Graphical Statistics},
+  \textbf{5}(3), 299--314.
+
+\bibitem[{Kosmidis(2007)}]{kosm:07}
+Kosmidis I (2007).
+\newblock \emph{\pkg{brglm}: Bias Reduction in Binary-Response GLMs}.
+\newblock \proglang{R}~package version~0.5-6,
+  \urlprefix\url{http://www.ucl.ac.uk/~ucakiko/software.html}.
+
+\bibitem[{Rao and Kupper(1967)}]{rao:kupp:67}
+Rao PV, Kupper LL (1967).
+\newblock \enquote{Ties in Paired-Comparison Experiments: {A} Generalization of
+  the {B}radley-{T}erry Model.}
+\newblock \emph{Journal of the American Statistical Association}, \textbf{62},
+  194--204.
+
+\bibitem[{{\proglang{R} Development Core Team}(2012)}]{R}
+{\proglang{R} Development Core Team} (2012).
+\newblock \emph{\proglang{R}: A Language and Environment for Statistical
+  Computing}.
+\newblock \proglang{R} Foundation for Statistical Computing, Vienna, Austria.
+\newblock {ISBN} 3-900051-07-0, \urlprefix\url{http://www.R-project.org/}.
+
+\bibitem[{Sham and Curtis(1995)}]{sham:curt:95}
+Sham PC, Curtis D (1995).
+\newblock \enquote{An Extended Transmission/Disequilibrium Test ({TDT}) for
+  Multi-Allele Marker Loci.}
+\newblock \emph{Annals of Human Genetics}, \textbf{59}(3), 323--336.
+
+\bibitem[{Stigler(1994)}]{stig:94}
+Stigler S (1994).
+\newblock \enquote{Citation Patterns in the Journals of Statistics and
+  Probability.}
+\newblock \emph{Statistical Science}, \textbf{9}, 94--108.
+
+\bibitem[{Turner and Firth(2012)}]{turn:12}
+Turner H, Firth D (2012).
+\newblock \enquote{Bradley-Terry Models in \proglang{R}: The
+  \pkg{BradleyTerry2} Package.}
+\newblock \emph{Journal of Statistical Software}, \textbf{48}(9), 1--21.
+\newblock \urlprefix\url{http://www.jstatsoft.org/v48/i09/}.
+
+\bibitem[{Whiting \emph{et~al.}({2006})Whiting, Stuart-Fox, O'Connor, Firth,
+  Bennett, and Blomberg}]{whit:06}
+Whiting MJ, Stuart-Fox DM, O'Connor D, Firth D, Bennett NC, Blomberg SP
+  ({2006}).
+\newblock \enquote{{Ultraviolet Signals Ultra-Aggression in a Lizard}.}
+\newblock \emph{Animal Behaviour}, \textbf{{72}}, 353--363.
+
+\end{thebibliography}
 
 \end{document}
 
