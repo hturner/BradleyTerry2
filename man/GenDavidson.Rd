@@ -4,8 +4,9 @@
 \alias{GenDavidson}
 \title{Specify a Generalised Davidson Term in a gnm Model Formula}
 \usage{
-GenDavidson(win, tie, loss, player1, player2, home.adv = NULL, tie.max = ~1,
-  tie.mode = NULL, tie.scale = NULL, at.home1 = NULL, at.home2 = NULL)
+GenDavidson(win, tie, loss, player1, player2, home.adv = NULL,
+  tie.max = ~1, tie.mode = NULL, tie.scale = NULL, at.home1 = NULL,
+  at.home2 = NULL)
 }
 \arguments{
 \item{win}{a logical vector: \code{TRUE} if player1 wins, \code{FALSE}

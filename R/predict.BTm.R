@@ -23,8 +23,8 @@
 #' @param type the type of prediction required.  The default is on the scale of
 #' the linear predictors; the alternative `"response"` is on the scale of
 #' the response variable. Thus for a default Bradley-Terry model the default
-#' predictions are of log-odds (probabilities on logit scale) and `type =
-#' "response"`` gives the predicted probabilities. The `"terms"` option
+#' predictions are of log-odds (probabilities on logit scale) and 
+#' `type = "response"` gives the predicted probabilities. The `"terms"` option
 #' returns a matrix giving the fitted values of each term in the model formula
 #' on the linear predictor scale (fixed effects only).
 #' @param se.fit logical switch indicating if standard errors are required.

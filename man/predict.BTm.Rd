@@ -5,9 +5,9 @@
 \title{Predict Method for Bradley-Terry Models}
 \usage{
 \method{predict}{BTm}(object, newdata = NULL,
-  level = ifelse(is.null(object$random), 0, 1), type = c("link", "response",
-  "terms"), se.fit = FALSE, dispersion = NULL, terms = NULL,
-  na.action = na.pass, ...)
+  level = ifelse(is.null(object$random), 0, 1), type = c("link",
+  "response", "terms"), se.fit = FALSE, dispersion = NULL,
+  terms = NULL, na.action = na.pass, ...)
 }
 \arguments{
 \item{object}{a fitted object of class \code{"BTm"}}
@@ -25,7 +25,8 @@ for a fixed effects model, \code{1} otherwise.}
 \item{type}{the type of prediction required.  The default is on the scale of
 the linear predictors; the alternative \code{"response"} is on the scale of
 the response variable. Thus for a default Bradley-Terry model the default
-predictions are of log-odds (probabilities on logit scale) and \code{type = "response"`` gives the predicted probabilities. The}"terms"` option
+predictions are of log-odds (probabilities on logit scale) and
+\code{type = "response"} gives the predicted probabilities. The \code{"terms"} option
 returns a matrix giving the fitted values of each term in the model formula
 on the linear predictor scale (fixed effects only).}
 

@@ -4,7 +4,8 @@
 \alias{glmmPQL.control}
 \title{Control Aspects of the glmmPQL Algorithm}
 \usage{
-glmmPQL.control(maxiter = 50, IWLSiter = 10, tol = 1e-06, trace = FALSE)
+glmmPQL.control(maxiter = 50, IWLSiter = 10, tol = 1e-06,
+  trace = FALSE)
 }
 \arguments{
 \item{maxiter}{the maximum number of outer iterations.}

@@ -5,8 +5,8 @@
 \alias{drop1.BTm}
 \title{Add or Drop Single Terms to/from a Bradley Terry Model}
 \usage{
-\method{add1}{BTm}(object, scope, scale = 0, test = c("none", "Chisq", "F"),
-  x = NULL, ...)
+\method{add1}{BTm}(object, scope, scale = 0, test = c("none", "Chisq",
+  "F"), x = NULL, ...)
 }
 \arguments{
 \item{object}{a fitted object of class inheriting from \code{"BTm"}.}
