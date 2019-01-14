@@ -212,11 +212,11 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
     if (setup$saturated)
         warning("Player ability saturated - equivalent to fitting ",
                 "separate abilities.")
-    if (ncol(setup$Y) == 2){
+    if (NCOL(setup$Y) == 2){
         denom <- rowSums(setup$Y)
         y <- setup$Y[,1]/denom
         w <- setup$weights*denom
-    }
+    } else y <- setup$Y
     mf <- cbind(data.frame(y = y), setup$X)
     formula <- y ~ . - 1
     argPos <- match(c("na.action", "start", "etastart",

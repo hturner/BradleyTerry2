@@ -8,9 +8,7 @@ BTm.setup <- function(player1, player2 = NULL, outcome = 1, formula = NULL,
                                    deparse(substitute(player2)))
         if (!length(keep)) keep <- FALSE
         ## save row names for checking against index variables (in Diff)
-        data[keep] <- lapply(data[keep], as.data.frame)
-        if (!all(vapply(data[!keep], inherits, logical(1), "data.frame")))
-            stop("unnamed elements of 'data' should be data.frames")
+        data <- lapply(data, as.data.frame)
         nm <- lapply(data, rownames)
         data <- c(data[keep], unlist(unname(data[!keep]), recursive = FALSE))
         if (any(dup <- duplicated(names(data))))
