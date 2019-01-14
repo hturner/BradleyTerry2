@@ -16,23 +16,36 @@ test_teams <- c("Milwaukee", "Detroit")
 all_teams <- levels(baseball$home.team)
 
 test_that("predict `type = ability` works for standard BT", {
+    # single player specified as factor
     test1 <- list(player1 = factor(test_teams, levels = all_teams))
     
     pred <- predict(baseballModel1, newdata = test1, type = "ability", 
                     se.fit = TRUE)
     abilities <- BTabilities(baseballModel1)
-    expect_equal(pred$fit, BTabilities(baseballModel1)[test_teams, "ability"],
+    expect_equal(pred$fit, abilities[test_teams, "ability"],
                  check.attributes = FALSE)
-    expect_equal(pred$se, BTabilities(baseballModel1)[test_teams, "s.e."],
+    expect_equal(pred$se, abilities[test_teams, "s.e."],
                  check.attributes = FALSE)
     
+    # single player specified as data frame
     test2 <- data.frame(home.team = factor(test_teams, levels = all_teams))
     
     pred2 <- predict(baseballModel1, newdata = test2, type = "ability", 
                      se.fit = TRUE)
-    expect_equal(pred2$fit, BTabilities(baseballModel1)[test_teams, "ability"],
+    expect_equal(pred2$fit, abilities[test_teams, "ability"],
                  check.attributes = FALSE)
-    expect_equal(pred2$se, BTabilities(baseballModel1)[test_teams, "s.e."],
+    expect_equal(pred2$se, abilities[test_teams, "s.e."],
+                 check.attributes = FALSE)
+    
+    # both players in new contests
+    test3 <- data.frame(home.team = factor(test_teams, levels = all_teams),
+                        away.team = factor(rev(test_teams), levels = all_teams))
+    
+    pred3 <- predict(baseballModel1, newdata = test3, type = "ability", 
+                     se.fit = TRUE)
+    expect_equal(pred3$fit$ability, rev(pred3$fit$ability2),
+                 check.attributes = FALSE)
+    expect_equal(pred3$se.fit$ability, rev(pred3$se.fit$ability2),
                  check.attributes = FALSE)
 })
 

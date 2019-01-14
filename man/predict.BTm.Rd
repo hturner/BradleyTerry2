@@ -31,8 +31,8 @@ i.e. the predicted probability that the first player wins. The \code{"terms"}
 option returns a matrix giving the fitted values of each term in the model
 formula on the linear predictor scale (fixed effects only). If
 \code{type = "ability"}, the fitted ability for each player in the contest is
-returned. To predict abilities for individual players, specify \code{newdata}
-with data only for \code{player1} and not for \code{player2}.}
+returned. When predicting abilities with new data, it is valid to specify
+only the first player (or only the second player) in a "contest".}
 
 \item{se.fit}{logical switch indicating if standard errors are required.}
 

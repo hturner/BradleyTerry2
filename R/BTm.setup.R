@@ -26,7 +26,7 @@ BTm.setup <- function(player1, player2 = NULL, outcome = 1, formula = NULL,
     }
     player1 <- withIfNecessary(substitute(player1), data)
     if (ncol(player1) == 1) colnames(player1) <- id
-    if (ncol(player1) == 0) player1 <- data[id]
+    if (ncol(player1) == 0) player1 <- NULL
     player2 <- withIfNecessary(substitute(player2), data)
     if (ncol(player2) == 1) colnames(player2) <- id
     if (ncol(player2) == 0) player2 <- NULL

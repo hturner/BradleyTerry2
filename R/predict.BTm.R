@@ -28,8 +28,8 @@
 #' option returns a matrix giving the fitted values of each term in the model
 #' formula on the linear predictor scale (fixed effects only). If 
 #' `type = "ability"`, the fitted ability for each player in the contest is 
-#' returned. To predict abilities for individual players, specify `newdata` 
-#' with data only for `player1` and not for `player2`.
+#' returned. When predicting abilities with new data, it is valid to specify 
+#' only the first player (or only the second player) in a "contest".
 #' @param se.fit logical switch indicating if standard errors are required.
 #' @param dispersion a value for the dispersion, not used for models with
 #' random effects. If omitted, that returned by `summary` applied to the
@@ -206,61 +206,27 @@ predict.BTm <- function (object,
         if (is.null(player1)) stop ("Cannot identify player 1 from `newdata`.")
         if (is.null(player2) & type != "ability")
             stop("`newdata` must specify both players for `type != \"ability\"`")
-        if (!is.null(player2) & type == "ability")
-            stop("player2 should not be specified in `newdata` ",
-                "for `type = ability`")
-        if (type == "ability") type <- "link"
-        setup <- do.call(BTm.setup,
-                         list(player1 = player1,
-                              player2 = player2,
-                              formula = formula(object),
-                              id = object$id,
-                              separate.ability = object$separate.ability,
-                              refcat = object$refcat,
-                              data = newdata, #[setdiff(names(newdata),
-                                               #      c("player1", "player2"))],
-                              weights = object$weights,
-                              offset = NULL, # only makes sense to add offset to full predictor
-                              contrasts = object$contrasts),
-                         envir = parent.frame())
-        nfix <- length(object$coefficients)
-        newdata <- data.frame(matrix(nrow = nrow(setup$X), ncol = 0))
-        keep <- match(names(object$coefficients), colnames(setup$X),
-                      nomatch = 0)
-        if (0 %in% keep){
-            ## new players with missing data - set to NA
-            missing <- rowSums(setup$X[,-keep, drop = FALSE]) != 0
-            setup$X <- setup$X[, keep]
-            setup$X[missing,] <- NA
-        }
-        if (ncol(setup$X) != nfix) {
-            ## newdata does not include original players with missing data
-            X <- matrix(0, nrow(setup$X), nfix,
-                        dimnames = list(rownames(setup$X),
-                        names(object$coefficients)))
-            X[, colnames(setup$X)] <- setup$X
-            newdata$X <- X
-        }
-        else newdata$X <- setup$X
-        nran <- length(attr(object$coefficients, "random"))
-        if (1 %in% level && !is.null(object$random) && type != "terms"){
-            if (ncol(setup$random) != nran) {
-                ## expand to give col for every random effect
-                Z <- matrix(0, nrow(setup$random), nran,
-                            dimnames = list(rownames(setup$random),
-                            colnames(object$random))) #ranef need names!!
-                ## set to NA for contests with new players 
-                ## (with predictors present)
-                miss <- !colnames(setup$random) %in% colnames(Z)
-                Z[, colnames(setup$random)[!miss]] <- setup$random[,!miss]
-                if (any(miss)) {
-                    miss <- rowSums(setup$random[, miss, drop = FALSE] != 0) > 0
-                    Z[miss,] <- NA
-                }
-                newrandom <- Z
+        if (type == "ability"){
+            type <- "link"
+            ## predict player 1
+            setup <- getXZ(object, player1, NULL, newdata, level, type)
+            newdata <- setup$newdata
+            pred1 <- NextMethod(newrandom = setup$newrandom)
+            if (!is.null(player2)){
+                setup <- getXZ(object, NULL, player2, newdata, level, type)
+                newdata <- setup$newdata
+                pred2 <- NextMethod(newrandom = setup$newrandom)
+                return(list(fit = list(ability = pred1$fit,
+                                       ability2 = pred2$fit),
+                            se.fit = list(ability = pred1$se.fit,
+                                          ability2 = pred2$se.fit)))
+            } else {
+                return(pred1)
             }
-            else newrandom <- setup$random
-            return(NextMethod(newrandom = newrandom))
+        } else {
+            setup <- getXZ(object, player1, NULL, newdata, level, type)
+            newdata <- setup$newdata
+            newrandom <- setup$newrandom
         }
     }
     if (type == "terms") {
@@ -284,5 +250,61 @@ predict.BTm <- function (object,
             c("(separate)"[0 %in% id], object$term.labels)
         return(tmp)
     }
-    NextMethod()
+    NextMethod(newrandom = setup$newrandom)
 }
+
+getXZ <- function(object, player1, player2, newdata, level, type){
+    setup <- do.call(BTm.setup,
+                     list(player1 = player1,
+                          player2 = player2,
+                          formula = formula(object),
+                          id = object$id,
+                          separate.ability = object$separate.ability,
+                          refcat = object$refcat,
+                          data = newdata, 
+                          weights = object$weights,
+                          offset = NULL, # only makes sense to add offset to full predictor
+                          contrasts = object$contrasts),
+                     envir = parent.frame())
+    newdata <- data.frame(matrix(nrow = nrow(setup$X), ncol = 0))
+    # define fixed effects
+    nfix <- length(object$coefficients)
+    keep <- match(names(object$coefficients), colnames(setup$X),
+                  nomatch = 0)
+    if (0 %in% keep){
+        ## new players with missing data - set to NA
+        missing <- rowSums(setup$X[,-keep, drop = FALSE]) != 0
+        setup$X <- setup$X[, keep]
+        setup$X[missing,] <- NA
+    }
+    if (ncol(setup$X) != nfix) {
+        ## newdata does not include original players with missing data
+        X <- matrix(0, nrow(setup$X), nfix,
+                    dimnames = list(rownames(setup$X),
+                                    names(object$coefficients)))
+        X[, colnames(setup$X)] <- setup$X
+        newdata$X <- X
+    } else newdata$X <- setup$X
+    # define random effects if necessary
+    nran <- length(attr(object$coefficients, "random"))
+    if (1 %in% level && !is.null(object$random) && type != "terms"){
+        if (ncol(setup$random) != nran) {
+            ## expand to give col for every random effect
+            Z <- matrix(0, nrow(setup$random), nran,
+                        dimnames = list(rownames(setup$random),
+                                        colnames(object$random))) #ranef need names!!
+            ## set to NA for contests with new players 
+            ## (with predictors present)
+            miss <- !colnames(setup$random) %in% colnames(Z)
+            Z[, colnames(setup$random)[!miss]] <- setup$random[,!miss]
+            if (any(miss)) {
+                miss <- rowSums(setup$random[, miss, drop = FALSE] != 0) > 0
+                Z[miss,] <- NA
+            }
+            return(list(newdata = newdata, newrandom = Z))
+        } else return(list(newdata = newdata, newrandom = setup$random))
+    }
+
+    return(list(newdata = newdata, newrandom = NULL))
+}
+    

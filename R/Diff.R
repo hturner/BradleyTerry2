@@ -1,11 +1,11 @@
 #' @importFrom stats is.empty.model model.frame model.matrix model.offset na.omit na.pass reformulate relevel terms
-Diff <- function(player1, player2 = NULL, formula = NULL, id = "..", data = NULL,
+Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
                  separate.ability = NULL, refcat = NULL, contrasts = NULL,
                  subset = NULL) {
     player.one <- player1[[id]]
+    player.two <- player2[[id]]
     
-    if (!is.null(player2)){
-        player.two <- player2[[id]]
+    if (!is.null(player1) && !is.null(player2)){
         if (!is.factor(player.one) || !is.factor(player.two) ||
             !identical(levels(player.one), levels(player.two)))
             stop("'player1$", id, "' and 'player2$", id,
@@ -14,8 +14,14 @@ Diff <- function(player1, player2 = NULL, formula = NULL, id = "..", data = NULL
                        attr(player.two, "contrasts")))
             stop("'player1$", id, "' and 'player2$", id,
                  "' must have the same contrasts attribute")
-    } else {
+    } else if (!is.null(player1)){
         if (!is.factor(player.one)) stop("`player1$", id, "`` must be a factor")
+    } else if (!is.null(player2)){
+        if (!is.factor(player.two)) stop("`player2$", id, "`` must be a factor")
+        # act as if it is player1 specified instead
+        player1 <- player2
+        player.one <- player.two
+        player2 <- player.two <- NULL
     }
     
     if(is.null(formula)) formula <- reformulate(id)
