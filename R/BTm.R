@@ -200,7 +200,7 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
         stop("link for binomial family must be one of \"logit\", \"probit\"",
              "or \"cauchit\"")
     fcall <- as.list(match.call(expand.dots = FALSE))
-    setup <- match(c("outcome", "player1", "player2", "formula", "id",
+    setup <- match(c("player1", "player2", "outcome", "formula", "id",
                      "separate.ability", "refcat", "data", "weights",
                      "subset", "offset", "contrasts"), names(fcall), 0L)
     if (is.null(formula)) env <- parent.frame()

@@ -6,27 +6,30 @@
 #' If `newdata` is omitted the predictions are based on the data used for
 #' the fit.  In that case how cases with missing values in the original fit are
 #' treated is determined by the `na.action` argument of that fit.  If
-#' `na.action = na.omit` omitted cases will not appear in the residuals,
+#' `na.action = na.omit` omitted cases will not appear,
 #' whereas if `na.action = na.exclude` they will appear (in predictions
-#' and standard errors), with residual value `NA`.  See also
-#' `napredict`.
+#' and standard errors), with value `NA`.  See also `[napredict()]`.
 #' 
 #' @param object a fitted object of class `"BTm"`
-#' @param newdata (optional) a data frame in which to look for variables with
-#' which to predict.  If omitted, the fitted linear predictors are used.
+#' @param newdata (optional) a single data frame of contest-level data or a 
+#' list of data frames in which to look for variables with which to predict.  
+#' If omitted, the fitted linear predictors are used.
 #' @param level for models with random effects: an integer vector giving the
 #' level(s) at which predictions are required. Level zero corresponds to
 #' population-level predictions (fixed effects only), whilst level one
 #' corresponds to the player-level predictions (full model) which are NA for
 #' contests involving players not in the original data. By default, `level = 0`
 #' for a fixed effects model, `1` otherwise.
-#' @param type the type of prediction required.  The default is on the scale of
-#' the linear predictors; the alternative `"response"` is on the scale of
-#' the response variable. Thus for a default Bradley-Terry model the default
-#' predictions are of log-odds (probabilities on logit scale) and 
-#' `type = "response"` gives the predicted probabilities. The `"terms"` option
-#' returns a matrix giving the fitted values of each term in the model formula
-#' on the linear predictor scale (fixed effects only).
+#' @param type the type of prediction required.  The default `"link"`is to 
+#' predict contest outcomes on the scale of the linear predictors, i.e. the 
+#' log-odds (probabilities on logit scale) that the first player wins. The 
+#' alternative `"response"` is on the scale of the binomial response variable, 
+#' i.e. the predicted probability that the first player wins. The `"terms"` 
+#' option returns a matrix giving the fitted values of each term in the model
+#' formula on the linear predictor scale (fixed effects only). If 
+#' `type = "ability"`, the fitted ability for each player in the contest is 
+#' returned. To predict abilities for individual players, specify `newdata` 
+#' with data only for `player1` and not for `player2`.
 #' @param se.fit logical switch indicating if standard errors are required.
 #' @param dispersion a value for the dispersion, not used for models with
 #' random effects. If omitted, that returned by `summary` applied to the
@@ -160,23 +163,68 @@
 #' 
 #' @importFrom stats model.matrix na.pass reformulate
 #' @export
-predict.BTm <- function (object, newdata = NULL, 
+predict.BTm <- function (object, 
+                         newdata = NULL, 
                          level = ifelse(is.null(object$random), 0, 1),
-                         type = c("link", "response", "terms"), se.fit = FALSE,
-                         dispersion = NULL, terms = NULL,
+                         type = c("link", "response", "terms", "ability"), 
+                         se.fit = FALSE,
+                         dispersion = NULL,
+                         terms = NULL,
                          na.action = na.pass, ...) {
     type <- match.arg(type)
+    # type = "ability" ends up equivalent to type = "link"
+    if (type == "ability"){
+        if (is.null(newdata)){
+            # TODO::define newdata based on original model, 
+            # will need to set type <- "link"
+            stop("not yet implemented")
+        }
+    }
     if (!is.null(newdata)) {
-        ## need to define X so will work with model terms
-        setup <- match(c("player1", "player2", "formula", "id",
-                        "separate.ability", "refcat", "weights",
-                        "subset", "offset", "contrasts"), names(object$call),
-                       0L)
+        # need to define X so will work with model terms
+        ## use player1 (and player2) elements from newdata
+        player1 <- newdata$player1
+        player2 <- newdata$player2
+        if (is.null(player1) & is.null(player2)){
+            getPlayer<- function(data, name){
+                if (is.data.frame(data)) return(data[[name]])
+                for (i in seq_along(data)){
+                    x <- data[[i]][[name]]
+                    if (!is.null(x)) return(x)
+                }
+                x
+            }
+            # use names from original call to identify player1 and player2
+            player1 <- getPlayer(newdata, deparse(object$call$player1))
+            if (!is.null(player1)){
+                player2 <- getPlayer(newdata, deparse(object$call$player2))
+            } else {
+                # use id to identify player 1, can only be one player
+                player1 <- getPlayer(newdata, object$id)
+            }
+        }
+        if (is.null(player1)) stop ("Cannot identify player 1 from `newdata`.")
+        if (is.null(player2) & type != "ability")
+            stop("`newdata` must specify both players for `type != \"ability\"`")
+        if (!is.null(player2) & type == "ability")
+            stop("player2 should not be specified in `newdata` ",
+                "for `type = ability`")
+        if (type == "ability") type <- "link"
         setup <- do.call(BTm.setup,
-                         c(as.list(object$call)[setup], list(data = newdata)),
-                         envir = environment(object$formula))
+                         list(player1 = player1,
+                              player2 = player2,
+                              formula = formula(object),
+                              id = object$id,
+                              separate.ability = object$separate.ability,
+                              refcat = object$refcat,
+                              data = newdata, #[setdiff(names(newdata),
+                                               #      c("player1", "player2"))],
+                              weights = object$weights,
+                              offset = NULL, # only makes sense to add offset to full predictor
+                              contrasts = object$contrasts),
+                         envir = parent.frame())
         nfix <- length(object$coefficients)
-        newdata <- data.frame(matrix(, nrow(setup$X), 0))
+        newdata <- data.frame(matrix(nrow = nrow(setup$X), ncol = 0))
         keep <- match(names(object$coefficients), colnames(setup$X),
                       nomatch = 0)
         if (0 %in% keep){
@@ -222,7 +270,7 @@ predict.BTm <- function (object, newdata = NULL,
         terms <- paste("X", id, sep = "")
         object$terms <- terms(reformulate(c(0, terms)))
         splitX <- function(X) {
-            newdata <- data.frame(matrix(, nrow(X), 0))
+            newdata <- data.frame(matrix(nrow = nrow(X), ncol = 0))
             for (i in seq(id))
                 newdata[terms[i]] <- X[,object$assign == id[i]]
             newdata
@@ -236,5 +284,5 @@ predict.BTm <- function (object, newdata = NULL,
             c("(separate)"[0 %in% id], object$term.labels)
         return(tmp)
     }
-    else NextMethod()
+    NextMethod()
 }

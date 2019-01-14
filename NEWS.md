@@ -1,3 +1,9 @@
+Development
+===========
+
+ * add `type = "ability"` to `predict.BTm()` to allow prediction of abilties in 
+   more complex models.
+ 
 Changes in BradleyTerry2 1.0-8
 ==============================
 
