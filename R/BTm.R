@@ -200,22 +200,25 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
         stop("link for binomial family must be one of \"logit\", \"probit\"",
              "or \"cauchit\"")
     fcall <- as.list(match.call(expand.dots = FALSE))
+    if (is.null(formula)) {
+        formula <- reformulate(id)
+        environment(formula) <- parent.frame()
+        fcall$formula <- formula
+    }
     setup <- match(c("player1", "player2", "outcome", "formula", "id",
                      "separate.ability", "refcat", "data", "weights",
                      "subset", "offset", "contrasts"), names(fcall), 0L)
-    if (is.null(formula)) env <- parent.frame()
-    else env <- environment(formula)
-    setup <- do.call(BTm.setup, fcall[setup], envir = env)
+    setup <- do.call(BTm.setup, fcall[setup], envir = parent.frame())
     if (setup$saturated)
         warning("Player ability saturated - equivalent to fitting ",
                 "separate abilities.")
-    mf <- data.frame(X = setup$player1) #just to get length
-    if (!is.null(setup$X)) {
-        mf$X <- setup$X
-        formula <- Y ~ X - 1
+    if (ncol(setup$Y) == 2){
+        denom <- rowSums(setup$Y)
+        y <- setup$Y[,1]/denom
+        w <- setup$weights*denom
     }
-    else formula <- Y ~ 0
-    mf$Y <- setup$Y
+    mf <- cbind(data.frame(y = y), setup$X)
+    formula <- y ~ . - 1
     argPos <- match(c("na.action", "start", "etastart",
                       "mustart", "control", "model", "x"), names(fcall), 0)
     dotArgs <- fcall$"..."
@@ -254,10 +257,7 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
         }
     }
     if (length(fit$coefficients)) {
-        if (ncol(setup$X) > 1)
-            names(fit$coefficients) <- substring(names(fit$coefficients), 2)
-        else
-            names(fit$coefficients) <- colnames(setup$X)
+        names(fit$coefficients) <- colnames(setup$X)
         fit$assign <- attr(setup$X, "assign")
     }
     fit$call <- call

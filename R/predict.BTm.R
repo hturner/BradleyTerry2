@@ -172,37 +172,40 @@ predict.BTm <- function (object,
                          terms = NULL,
                          na.action = na.pass, ...) {
     type <- match.arg(type)
-    # type = "ability" ends up equivalent to type = "link"
-    if (type == "ability"){
+    if (!is.null(newdata) | type == "ability") {
+        # identify player1 and player2
         if (is.null(newdata)){
-            # TODO::define newdata based on original model, 
-            # will need to set type <- "link"
-            stop("not yet implemented")
-        }
-    }
-    if (!is.null(newdata)) {
-        # need to define X so will work with model terms
-        ## use player1 (and player2) elements from newdata
-        player1 <- newdata$player1
-        player2 <- newdata$player2
-        if (is.null(player1) & is.null(player2)){
-            getPlayer<- function(data, name){
-                if (is.data.frame(data)) return(data[[name]])
-                for (i in seq_along(data)){
-                    x <- data[[i]][[name]]
-                    if (!is.null(x)) return(x)
+            # use original player1 and player2
+            player1 <- object$player1
+            player2 <- object$player2
+            newdata <- object$data
+        } else{
+            # use player1 (and player2) elements from newdata
+            player1 <- newdata$player1
+            player2 <- newdata$player2
+            # if both NULL, should be in newdata named as in original call/by id
+            if (is.null(player1) & is.null(player2)){
+                getPlayer<- function(data, name){
+                    if (is.data.frame(data)) return(data[[name]])
+                    for (i in seq_along(data)){
+                        x <- data[[i]][[name]]
+                        if (!is.null(x)) return(x)
+                    }
+                    x
                 }
-                x
-            }
-            # use names from original call to identify player1 and player2
-            player1 <- getPlayer(newdata, deparse(object$call$player1))
-            if (!is.null(player1)){
-                player2 <- getPlayer(newdata, deparse(object$call$player2))
-            } else {
-                # use id to identify player 1, can only be one player
-                player1 <- getPlayer(newdata, object$id)
+                # use names from original call to identify player1 and player2
+                player1 <- getPlayer(newdata, deparse(object$call$player1))
+                if (!is.null(player1)){
+                    player2 <- getPlayer(newdata, deparse(object$call$player2))
+                } else {
+                    # use id to identify player 1, can only be one player
+                    player1 <- getPlayer(newdata, object$id)
+                }
             }
         }
+        # need to define X so will work with model terms
+        
+        
         if (is.null(player1)) stop ("Cannot identify player 1 from `newdata`.")
         if (is.null(player2) & type != "ability")
             stop("`newdata` must specify both players for `type != \"ability\"`")
@@ -210,12 +213,12 @@ predict.BTm <- function (object,
             type <- "link"
             ## predict player 1
             setup <- getXZ(object, player1, NULL, newdata, level, type)
-            newdata <- setup$newdata
-            pred1 <- NextMethod(newrandom = setup$newrandom)
+            pred1 <- NextMethod(newdata = setup$newdata, 
+                                newrandom = setup$newrandom)
             if (!is.null(player2)){
                 setup <- getXZ(object, NULL, player2, newdata, level, type)
-                newdata <- setup$newdata
-                pred2 <- NextMethod(newrandom = setup$newrandom)
+                pred2 <- NextMethod(newdata = setup$newdata, 
+                                    newrandom = setup$newrandom)
                 return(list(fit = list(ability = pred1$fit,
                                        ability2 = pred2$fit),
                             se.fit = list(ability = pred1$se.fit,
@@ -283,8 +286,8 @@ getXZ <- function(object, player1, player2, newdata, level, type){
                     dimnames = list(rownames(setup$X),
                                     names(object$coefficients)))
         X[, colnames(setup$X)] <- setup$X
-        newdata$X <- X
-    } else newdata$X <- setup$X
+        newdata <- as.data.frame(X, check.names = FALSE)
+    } else newdata <- as.data.frame(setup$X, check.names = FALSE)
     # define random effects if necessary
     nran <- length(attr(object$coefficients, "random"))
     if (1 %in% level && !is.null(object$random) && type != "terms"){

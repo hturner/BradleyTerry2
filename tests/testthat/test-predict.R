@@ -5,6 +5,15 @@ data(baseball)
 baseballModel1 <- BTm(cbind(home.wins, away.wins), home.team, away.team,
                       data = baseball, id = "team")
 
+# Same but get data from environment
+f <- function(){
+    results <- with(baseball, cbind(home.wins, away.wins))
+    home.team <- baseball$home.team
+    away.team <- baseball$away.team
+    BTm(results, home.team, away.team, id = "team")
+}
+baseballModel1b <- f()
+
 # BT model with home advantage (don't rely on names in call)
 baseballModel2 <- update(baseballModel1, 
                          player1 = data.frame(team = baseball$home.team, at.home = 1),
@@ -46,6 +55,17 @@ test_that("predict `type = ability` works for standard BT", {
     expect_equal(pred3$fit$ability, rev(pred3$fit$ability2),
                  check.attributes = FALSE)
     expect_equal(pred3$se.fit$ability, rev(pred3$se.fit$ability2),
+                 check.attributes = FALSE)
+    
+    # both players in original contests
+    pred4 <- predict(baseballModel1, type = "ability", se.fit = TRUE)
+    expect_equal(pred4$fit$ability, abilities[baseball$home.team, 1],
+                 check.attributes = FALSE)
+    expect_equal(pred4$fit$ability2, abilities[baseball$away.team, 1],
+                 check.attributes = FALSE)
+    expect_equal(pred4$se.fit$ability, abilities[baseball$home.team, 2],
+                 check.attributes = FALSE)
+    expect_equal(pred4$se.fit$ability2, abilities[baseball$away.team, 2],
                  check.attributes = FALSE)
 })
 
