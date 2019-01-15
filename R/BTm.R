@@ -212,11 +212,16 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
     if (setup$saturated)
         warning("Player ability saturated - equivalent to fitting ",
                 "separate abilities.")
+    # broom doesn't currently support glm with matrix response
     if (NCOL(setup$Y) == 2){
         denom <- rowSums(setup$Y)
         y <- setup$Y[,1]/denom
-        w <- setup$weights*denom
-    } else y <- setup$Y
+        w <- denom
+        if (!is.null(setup$weights)) w <- w * setup$weights
+    } else {
+        y <- setup$Y
+        w <- setup$weights
+    }
     mf <- cbind(data.frame(y = y), setup$X)
     formula <- y ~ . - 1
     argPos <- match(c("na.action", "start", "etastart",
@@ -227,7 +232,7 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
         fit <- as.call(c(method, fcall[argPos],
                          list(formula = formula, family = family, data = mf,
                               offset = setup$offset, subset = setup$subset,
-                              weights = setup$weights), dotArgs))
+                              weights = w), dotArgs))
         fit <- eval(fit, parent.frame())
     }
     else {
