@@ -227,7 +227,7 @@ predict.BTm <- function (object,
                 return(pred1)
             }
         } else {
-            setup <- getXZ(object, player1, NULL, newdata, level, type)
+            setup <- getXZ(object, player1, player2, newdata, level, type)
             newdata <- setup$newdata
             newrandom <- setup$newrandom
         }
