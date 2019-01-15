@@ -1,5 +1,5 @@
-#' @importFrom stats model.frame
 #' @export
-model.matrix.BTm <- function(object, ...){
-    model.frame(object)$X
+model.matrix.BTm <- function (object, ...){
+    object$contrasts <- NULL
+    NextMethod()
 }

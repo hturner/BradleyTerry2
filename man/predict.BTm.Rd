@@ -6,14 +6,15 @@
 \usage{
 \method{predict}{BTm}(object, newdata = NULL,
   level = ifelse(is.null(object$random), 0, 1), type = c("link",
-  "response", "terms"), se.fit = FALSE, dispersion = NULL,
+  "response", "terms", "ability"), se.fit = FALSE, dispersion = NULL,
   terms = NULL, na.action = na.pass, ...)
 }
 \arguments{
 \item{object}{a fitted object of class \code{"BTm"}}
 
-\item{newdata}{(optional) a data frame in which to look for variables with
-which to predict.  If omitted, the fitted linear predictors are used.}
+\item{newdata}{(optional) a single data frame of contest-level data or a
+list of data frames in which to look for variables with which to predict.
+If omitted, the fitted linear predictors are used.}
 
 \item{level}{for models with random effects: an integer vector giving the
 level(s) at which predictions are required. Level zero corresponds to
@@ -22,13 +23,16 @@ corresponds to the player-level predictions (full model) which are NA for
 contests involving players not in the original data. By default, \code{level = 0}
 for a fixed effects model, \code{1} otherwise.}
 
-\item{type}{the type of prediction required.  The default is on the scale of
-the linear predictors; the alternative \code{"response"} is on the scale of
-the response variable. Thus for a default Bradley-Terry model the default
-predictions are of log-odds (probabilities on logit scale) and
-\code{type = "response"} gives the predicted probabilities. The \code{"terms"} option
-returns a matrix giving the fitted values of each term in the model formula
-on the linear predictor scale (fixed effects only).}
+\item{type}{the type of prediction required.  The default \code{"link"}is to
+predict contest outcomes on the scale of the linear predictors, i.e. the
+log-odds (probabilities on logit scale) that the first player wins. The
+alternative \code{"response"} is on the scale of the binomial response variable,
+i.e. the predicted probability that the first player wins. The \code{"terms"}
+option returns a matrix giving the fitted values of each term in the model
+formula on the linear predictor scale (fixed effects only). If
+\code{type = "ability"}, the fitted ability for each player in the contest is
+returned. When predicting abilities with new data, it is valid to specify
+only the first player (or only the second player) in a "contest".}
 
 \item{se.fit}{logical switch indicating if standard errors are required.}
 
@@ -57,10 +61,9 @@ a fitted Bradley-Terry model.
 If \code{newdata} is omitted the predictions are based on the data used for
 the fit.  In that case how cases with missing values in the original fit are
 treated is determined by the \code{na.action} argument of that fit.  If
-\code{na.action = na.omit} omitted cases will not appear in the residuals,
+\code{na.action = na.omit} omitted cases will not appear,
 whereas if \code{na.action = na.exclude} they will appear (in predictions
-and standard errors), with residual value \code{NA}.  See also
-\code{napredict}.
+and standard errors), with value \code{NA}.  See also \code{[napredict()]}.
 }
 \examples{
 
