@@ -273,6 +273,7 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
     fit$formula <- setup$formula
     fit$player1 <- setup$player1
     fit$player2 <- setup$player2
+    fit$xlevels <- setup$xlevels
     fit$term.labels <- setup$term.labels
     fit$data <- setup$data
     fit$random <- setup$random

@@ -1,6 +1,7 @@
 Development
 ===========
 
+ * add `BTcontrasts()` and `contrast.BTm()` to assist with computation of general linear contrasts.
  * add `type = "ability"` to `predict.BTm()` to allow prediction of abilities in 
    more complex models.
  * make `BTm` objects compatible with `broom::augment()`.

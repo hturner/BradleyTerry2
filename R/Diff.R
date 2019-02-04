@@ -24,7 +24,7 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
         player2 <- player.two <- NULL
     }
     
-    if(is.null(formula)) formula <- reformulate(id)
+    if (is.null(formula))  formula <- reformulate(id)
     players <- levels(player.one)
     nplayers <- nlevels(player.one)
     ncontests <- length(player.one)
@@ -147,7 +147,9 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
         if (!is.null(random))
             random <- D[,!sep[[id]], drop = FALSE]
     }
-    list(X = X, random = random, offset = offset,
+    xlev <- list(levels(mf1[[id]]))
+    names(xlev) <- id
+    list(X = X, random = random, offset = offset, xlevels = xlev,
          term.labels = term.labels, refcat = refcat, contrasts = contrasts,
          saturated = saturated)
 }
