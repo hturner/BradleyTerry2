@@ -36,7 +36,7 @@
 #' 
 #' Firth, D. (2000)  Quasi-variances in Xlisp-Stat and on the web.  
 #' *Journal of Statistical Software* **5.4**, 1--13.  
-#' At http://www.jstatsoft.org
+#' \url{https://www.jstatsoft.org/article/view/v005i04}.
 #' 
 #' Firth, D. (2003) Overcoming the reference category problem in the 
 #' presentation of statistical models. *Sociological Methodology*

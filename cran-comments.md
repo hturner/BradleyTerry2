@@ -1,31 +1,28 @@
 ## General comments
 
-This is a minor update to be compatible with qvcalc 0.9-1. The CRAN version of 
-BradleyTerry2 (1.0-7) still passes check with qvcalc 0.9-1, but the new version
-of qvcalc reveals a bug in BradleyTerry2 1.0-7 which is fixed in this update.
+This is a minor update to address a bug revealed by R-devel NEWS item
 
-This update depends on qvcalc 0.9-1 exporting the S3 method qvcalc.default, so
-qvcalc 0.9-1 must be installed for BradleyTerry2 1.0-8 to pass check.
-
-I could not reproduce the error reported for r-devel-linux-x86_64-debian-clang
-in the package check summary, either using R-hub or a docker container. However
-it may be related to recent changes in `base::deparse`. I have modified 
-`BTabilities` so that it works regardless of whether the `backtick` argument
-to `base::deparse` is `TRUE` or `FALSE`.
-
-Similarly I could not reproduce the note reported for r-oldrel-osx-x86_64 on 
-R-hub or on a friend's Mac and got no response to a query on R-package-devel. 
-The note seems to be associated with having to run BibTex on the vignette .tex 
-file, so as a possible solution I have included the contents of the .bbl 
-directly in the .Rnw so BibTeX is not needed.
+ * model.matrix(*, contrasts.arg = CC) now warns about invalid contrasts.args.
+ 
+In addition, urls have been updated and this version fixes a couple of instances where `if` statements could have arguments of length > 1.
 
 ## Test environments
 
-* Local (with qvcalc 0.9-1 installed)
-    * Ubuntu 14.04, R 3.4.1
-    * Ubuntu 14.04, R-devel (2017-09-20 r73322)
-    * Windows 8, R 3.4.1
+* Local
+    * Ubuntu 18.04.2, R 3.5.2
+    * Ubuntu 18.04.2, R-devel (2019-02-24 r76155)
+    * Windows 8, R 3.5.2
     
-## R CMD check results
+* R-hub
+    * macOS 10.11 El Capitan, R-release (experimental)
+    
+### Check results
 
-Status: OK
+I get a warning on R-hub macOS, 
+
+* checking top-level files ... WARNING
+Conversion of ‘README.md’ failed:
+pandoc: Could not fetch https://www.r-pkg.org/badges/version/BradleyTerry2
+TlsExceptionHostPort (HandshakeFailed (Error_Misc "user error (unexpected type received. expecting handshake and got: Alert [(AlertLevel_Fatal,HandshakeFailure)])")) "www.r-pkg.org" 443
+
+This seems to due to missing https support in an older version of pandoc.

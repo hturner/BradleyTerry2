@@ -57,7 +57,7 @@ management school) on the following 7 variables: \describe{
 (value 0 or 1) indicating a 'Latin' city} }}
 \source{
 Royal Statistical Society datasets website, at
-http://onlinelibrary.wiley.com/journal/10.1111/(ISSN)1467-9876/homepage/47_4.htm.
+\url{https://rss.onlinelibrary.wiley.com/hub/journal/14679876/series-c-datasets/pre_2016}.
 }
 \usage{
 CEMS
