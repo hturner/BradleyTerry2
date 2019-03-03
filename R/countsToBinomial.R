@@ -30,7 +30,7 @@
 #' @export
 countsToBinomial <- function(xtab) {
     ## make square if necessary
-    if (nrow(xtab) != ncol(xtab) || rownames(xtab) != colnames(xtab)) {
+    if (nrow(xtab) != ncol(xtab) || !all(rownames(xtab) == colnames(xtab))) {
         dat <- as.data.frame(xtab)
         lev <- union(rownames(xtab), colnames(xtab))
         dat[,1] <- factor(dat[,1], levels = lev)

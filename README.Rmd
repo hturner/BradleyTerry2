@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 
 # BradleyTerry2
 
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/BradleyTerry2)](https://cran.r-project.org/package=BradleyTerry2)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/BradleyTerry2)](https://cran.r-project.org/package=BradleyTerry2)
 [![Travis-CI Build Status](https://travis-ci.org/hturner/BradleyTerry2.svg?branch=master)](https://travis-ci.org/hturner/BradleyTerry2)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/hturner/BradleyTerry2?branch=master&svg=true)](https://ci.appveyor.com/project/hturner/BradleyTerry2)
 

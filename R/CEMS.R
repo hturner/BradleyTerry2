@@ -84,7 +84,7 @@
 #' Turner, H. and Firth, D. (2012) Bradley-Terry models in R: The BradleyTerry2
 #' package.  *Journal of Statistical Software*, **48**(9), 1--21.
 #' @source Royal Statistical Society datasets website, at
-#' http://onlinelibrary.wiley.com/journal/10.1111/(ISSN)1467-9876/homepage/47_4.htm.
+#' \url{https://rss.onlinelibrary.wiley.com/hub/journal/14679876/series-c-datasets/pre_2016}.
 #' @keywords datasets
 #' @examples
 #' 

@@ -14,9 +14,9 @@
 #' There are six automatic bids that go to the conference tournament champions,
 #' the remaining 10 teams are selected based upon ranking under the NCAA's
 #' system of pairwise comparisons
-#' (http://www.collegehockeynews.com/info/?d=pwcrpi). Some have argued
+#' (\url{https://www.collegehockeynews.com/info/?d=pwcrpi}). Some have argued
 #' that Bradley-Terry rankings would be fairer
-#' (http://www.collegehockeynews.com/info/?d=krach).
+#' (\url{https://www.collegehockeynews.com/info/?d=krach}).
 #' 
 #' @name icehockey
 #' @docType data
@@ -36,14 +36,14 @@
 #' won, 0.5 for a draw and 0 if visitor lost} 
 #' \item{home.ice}{a logical
 #' vector: 1 if opponent on home ice, 0 if game on neutral ground} }
-#' @references Schlobotnik, J. Build your own rankings.
-#' http://slack.net/~whelan/tbrw/2010/rankings.diy.shtml
+#' @references Schlobotnik, J. Build your own rankings:
+#' \url{http://slack.net/~whelan/tbrw/2010/rankings.diy.shtml}.
 #' 
-#' http://www.collegehockeynews.com
+#' College Hockey News \url{https://www.collegehockeynews.com/}.
 #' 
-#' Selections for 2010 NCAA tournament.
-#' http://sports.espn.go.com/ncaa/news/story?id=5012918
-#' @source http://www.collegehockeystats.net/0910/schedules/men
+#' Selections for 2010 NCAA tournament:
+#' \url{https://www.espn.com/college-sports/news/story?id=5012918}.
+#' @source \url{http://www.collegehockeystats.net/0910/schedules/men}.
 #' @keywords datasets
 #' @examples
 #' 

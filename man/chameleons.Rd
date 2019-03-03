@@ -39,7 +39,7 @@ the flank occupied by the main pink patch on the flank}
 of the flank occupied by the entire flank patch} }}
 \source{
 The data were obtained by Dr Devi Stuart-Fox,
-http://www.zoology.unimelb.edu.au/research/groups/animal/labs/stuart-fox/index.php,
+\url{https://devistuartfox.com/},
 and they are reproduced here with her kind permission.
 
 These are the same data that were used in

@@ -1,5 +1,5 @@
 Package: BradleyTerry2
-Version: 1.0-8.9000
+Version: 1.0-9.9000
 Title: Bradley-Terry Models
 Authors@R: c(person("Heather", "Turner", role = c("aut", "cre"),
                     email = "ht@heatherturner.net"),
@@ -19,3 +19,4 @@ LazyData: yes
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
+Language: en-GB

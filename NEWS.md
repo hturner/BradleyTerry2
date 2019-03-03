@@ -4,6 +4,13 @@ Development
  * add `type = "ability"` to `predict.BTm()` to allow prediction of abilities in 
    more complex models.
  * make `BTm` objects compatible with `broom::augment()`.
+
+Changes in BradleyTerry2 1.0-9
+==============================
+
+ * fix bug in setting contrasts in internal function `Diff()` that gave warning under R-devel.
+ * update urls (using https where possible).
+ * fix a couple of `if` statements where argument could be > 1.
  
 Changes in BradleyTerry2 1.0-8
 ==============================

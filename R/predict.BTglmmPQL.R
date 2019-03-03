@@ -114,7 +114,7 @@ predict.BTglmmPQL <- function(object, newdata = NULL, newrandom = NULL,
         diag(ZWZ) <- diag(ZWZ) + 1/sigma^2
         K <- cbind(XWX, XWZ)
         K <- chol(rbind(K, cbind(t(XWZ), ZWZ)))
-        if (type == "terms" || level == 0){
+        if (type == "terms" || 0 %in% level){
             ## work out (chol of inverse of) topleft of K-inv directly
             A <- backsolve(chol(ZWZ), t(XWZ), transpose = TRUE)
             A <- chol(XWX - t(A) %*% A)

@@ -57,7 +57,7 @@ avoiding an arbitrary reference group. \emph{Statistics in Medicine} \strong{10}
 
 Firth, D. (2000)  Quasi-variances in Xlisp-Stat and on the web.
 \emph{Journal of Statistical Software} \strong{5.4}, 1--13.
-At http://www.jstatsoft.org
+\url{https://www.jstatsoft.org/article/view/v005i04}.
 
 Firth, D. (2003) Overcoming the reference category problem in the
 presentation of statistical models. \emph{Sociological Methodology}

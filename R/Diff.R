@@ -86,7 +86,7 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
             if (!is.null(refcat)) {
                 mf1[[id]] <- relevel(mf1[[id]], refcat)
                 if (!is.null(player2)) mf2[[id]] <- relevel(mf2[[id]], refcat)
-                if (!missing(contrasts)) contrasts[[id]] <- "contr.treatment"
+                if (!is.null(contrasts)) contrasts[[id]] <- "contr.treatment"
             } else {
                 ## 'else' defined by contrasts arg/contrasts attr of id factor
                 ## leave refcat NULL
