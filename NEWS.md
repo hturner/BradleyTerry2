@@ -1,3 +1,8 @@
+Development
+===========
+
+ * `anova.BTm` now respects `test` and `dispersion` arguments for models that inherit from `glm`.
+ 
 Changes in BradleyTerry2 1.0-9
 ==============================
 

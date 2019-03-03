@@ -82,7 +82,8 @@ anova.BTm <- function (object, ..., dispersion = NULL, test = NULL)
                 x})
             call <- match.call()
             anova.table <- do.call("anova", 
-                                   c(models, call$dispersion, call$test))
+                                   c(models, dispersion = call$dispersion, 
+                                     test = call$test))
             attr(anova.table, "heading") <-
                 c(paste("Analysis of Deviance Table\n\n",
                         "Response: ", 
