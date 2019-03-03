@@ -4,7 +4,8 @@ Development
  * add `type = "ability"` to `predict.BTm()` to allow prediction of abilities in 
    more complex models.
  * make `BTm` objects compatible with `broom::augment()`.
-
+ * `anova.BTm` now respects `test` and `dispersion` arguments for models that inherit from `glm`.
+ 
 Changes in BradleyTerry2 1.0-9
 ==============================
 
