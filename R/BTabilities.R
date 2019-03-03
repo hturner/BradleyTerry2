@@ -127,9 +127,9 @@ BTabilities <-  function (model)
     else {
         ## get ability coef and corresponding vcov
         asgn <- model$assign
-        if (is.null(asgn))
+        if (is.null(asgn)){
             abilities <- TRUE
-        else {
+        } else {
             idterm <- attr(terms(model$formula), "term.labels") == model$id
             if (!any(idterm))
                stop("abilities not uniquely defined for this parameterization")
