@@ -27,7 +27,7 @@ summary.BTglmmPQL <- function(object, dispersion = NULL, correlation = FALSE,
     ranef.table <- cbind(object$sigma, sterr, tvalue, pvalue)
     dimnames(ranef.table) <- list("Std. Dev.", dn)
     ans <- c(object[c("call", "family", "iter", "rank", "na.action")],
-             list(fixef = fixef.table, ranef = ranef.table,
+             list(coefficients = fixef.table, ranef = ranef.table,
                   aliased = aliased, dispersion = 1,
                   cov.unscaled = cov.unscaled))
     if (correlation & object$rank > 0) {

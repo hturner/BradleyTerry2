@@ -17,12 +17,12 @@ print.summary.BTglmmPQL <- function(x, digits = max(3, getOption("digits") - 3),
             cat("\nFixed Effects: (", nsingular,
                 " not defined because of singularities)\n", sep = "")
             cn <- names(x$aliased)
-            pars <- matrix(NA, p, 4, dimnames = list(cn, colnames(x$fixef)))
-            pars[!x$aliased, ] <- tidy.zeros(x$fixef)
+            pars <- matrix(NA, p, 4, dimnames = list(cn, colnames(coef(x))))
+            pars[!x$aliased, ] <- tidy.zeros(coef(x))
         }
         else {
             cat("\nFixed Effects:\n")
-            pars <- tidy.zeros(x$fixef)
+            pars <- tidy.zeros(coef(x))
         }
         printCoefmat(pars, digits = digits, signif.stars = signif.stars,
             na.print = "NA", ...)
