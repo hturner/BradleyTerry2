@@ -172,17 +172,23 @@ predict.BTm <- function (object,
                          terms = NULL,
                          na.action = na.pass, ...) {
     type <- match.arg(type)
-    if (!is.null(newdata) | type == "ability") {
+    call <- match.call()
+    if ("newdata" %in% names(call) | type == "ability") {
         # identify player1 and player2
-        if (is.null(newdata)){
+        if (!"newdata" %in% names(call)){
             # use original player1 and player2
             player1 <- object$player1
             player2 <- object$player2
             newdata <- object$data
         } else{
             # use player1 (and player2) elements from newdata
-            player1 <- newdata$player1
-            player2 <- newdata$player2
+            if (length(call$newdata) > 1) {
+                player1 <- call$newdata$player1
+                player2 <- call$newdata$player2
+            } else { # okay to be NULL
+                player1 <- suppressWarnings(newdata$player1)
+                player2 <- suppressWarnings(newdata$player2)
+            }
             # if both NULL, should be in newdata named as in original call/by id
             if (is.null(player1) & is.null(player2)){
                 getPlayer<- function(data, name){
@@ -201,6 +207,10 @@ predict.BTm <- function (object,
                     # use id to identify player 1, can only be one player
                     player1 <- getPlayer(newdata, object$id)
                 }
+            } else {
+                nm <- names(call$newdata)
+                id <- which(nm %in% c("player1", "player2"))
+                newdata <- eval(call$newdata[-id])
             }
         }
         # need to define X so will work with model terms
@@ -277,7 +287,7 @@ getXZ <- function(object, player1, player2, newdata, level, type){
     if (0 %in% keep){
         ## new players with missing data - set to NA
         missing <- rowSums(setup$X[,-keep, drop = FALSE]) != 0
-        setup$X <- setup$X[, keep]
+        setup$X <- setup$X[, keep, drop = FALSE]
         setup$X[missing,] <- NA
     }
     if (ncol(setup$X) != nfix) {
