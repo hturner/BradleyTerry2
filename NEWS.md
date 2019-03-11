@@ -5,6 +5,7 @@ Development
    more complex models.
  * make `BTm` objects compatible with `broom::augment()`.
  * `anova.BTm` now respects `test` and `dispersion` arguments for models that inherit from `glm`.
+ * fix bug in `anova.BTmlist` affecting models where ability is modelled by predictors but ability is estimated separately for some players due to missing values. 
  
 Changes in BradleyTerry2 1.0-9
 ==============================
