@@ -175,7 +175,7 @@ predict.BTm <- function (object,
     call <- match.call()
     if ("newdata" %in% names(call) | type == "ability") {
         # identify player1 and player2
-        if (!"newdata" %in% names(call)){
+        if (!"newdata" %in% names(call) |!length(newdata)){
             # use original player1 and player2
             player1 <- object$player1
             player2 <- object$player2
