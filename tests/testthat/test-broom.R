@@ -64,10 +64,10 @@ test_that("augment works based on new data, with home advantage", {
                              player2 = data.frame(team = baseball$away.team, 
                                                   at.home = 0),
                              formula = ~ team + at.home)
-    
+
     # Augment original fit with contest-level data, glm fitted values
     res <- augment(baseballModel2)
-    
+
     # set up test data
     test_teams <- c("Milwaukee", "Detroit")
     all_teams <- levels(baseball$home.team)
