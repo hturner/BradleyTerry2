@@ -240,7 +240,7 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
         fit <- as.call(c(method, fcall[argPos],
                          list(formula, setup$random, family = family,
                               data = mf, offset = setup$offset,
-                              subset = setup$subset, weights = setup$weights), 
+                              subset = setup$subset, weights = w), 
                          dotArgs))
         fit <- eval(fit, parent.frame())
         if (br) {
@@ -251,7 +251,7 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
                                  list(formula, family = family, data = mf,
                                       offset = setup$offset,
                                       subset = setup$subset,
-                                      weights = setup$weights,
+                                      weights = w,
                                       etastart = fit$linear.predictors)))
                 fit <- eval(fit, parent.frame())
                 fit$class <- c("glmmPQL", class(fit))

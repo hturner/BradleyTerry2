@@ -187,7 +187,7 @@ glmmPQL <- function(fixed, random = NULL, family = "binomial", data = NULL,
     ## Use GLM to estimate fixed effects
     empty <- is.empty.model(modelTerms)
     if (!empty)
-        X <- model.matrix(fixed, data = modelData, contrasts)
+        X <- model.matrix(formula(modelTerms), data = modelData, contrasts)
     else
         X <- matrix(, nObs, 0)
     fit <- glmmPQL.fit(X = X, y = y, Z = Z, weights = weights, start = start,
