@@ -5,6 +5,10 @@ print.summary.BTglmmPQL <- function(x, digits = max(3, getOption("digits") - 3),
                                    signif.stars = 
                                        getOption("show.signif.stars"),
                                    ...)  {
+    if (identical(object$sigma, 0)){
+        cat("PQL algorithm converged to fixed effects model\n")
+        return(NextMethod("print.summary"))
+    }
     cat("\nCall:\n", deparse(x$call), sep = "", fill = TRUE)
     p <- length(x$aliased)
     tidy.zeros <- function(vec) ifelse(abs(vec) < 100 * .Machine$double.eps,
