@@ -5,7 +5,7 @@ print.summary.BTglmmPQL <- function(x, digits = max(3, getOption("digits") - 3),
                                    signif.stars = 
                                        getOption("show.signif.stars"),
                                    ...)  {
-    if (identical(object$sigma, 0)){
+    if (identical(x$sigma, 0)){
         cat("PQL algorithm converged to fixed effects model\n")
         return(NextMethod("print.summary"))
     }
