@@ -4,33 +4,23 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
                  subset = NULL) {
     player.one <- player1[[id]]
     player.two <- player2[[id]]
-    
-    if (!is.null(player1) && !is.null(player2)){
-        if (!is.factor(player.one) || !is.factor(player.two) ||
-            !identical(levels(player.one), levels(player.two)))
-            stop("'player1$", id, "' and 'player2$", id,
-                 "' must be factors with the same levels")
-        if (!identical(attr(player.one, "contrasts"),
-                       attr(player.two, "contrasts")))
-            stop("'player1$", id, "' and 'player2$", id,
-                 "' must have the same contrasts attribute")
-    } else if (!is.null(player1)){
-        if (!is.factor(player.one)) stop("`player1$", id, "`` must be a factor")
-    } else if (!is.null(player2)){
-        if (!is.factor(player.two)) stop("`player2$", id, "`` must be a factor")
-        # act as if it is player1 specified instead
-        player1 <- player2
-        player.one <- player.two
-        player2 <- player.two <- NULL
-    }
-    
+
+    if (!is.factor(player.one) || !is.factor(player.two) ||
+        !identical(levels(player.one), levels(player.two)))
+        stop("'player1$", id, "' and 'player2$", id,
+             "' must be factors with the same levels")
+    if (!identical(attr(player.one, "contrasts"),
+                   attr(player.two, "contrasts")))
+        stop("'player1$", id, "' and 'player2$", id,
+             "' must have the same contrasts attribute")
     if(is.null(formula)) formula <- reformulate(id)
+
     players <- levels(player.one)
     nplayers <- nlevels(player.one)
     ncontests <- length(player.one)
     D <- matrix(nrow = ncontests, ncol = nplayers)
     D <- col(D) == as.numeric(player.one)
-    if (!is.null(player2)) D <- D - (col(D) == as.numeric(player.two))
+    D <- D - (col(D) == as.numeric(player.two))
     colnames(D) <- paste(id, players, sep = "")
 
     fixed <- nobars(formula)
@@ -79,13 +69,11 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
         if (nrow(mf1) != ncontests)
             stop("Predictor variables are not of the correct length --",
                  "they probably need indexing in 'formula'.")
-        if (!is.null(player2)){
-            mf2 <- model.frame(mt, data = c(player2, data), na.action = na.pass)
-        }
+        mf2 <- model.frame(mt, data = c(player2, data), na.action = na.pass)
         if (idterm){
             if (!is.null(refcat)) {
                 mf1[[id]] <- relevel(mf1[[id]], refcat)
-                if (!is.null(player2)) mf2[[id]] <- relevel(mf2[[id]], refcat)
+                mf2[[id]] <- relevel(mf2[[id]], refcat)
                 if (!is.null(contrasts)) contrasts[[id]] <- "contr.treatment"
             } else {
                 ## 'else' defined by contrasts arg/contrasts attr of id factor
@@ -107,26 +95,22 @@ Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
                 levels(x)[!keep]  <- ext
                 relevel(x, ref = ext)
             }
-            for (g in names(grp)) {
-                mf1[g] <- recode(mf1[[g]], sep[[g]])
-                if (!is.null(player2)) mf2[g] <- recode(mf2[[g]], sep[[g]])
+            for (ind in names(grp)) {
+                mf1[ind] <- recode(mf1[[ind]], sep[[ind]])
+                mf2[ind] <- recode(mf2[[ind]], sep[[ind]])
             }
         }
 
-        X <- model.matrix(fixed, mf1, contrasts = contrasts)
-        asgn <- attr(X, "assign")
-        if (!is.null(player2)) {
-            X2 <- model.matrix(fixed, mf2, contrasts = contrasts)
-            X <- X - X2
-        }
-            
+        X1 <- model.matrix(fixed, mf1, contrasts = contrasts)
+        X2 <- model.matrix(fixed, mf2, contrasts = contrasts)
+        X <- X1 - X2
         ## will need to check for saturation in each set of indexed var
         ## - however as only allowing (1|..) just consider player id for now
 
         saturated <- 
             qr(na.omit(X))$rank == qr(na.omit(cbind(D, X)))$rank && !idterm
-        if (all(X[,1] == X[1,1])) X <- X[, -1, drop = FALSE]
-        attr(X, "assign") <- asgn[-1]
+        if (all(X[,1] == 0)) X <- X[, -1, drop = FALSE]
+        attr(X, "assign") <- attr(X1, "assign")[-1]
     }
 
     random <- findbars(formula[[2]])

@@ -1,10 +1,3 @@
-Development
-===========
-
- * add `type = "ability"` to `predict.BTm()` to allow prediction of abilities in 
-   more complex models.
- * make `BTm` objects compatible with `broom::augment()`.
-
 Changes in BradleyTerry2 1.0-9
 ==============================
 

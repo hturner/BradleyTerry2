@@ -200,30 +200,22 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
         stop("link for binomial family must be one of \"logit\", \"probit\"",
              "or \"cauchit\"")
     fcall <- as.list(match.call(expand.dots = FALSE))
-    if (is.null(formula)) {
-        formula <- reformulate(id)
-        environment(formula) <- parent.frame()
-        fcall$formula <- formula
-    }
-    setup <- match(c("player1", "player2", "outcome", "formula", "id",
+    setup <- match(c("outcome", "player1", "player2", "formula", "id",
                      "separate.ability", "refcat", "data", "weights",
                      "subset", "offset", "contrasts"), names(fcall), 0L)
-    setup <- do.call(BTm.setup, fcall[setup], envir = parent.frame())
+    if (is.null(formula)) env <- parent.frame()
+    else env <- environment(formula)
+    setup <- do.call(BTm.setup, fcall[setup], envir = env)
     if (setup$saturated)
         warning("Player ability saturated - equivalent to fitting ",
                 "separate abilities.")
-    # broom doesn't currently support glm with matrix response
-    if (NCOL(setup$Y) == 2){
-        denom <- rowSums(setup$Y)
-        y <- setup$Y[,1]/denom
-        w <- denom
-        if (!is.null(setup$weights)) w <- w * setup$weights
-    } else {
-        y <- setup$Y
-        w <- setup$weights
+    mf <- data.frame(X = setup$player1) #just to get length
+    if (!is.null(setup$X)) {
+        mf$X <- setup$X
+        formula <- Y ~ X - 1
     }
-    mf <- cbind(data.frame(y = y), setup$X)
-    formula <- y ~ . - 1
+    else formula <- Y ~ 0
+    mf$Y <- setup$Y
     argPos <- match(c("na.action", "start", "etastart",
                       "mustart", "control", "model", "x"), names(fcall), 0)
     dotArgs <- fcall$"..."
@@ -232,7 +224,7 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
         fit <- as.call(c(method, fcall[argPos],
                          list(formula = formula, family = family, data = mf,
                               offset = setup$offset, subset = setup$subset,
-                              weights = w), dotArgs))
+                              weights = setup$weights), dotArgs))
         fit <- eval(fit, parent.frame())
     }
     else {
@@ -262,7 +254,10 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
         }
     }
     if (length(fit$coefficients)) {
-        names(fit$coefficients) <- colnames(setup$X)
+        if (ncol(setup$X) > 1)
+            names(fit$coefficients) <- substring(names(fit$coefficients), 2)
+        else
+            names(fit$coefficients) <- colnames(setup$X)
         fit$assign <- attr(setup$X, "assign")
     }
     fit$call <- call
