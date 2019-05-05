@@ -7,5 +7,5 @@ augment.BTm <- function(x, ...){
             x$sigma <- 0
         }
     }
-    NextMethod(x = x)
+    NextMethod(x = x, ...)
 }
