@@ -37,7 +37,7 @@
 #' \item{home.ice}{a logical
 #' vector: 1 if opponent on home ice, 0 if game on neutral ground} }
 #' @references Schlobotnik, J. Build your own rankings:
-#' \url{http://slack.net/~whelan/tbrw/2010/rankings.diy.shtml}.
+#' \url{http://www.elynah.com/tbrw/2010/rankings.diy.shtml}.
 #' 
 #' College Hockey News \url{https://www.collegehockeynews.com/}.
 #' 
