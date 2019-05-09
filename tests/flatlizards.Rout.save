@@ -1,6 +1,6 @@
 
-R version 3.4.1 (2017-06-30) -- "Single Candle"
-Copyright (C) 2017 The R Foundation for Statistical Computing
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -17,8 +17,6 @@ Type 'q()' to quit R.
 
 > options(digits = 4) ## only applies to this file
 > library(BradleyTerry2)
-Loading required package: lme4
-Loading required package: Matrix
 > data(flatlizards, package = "BradleyTerry2")
 > ##
 > ##  Fit the standard Bradley-Terry model, using the bias-reduced
@@ -301,87 +299,85 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Number of iterations: 7
 
-> BTabilities(Whiting.model3)
-           ability      s.e.
-lizard003  0.95355 2.933e-01
-lizard005  0.53816 3.183e-01
-lizard006 -0.14147 3.377e-01
-lizard009  0.73757 3.665e-01
-lizard010  0.64227 3.232e-01
-lizard011 -0.06162 4.258e-01
-lizard012 -1.84812 6.110e-01
-lizard013  0.22103 1.920e-01
-lizard016  0.91544 3.519e-01
-lizard018 -0.56996 4.624e-01
-lizard020  1.40642 4.914e-01
-lizard023 -0.36857 1.222e-01
-lizard024 -0.75717 3.324e-01
-lizard025  0.72348 2.553e-01
-lizard026  0.88139 2.870e-01
-lizard028 -0.18453 2.132e-01
-lizard029 -0.45028 3.763e-01
-lizard030  0.81456 2.863e-01
-lizard031 -0.17223 2.208e-01
-lizard032 -0.25860 2.435e-01
-lizard033 -0.47074 2.662e-01
-lizard037 -0.70113 3.183e-01
-lizard038  0.14185 3.460e-01
-lizard040  0.01696 2.886e-01
-lizard045 -0.42884 3.105e-01
-lizard047  0.43601 1.649e-01
-lizard048  0.63648 2.739e-01
-lizard050 -0.60271 1.899e-01
-lizard052 -0.44522 3.262e-01
-lizard053 -0.71500 3.899e-01
-lizard055 -1.07833 3.624e-01
-lizard058 -0.54361 4.181e-01
-lizard060  0.49446 3.946e-01
-lizard061  0.46849 2.358e-01
-lizard062  0.34632 2.301e-01
-lizard063  0.33597 3.267e-01
-lizard064  0.33638 4.172e-01
-lizard065 -0.28462 2.293e-01
-lizard066  0.95006 5.584e-01
-lizard069 -1.33897 3.664e-01
-lizard070  1.24275 5.065e-01
-lizard071 -0.23844 3.145e-01
-lizard073 -0.08660 1.703e-01
-lizard074 -0.41429 1.308e-01
-lizard075 -0.46101 3.525e-01
-lizard077 -1.25546 4.186e-01
-lizard078 -0.49810 2.521e-01
-lizard081  0.50978 2.047e-01
-lizard082 -0.44364 3.049e-01
-lizard083 -0.10509 2.741e-01
-lizard084 -0.37502 2.736e-01
-lizard086  0.43640 4.175e-01
-lizard089  0.46797 2.035e-01
-lizard091  0.76537 2.618e-01
-lizard096 20.46403 3.875e+07
-lizard099  0.59770 7.377e-01
-lizard100 -0.82767 2.606e-01
-lizard102 -0.67043 3.512e-01
-lizard105 -1.23675 3.977e-01
-lizard155 -0.55743 3.604e-01
-lizard156 -0.38819 2.065e-01
-lizard162  0.01532 1.011e-01
-lizard163  0.39476 1.746e-01
-lizard165  0.16178 3.076e-01
-lizard167  0.53388 2.976e-01
-lizard170  0.80979 2.315e-01
-lizard171  0.65363 2.985e-01
-lizard173 -1.71445 5.203e-01
-lizard174 -0.03279 2.826e-01
-lizard176  1.10974 3.245e-01
-lizard177  1.10664 3.800e-01
-lizard178  0.12929 1.987e-01
-lizard179 -0.03706 3.023e-01
-lizard180  0.48147 3.489e-01
-lizard183 -1.33956 4.096e-01
-lizard188 -0.27797 5.677e-01
-lizard189  0.59487 2.500e-01
-attr(,"separate")
-[1] "lizard096" "lizard099"
+> ## drop lizard 99 as coef not estimable
+> BTabilities(Whiting.model3)[-55,]
+           ability   s.e.
+lizard003  0.95355 0.2933
+lizard005  0.53816 0.3183
+lizard006 -0.14147 0.3377
+lizard009  0.73757 0.3665
+lizard010  0.64227 0.3232
+lizard011 -0.06162 0.4258
+lizard012 -1.84812 0.6110
+lizard013  0.22103 0.1920
+lizard016  0.91544 0.3519
+lizard018 -0.56996 0.4624
+lizard020  1.40642 0.4914
+lizard023 -0.36857 0.1222
+lizard024 -0.75717 0.3324
+lizard025  0.72348 0.2553
+lizard026  0.88139 0.2870
+lizard028 -0.18453 0.2132
+lizard029 -0.45028 0.3763
+lizard030  0.81456 0.2863
+lizard031 -0.17223 0.2208
+lizard032 -0.25860 0.2435
+lizard033 -0.47074 0.2662
+lizard037 -0.70113 0.3183
+lizard038  0.14185 0.3460
+lizard040  0.01696 0.2886
+lizard045 -0.42884 0.3105
+lizard047  0.43601 0.1649
+lizard048  0.63648 0.2739
+lizard050 -0.60271 0.1899
+lizard052 -0.44522 0.3262
+lizard053 -0.71500 0.3899
+lizard055 -1.07833 0.3624
+lizard058 -0.54361 0.4181
+lizard060  0.49446 0.3946
+lizard061  0.46849 0.2358
+lizard062  0.34632 0.2301
+lizard063  0.33597 0.3267
+lizard064  0.33638 0.4172
+lizard065 -0.28462 0.2293
+lizard066  0.95006 0.5584
+lizard069 -1.33897 0.3664
+lizard070  1.24275 0.5065
+lizard071 -0.23844 0.3145
+lizard073 -0.08660 0.1703
+lizard074 -0.41429 0.1308
+lizard075 -0.46101 0.3525
+lizard077 -1.25546 0.4186
+lizard078 -0.49810 0.2521
+lizard081  0.50978 0.2047
+lizard082 -0.44364 0.3049
+lizard083 -0.10509 0.2741
+lizard084 -0.37502 0.2736
+lizard086  0.43640 0.4175
+lizard089  0.46797 0.2035
+lizard091  0.76537 0.2618
+lizard099  0.59770 0.7377
+lizard100 -0.82767 0.2606
+lizard102 -0.67043 0.3512
+lizard105 -1.23675 0.3977
+lizard155 -0.55743 0.3604
+lizard156 -0.38819 0.2065
+lizard162  0.01532 0.1011
+lizard163  0.39476 0.1746
+lizard165  0.16178 0.3076
+lizard167  0.53388 0.2976
+lizard170  0.80979 0.2315
+lizard171  0.65363 0.2985
+lizard173 -1.71445 0.5203
+lizard174 -0.03279 0.2826
+lizard176  1.10974 0.3245
+lizard177  1.10664 0.3800
+lizard178  0.12929 0.1987
+lizard179 -0.03706 0.3023
+lizard180  0.48147 0.3489
+lizard183 -1.33956 0.4096
+lizard188 -0.27797 0.5677
+lizard189  0.59487 0.2500
 > residuals(Whiting.model3, "grouped")
                   [,1]
 ..lizard003  6.156e-01
@@ -548,4 +544,4 @@ attr(,"weights")
 > 
 > proc.time()
    user  system elapsed 
-  1.836   0.048   1.904 
+  1.357   0.079   1.458 

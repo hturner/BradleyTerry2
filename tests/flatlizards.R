@@ -60,7 +60,8 @@ Whiting.model3 <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
                       family = binomial(link = "probit"),
                       data = flatlizards, trace = TRUE)
 summary(Whiting.model3)
-BTabilities(Whiting.model3)
+## drop lizard 99 as coef not estimable
+BTabilities(Whiting.model3)[-55,]
 residuals(Whiting.model3, "grouped")
 ##  Note the "separate" attribute here, identifying two lizards with
 ##  missing values of at least one predictor variable

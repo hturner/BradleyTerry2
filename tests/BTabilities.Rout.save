@@ -1,6 +1,6 @@
 
-R version 3.4.1 (2017-06-30) -- "Single Candle"
-Copyright (C) 2017 The R Foundation for Statistical Computing
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -16,8 +16,6 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > library(BradleyTerry2)
-Loading required package: lme4
-Loading required package: Matrix
 > 
 > ## refcat is not the first level
 > 
@@ -75,7 +73,6 @@ AIC: 91.396
 Number of Fisher Scoring iterations: NA
 
 > head(BTabilities(chameleon.model))
-PQL algorithm converged to fixed effects model
      ability     s.e.
 C01 3.757229 1.655205
 C02 2.404778 1.017782
@@ -111,4 +108,4 @@ JRSS-B        1.0588761 0.05304699
 > 
 > proc.time()
    user  system elapsed 
-  1.452   0.036   1.495 
+  1.086   0.052   1.135 

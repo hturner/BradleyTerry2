@@ -12,19 +12,27 @@ Whiting.model3 <- BTm(1, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
                       data = flatlizards, trace = TRUE)
 
 
-## new lizard with original lizards with NAs
-lev <- c("lizard048", "lizard052", "lizard096", "lizard059")
+## new lizard with original lizard with NAs
+lev <- c("lizard048", "lizard052", "lizard099", "lizard059")
 newdata  <- list(contests = 
-                     data.frame(winner = factor(c("lizard096", "lizard059"),
+                     data.frame(winner = factor(c("lizard059", "lizard099"),
                                                 levels = lev),
                                 loser = factor(c("lizard048", "lizard052"),
                                                levels = lev)),
                  predictors = 
-                     rbind(flatlizards$predictors[c(27, 29, 55),-c(1,18) ],
-                           c(NA, 1.5, 1.5, -.2, 3, 1, -1, -1.5, -1.5, 250, 
+                     rbind(flatlizards$predictors[c(27, 29, 56),-c(1,18) ],
+                           c(1.5, 1.5, 1.5, -.2, 3, 1, -1, -1.5, -1.5, 250, 
                              2000, 1, 0.1, 0.2, 0.5, -0.2)))
 
+## for contests with new lizard can only predict at level 0
+predict(Whiting.model3, level = 0, se.fit = TRUE, newdata = newdata)
 predict(Whiting.model3, level = 1, se.fit = TRUE, newdata = newdata)
+
+## predictions between original lizards as original
+predict(Whiting.model3, level = 0, se.fit = TRUE)$fit[34]
+predict(Whiting.model3, level = 0, se.fit = TRUE)$se.fit[34]
+predict(Whiting.model3, level = 1, se.fit = TRUE)$fit[34]
+predict(Whiting.model3, level = 1, se.fit = TRUE)$se.fit[34]
 
 ## new lizard with NAs - can't predict, go by na.action
 lev <- c("lizard006", "lizard011", "lizard048", "lizard059")
@@ -49,24 +57,12 @@ tmp <- predict(Whiting.model3)
 tmp2 <- predict(Whiting.model3, newdata = flatlizards)
 identical(tmp, tmp2)
 
-## new data with separate effects as in original
-lev <- c("lizard048", "lizard052", "lizard096", "lizard099")
-newdata  <- list(contests = 
-                     data.frame(winner = factor(c("lizard096", "lizard099"),
-                                                levels = lev),
-                                loser = factor(c("lizard048", "lizard052"),
-                                               levels = lev)),
-                 predictors = 
-                     flatlizards$predictors[c(27, 29, 55, 56),-c(1,18) ])
-
-predict(Whiting.model3, level = 1, se.fit = TRUE, newdata = newdata)#[31, 34]
-
-predict(Whiting.model3, level = 1, se.fit = TRUE)$fit[c(31, 34)]
-predict(Whiting.model3, level = 1, se.fit = TRUE)$se.fit[c(31, 34)]
-
 ## model in which some parameters are inestimable, e.g. contest-level predictor
 ## that is same for both players (interactions may be of interest in practice)
 
+### set seed for consistency with historical results 
+### (when sampling predictor values for new hypothetical lizards)
+suppressWarnings(RNGversion("2.10")) 
 set.seed(1)
 data(flatlizards)
 flatlizards$contests$rainy <- sample(c(0, 1), nrow(flatlizards$contests), 
@@ -106,3 +102,4 @@ newdata$contests$loser <- factor(c("lizard012", "lizard011"),
 newdata$predictors <- flatlizards$predictors[5:8,]
 predict(example.model, level = 1, newdata = newdata, type = "response", 
         se.fit = TRUE)
+

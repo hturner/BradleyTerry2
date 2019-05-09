@@ -1,6 +1,6 @@
 
-R version 3.4.1 (2017-06-30) -- "Single Candle"
-Copyright (C) 2017 The R Foundation for Statistical Computing
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -22,8 +22,6 @@ Type 'q()' to quit R.
 > 
 > ## The final model in example(flatlizards)
 > library(BradleyTerry2)
-Loading required package: lme4
-Loading required package: Matrix
 > data(flatlizards, package = "BradleyTerry2")
 > Whiting.model3 <- BTm(1, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
 +                       head.length[..] + SVL[..] + (1|..),
@@ -38,25 +36,43 @@ Iteration 6. Score = 9.28e-06
 Iteration 7. Score = 6.795e-07
 > 
 > 
-> ## new lizard with original lizards with NAs
-> lev <- c("lizard048", "lizard052", "lizard096", "lizard059")
+> ## new lizard with original lizard with NAs
+> lev <- c("lizard048", "lizard052", "lizard099", "lizard059")
 > newdata  <- list(contests = 
-+                      data.frame(winner = factor(c("lizard096", "lizard059"),
++                      data.frame(winner = factor(c("lizard059", "lizard099"),
 +                                                 levels = lev),
 +                                 loser = factor(c("lizard048", "lizard052"),
 +                                                levels = lev)),
 +                  predictors = 
-+                      rbind(flatlizards$predictors[c(27, 29, 55),-c(1,18) ],
-+                            c(NA, 1.5, 1.5, -.2, 3, 1, -1, -1.5, -1.5, 250, 
++                      rbind(flatlizards$predictors[c(27, 29, 56),-c(1,18) ],
++                            c(1.5, 1.5, 1.5, -.2, 3, 1, -1, -1.5, -1.5, 250, 
 +                              2000, 1, 0.1, 0.2, 0.5, -0.2)))
 > 
-> predict(Whiting.model3, level = 1, se.fit = TRUE, newdata = newdata)
+> ## for contests with new lizard can only predict at level 0
+> predict(Whiting.model3, level = 0, se.fit = TRUE, newdata = newdata)
 $fit
-[1] 19.63    NA
+[1] -0.3545  1.0429
 
 $se.fit
-[1] 38745321       NA
+[1] 0.3276 0.7805
 
+> predict(Whiting.model3, level = 1, se.fit = TRUE, newdata = newdata)
+$fit
+[1]     NA 0.6275
+
+$se.fit
+[1]     NA 0.7994
+
+> 
+> ## predictions between original lizards as original
+> predict(Whiting.model3, level = 0, se.fit = TRUE)$fit[34]
+[1] 1.043
+> predict(Whiting.model3, level = 0, se.fit = TRUE)$se.fit[34]
+[1] 0.7805
+> predict(Whiting.model3, level = 1, se.fit = TRUE)$fit[34]
+[1] 0.6275
+> predict(Whiting.model3, level = 1, se.fit = TRUE)$se.fit[34]
+[1] 0.7994
 > 
 > ## new lizard with NAs - can't predict, go by na.action
 > lev <- c("lizard006", "lizard011", "lizard048", "lizard059")
@@ -114,32 +130,12 @@ $individual$se.fit
 > identical(tmp, tmp2)
 [1] TRUE
 > 
-> ## new data with separate effects as in original
-> lev <- c("lizard048", "lizard052", "lizard096", "lizard099")
-> newdata  <- list(contests = 
-+                      data.frame(winner = factor(c("lizard096", "lizard099"),
-+                                                 levels = lev),
-+                                 loser = factor(c("lizard048", "lizard052"),
-+                                                levels = lev)),
-+                  predictors = 
-+                      flatlizards$predictors[c(27, 29, 55, 56),-c(1,18) ])
-> 
-> predict(Whiting.model3, level = 1, se.fit = TRUE, newdata = newdata)#[31, 34]
-$fit
-[1] 19.6348  0.6275
-
-$se.fit
-[1] 3.875e+07 7.994e-01
-
-> 
-> predict(Whiting.model3, level = 1, se.fit = TRUE)$fit[c(31, 34)]
-[1] 19.6348  0.6275
-> predict(Whiting.model3, level = 1, se.fit = TRUE)$se.fit[c(31, 34)]
-[1] 3.875e+07 7.994e-01
-> 
 > ## model in which some parameters are inestimable, e.g. contest-level predictor
 > ## that is same for both players (interactions may be of interest in practice)
 > 
+> ### set seed for consistency with historical results 
+> ### (when sampling predictor values for new hypothetical lizards)
+> suppressWarnings(RNGversion("2.10")) 
 > set.seed(1)
 > data(flatlizards)
 > flatlizards$contests$rainy <- sample(c(0, 1), nrow(flatlizards$contests), 
@@ -234,6 +230,7 @@ $se.fit
 [1] 0.2696 0.3219
 
 > 
+> 
 > proc.time()
    user  system elapsed 
-  1.884   0.028   1.920 
+  1.212   0.096   1.319 
