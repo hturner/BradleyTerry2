@@ -173,7 +173,7 @@ BTabilities <-  function (model)
 print.BTabilities <- function(x, ...) {
     attr(x, "vcov") <- attr(x, "modelcall") <- attr(x, "factorname") <- NULL
     class(x) <- "matrix"
-    print(x)      ## ie, print without showing the messy attributes
+    print(x, ...)      ## ie, print without showing the messy attributes
 }
 
 #' @export
