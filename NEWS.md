@@ -1,9 +1,10 @@
-Development
-===========
+Changes in BradleyTerry2 1.1-0
+==============================
 
  * `anova.BTm` now respects `test` and `dispersion` arguments for models that inherit from `glm`.
  * fix bug in `anova.BTmlist` affecting models where ability is modelled by predictors but ability is estimated separately for some players due to missing values. 
  * fix bug in `glmmPQL` affecting models with `.` in formula and either offset or weights specified.
+ * standardize tests to use random number generation as in R 2.10 for backwards compatibility.
  
 Changes in BradleyTerry2 1.0-9
 ==============================

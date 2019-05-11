@@ -1,19 +1,17 @@
 ## General comments
 
-This is a minor update to address a bug revealed by R-devel NEWS item
-
- * model.matrix(*, contrasts.arg = CC) now warns about invalid contrasts.args.
- 
-In addition, urls have been updated and this version fixes a couple of instances where `if` statements could have arguments of length > 1.
+This is a minor update: 
+ * standardizing tests to use RNGversion("2.10") - package already depended on this R version
+ * fixing some minor bugs
 
 ## Test environments
 
 * Local
-    * Ubuntu 18.04.2, R 3.5.2
-    * Ubuntu 18.04.2, R-devel (2019-02-24 r76155)
-    * Windows 8, R 3.5.2
+    * Ubuntu 18.04.2, R 3.6.0
+    * Windows 8, R 3.6.0
     
 * R-hub
+    * Debian Linux, R-devel, GCC
     * macOS 10.11 El Capitan, R-release (experimental)
     
 ### Check results
