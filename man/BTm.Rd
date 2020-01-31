@@ -4,11 +4,29 @@
 \alias{BTm}
 \title{Bradley-Terry Model and Extensions}
 \usage{
-BTm(outcome = 1, player1, player2, formula = NULL, id = "..",
-  separate.ability = NULL, refcat = NULL, family = "binomial",
-  data = NULL, weights = NULL, subset = NULL, na.action = NULL,
-  start = NULL, etastart = NULL, mustart = NULL, offset = NULL,
-  br = FALSE, model = TRUE, x = FALSE, contrasts = NULL, ...)
+BTm(
+  outcome = 1,
+  player1,
+  player2,
+  formula = NULL,
+  id = "..",
+  separate.ability = NULL,
+  refcat = NULL,
+  family = "binomial",
+  data = NULL,
+  weights = NULL,
+  subset = NULL,
+  na.action = NULL,
+  start = NULL,
+  etastart = NULL,
+  mustart = NULL,
+  offset = NULL,
+  br = FALSE,
+  model = TRUE,
+  x = FALSE,
+  contrasts = NULL,
+  ...
+)
 }
 \arguments{
 \item{outcome}{the binomial response: either a numeric vector, a factor in

@@ -4,9 +4,17 @@
 \alias{predict.BTglmmPQL}
 \title{Predict Method for BTglmmPQL Objects}
 \usage{
-\method{predict}{BTglmmPQL}(object, newdata = NULL, newrandom = NULL,
-  level = ifelse(object$sigma == 0, 0, 1), type = c("link", "response",
-  "terms"), se.fit = FALSE, terms = NULL, na.action = na.pass, ...)
+\method{predict}{BTglmmPQL}(
+  object,
+  newdata = NULL,
+  newrandom = NULL,
+  level = ifelse(object$sigma == 0, 0, 1),
+  type = c("link", "response", "terms"),
+  se.fit = FALSE,
+  terms = NULL,
+  na.action = na.pass,
+  ...
+)
 }
 \arguments{
 \item{object}{a fitted object of class \code{"BTglmmPQL"}}

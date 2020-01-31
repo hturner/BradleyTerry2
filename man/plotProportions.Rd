@@ -4,12 +4,28 @@
 \alias{plotProportions}
 \title{Plot Proportions of Tied Matches and Non-tied Matches Won}
 \usage{
-plotProportions(win, tie = NULL, loss, player1, player2,
-  abilities = NULL, home.adv = NULL, tie.max = NULL,
-  tie.scale = NULL, tie.mode = NULL, at.home1 = NULL,
-  at.home2 = NULL, data = NULL, subset = NULL, bin.size = 20,
-  xlab = "P(player1 wins | not a tie)", ylab = "Proportion",
-  legend = NULL, col = 1:2, ...)
+plotProportions(
+  win,
+  tie = NULL,
+  loss,
+  player1,
+  player2,
+  abilities = NULL,
+  home.adv = NULL,
+  tie.max = NULL,
+  tie.scale = NULL,
+  tie.mode = NULL,
+  at.home1 = NULL,
+  at.home2 = NULL,
+  data = NULL,
+  subset = NULL,
+  bin.size = 20,
+  xlab = "P(player1 wins | not a tie)",
+  ylab = "Proportion",
+  legend = NULL,
+  col = 1:2,
+  ...
+)
 }
 \arguments{
 \item{win}{a logical vector: \code{TRUE} if player1 wins, \code{FALSE}

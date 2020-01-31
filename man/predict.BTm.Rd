@@ -4,10 +4,17 @@
 \alias{predict.BTm}
 \title{Predict Method for Bradley-Terry Models}
 \usage{
-\method{predict}{BTm}(object, newdata = NULL,
-  level = ifelse(is.null(object$random), 0, 1), type = c("link",
-  "response", "terms"), se.fit = FALSE, dispersion = NULL,
-  terms = NULL, na.action = na.pass, ...)
+\method{predict}{BTm}(
+  object,
+  newdata = NULL,
+  level = ifelse(is.null(object$random), 0, 1),
+  type = c("link", "response", "terms"),
+  se.fit = FALSE,
+  dispersion = NULL,
+  terms = NULL,
+  na.action = na.pass,
+  ...
+)
 }
 \arguments{
 \item{object}{a fitted object of class \code{"BTm"}}

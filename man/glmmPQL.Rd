@@ -4,11 +4,26 @@
 \alias{glmmPQL}
 \title{PQL Estimation of Generalized Linear Mixed Models}
 \usage{
-glmmPQL(fixed, random = NULL, family = "binomial", data = NULL,
-  subset = NULL, weights = NULL, offset = NULL, na.action = NULL,
-  start = NULL, etastart = NULL, mustart = NULL,
-  control = glmmPQL.control(...), sigma = 0.1, sigma.fixed = FALSE,
-  model = TRUE, x = FALSE, contrasts = NULL, ...)
+glmmPQL(
+  fixed,
+  random = NULL,
+  family = "binomial",
+  data = NULL,
+  subset = NULL,
+  weights = NULL,
+  offset = NULL,
+  na.action = NULL,
+  start = NULL,
+  etastart = NULL,
+  mustart = NULL,
+  control = glmmPQL.control(...),
+  sigma = 0.1,
+  sigma.fixed = FALSE,
+  model = TRUE,
+  x = FALSE,
+  contrasts = NULL,
+  ...
+)
 }
 \arguments{
 \item{fixed}{a formula for the fixed effects.}

@@ -200,12 +200,15 @@ BTm <- function(outcome = 1, player1, player2, formula = NULL,
         stop("link for binomial family must be one of \"logit\", \"probit\"",
              "or \"cauchit\"")
     fcall <- as.list(match.call(expand.dots = FALSE))
+    if (is.null(formula)) {
+        formula <- reformulate(id)
+        environment(formula) <- parent.frame()
+        fcall$formula <- formula
+    }
     setup <- match(c("outcome", "player1", "player2", "formula", "id",
                      "separate.ability", "refcat", "data", "weights",
                      "subset", "offset", "contrasts"), names(fcall), 0L)
-    if (is.null(formula)) env <- parent.frame()
-    else env <- environment(formula)
-    setup <- do.call(BTm.setup, fcall[setup], envir = env)
+    setup <- do.call(BTm.setup, fcall[setup], envir = parent.frame())
     if (setup$saturated)
         warning("Player ability saturated - equivalent to fitting ",
                 "separate abilities.")

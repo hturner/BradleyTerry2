@@ -8,10 +8,10 @@
 \describe{
 \item{date}{a numeric vector}
 \item{visitor}{a
-factor with 58 levels \code{Alaska Anchorage} ... \code{Yale}}
+factor with 58 levels \verb{Alaska Anchorage} ... \code{Yale}}
 \item{v_goals}{a numeric vector}
 \item{opponent}{a factor
-with 58 levels \code{Alaska Anchorage} ... \code{Yale}}
+with 58 levels \verb{Alaska Anchorage} ... \code{Yale}}
 \item{o_goals}{a numeric vector}
 \item{conference}{a factor
 with levels \code{AH}, \code{CC}, \code{CH}, \code{EC}, \code{HE},

@@ -4,8 +4,12 @@
 \alias{residuals.BTm}
 \title{Residuals from a Bradley-Terry Model}
 \usage{
-\method{residuals}{BTm}(object, type = c("deviance", "pearson",
-  "working", "response", "partial", "grouped"), by = object$id, ...)
+\method{residuals}{BTm}(
+  object,
+  type = c("deviance", "pearson", "working", "response", "partial", "grouped"),
+  by = object$id,
+  ...
+)
 }
 \arguments{
 \item{object}{a model object for which \code{inherits(model, "BTm")} is
