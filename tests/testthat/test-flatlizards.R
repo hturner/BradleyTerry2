@@ -33,7 +33,10 @@ Whiting.model3 <- BTm(result, winner, loser,
 
 test_that("standard model as expected on flatlizards", {
     # check standard model
-    expect_known_value(summary(BTmodel),
+    # ignore family: mode of initialize changes between R versions
+    res <- summary(BTmodel)
+    res$family <- NULL
+    expect_known_value(res,
                        file = test_path("outputs/flatlizards-BTmodel.rds"),
                        tol = tol)
     # check structured model against Table 1 of Whiting et al. (2006)

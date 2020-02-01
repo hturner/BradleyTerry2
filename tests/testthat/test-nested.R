@@ -39,11 +39,14 @@ fun2 <- function(x) {
 }
 
 test_that("nested call to BTm works", {
+    # ignore family: mode of initialize changes between R versions
     res <- fun1(x)
+    res$family <- NULL
     expect_known_value(res,
                        file = test_path("outputs/nested.rds"),
                        tol = tol)
     res2 <- fun2(x)
+    res2$family <- NULL
     nm <- setdiff(names(res), c("call", "model"))
     expect_equal(res[nm], res2[nm])
 })
