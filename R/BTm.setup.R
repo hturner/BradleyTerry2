@@ -38,7 +38,8 @@ BTm.setup <- function(outcome = 1, player1, player2, formula = NULL,
     else subset <- c(subset1, subset2)
     diffModel <- Diff(player1, player2, formula, id, data, separate.ability,
                       refcat, contrasts, nm)
-    offset <- withIfNecessary(substitute(offset), formula, data, FALSE) #contest level
+    # offset is contest level
+    offset <- withIfNecessary(substitute(offset), formula, data, FALSE) 
     if (!is.null(offset)) {
         if (is.null(diffModel$offset))  diffModel$offset <- offset
         else diffModel$offset <- diffModel$offset + offset

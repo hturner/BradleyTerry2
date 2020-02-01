@@ -8,25 +8,28 @@ BTmodel <- BTm(result, winner, loser, br = TRUE,
                data = flatlizards$contests)
 
 ##  "structured" B-T model: abilities are determined by a linear predictor.
-Whiting.model1 <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
-                          head.length[..] + SVL[..], family = binomial,
-                      data = flatlizards)
+Whiting.model1 <- BTm(result, winner, loser, 
+                      ~ throat.PC1[..] + throat.PC3[..] + 
+                          head.length[..] + SVL[..], 
+                      family = binomial, data = flatlizards)
 
 ##  Equivalently, fit the same model using glmmPQL:
-Whiting.model1b <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
-                           head.length[..] + SVL[..] + (1|..), sigma = 0,
-                       sigma.fixed = TRUE, data = flatlizards)
+Whiting.model1b <- BTm(result, winner, loser, 
+                       ~ throat.PC1[..] + throat.PC3[..] +
+                           head.length[..] + SVL[..] + (1|..), 
+                       sigma = 0, sigma.fixed = TRUE, data = flatlizards)
 
 ##  Same predictor but with a normally distributed error
-Whiting.model2 <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
+Whiting.model2 <- BTm(result, winner, loser, 
+                      ~ throat.PC1[..] + throat.PC3[..] +
                           head.length[..] + SVL[..] + (1|..),
                       data = flatlizards)
 
 ##  Now use probit rather than logit as the link function:
-Whiting.model3 <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
+Whiting.model3 <- BTm(result, winner, loser, 
+                      ~ throat.PC1[..] + throat.PC3[..] +
                           head.length[..] + SVL[..] + (1|..),
-                      family = binomial(link = "probit"),
-                      data = flatlizards)
+                      family = binomial(link = "probit"), data = flatlizards)
 
 test_that("standard model as expected on flatlizards", {
     # check standard model

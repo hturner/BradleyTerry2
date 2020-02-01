@@ -50,8 +50,8 @@ length of the lizard.}
 are \code{resident} and \code{floater}.} }}
 \source{
 The data were collected by Dr Martin Whiting,
-\url{http://whitinglab.com/people/martin-whiting/}, and they appear here with his
-kind permission.
+\url{http://whitinglab.com/people/martin-whiting/}, and they appear here
+with his kind permission.
 }
 \usage{
 flatlizards
@@ -98,16 +98,18 @@ summary(BTmodel)
 ##
 ##  This reproduces results reported in Table 1 of Whiting et al. (2006):
 ##
-Whiting.model <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
-                     head.length[..] + SVL[..],
+Whiting.model <- BTm(result, winner, loser, 
+                     ~ throat.PC1[..] + throat.PC3[..] +
+                         head.length[..] + SVL[..],
                      data = flatlizards)
 summary(Whiting.model)
 ##
 ##  Equivalently, fit the same model using glmmPQL:
 ##
-Whiting.model <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
-                     head.length[..] + SVL[..] + (1|..), sigma = 0,
-                     sigma.fixed = TRUE, data = flatlizards)
+Whiting.model <- BTm(result, winner, loser,
+                     ~ throat.PC1[..] + throat.PC3[..] +
+                         head.length[..] + SVL[..] + (1|..), 
+                     sigma = 0, sigma.fixed = TRUE, data = flatlizards)
 summary(Whiting.model)
 ##
 ##  But that analysis assumes that the linear predictor formula for
@@ -118,8 +120,9 @@ summary(Whiting.model)
 ##  term --- a generalized linear mixed model --- by using the BTm
 ##  function instead of glm.
 ##
-Whiting.model2 <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
-                      head.length[..] + SVL[..] + (1|..), 
+Whiting.model2 <- BTm(result, winner, loser,
+                      ~ throat.PC1[..] + throat.PC3[..] +
+                          head.length[..] + SVL[..] + (1|..), 
                       data = flatlizards, trace = TRUE)
 summary(Whiting.model2)
 ##
@@ -134,8 +137,9 @@ summary(Whiting.model2)
 ##  function:
 ##
 require(stats)
-Whiting.model3 <- BTm(result, winner, loser, ~ throat.PC1[..] + throat.PC3[..] +
-                      head.length[..] + SVL[..] + (1|..),
+Whiting.model3 <- BTm(result, winner, loser, 
+                      ~ throat.PC1[..] + throat.PC3[..] +
+                          head.length[..] + SVL[..] + (1|..),
                       family = binomial(link = "probit"),
                       data = flatlizards, trace = TRUE)
 summary(Whiting.model3)

@@ -55,8 +55,8 @@
 #' @examples
 #' 
 #' ##
-#' ##  Fit the Bradley-Terry model to data for flutes, using the simple 'add 0.5'
-#' ##  method to handle ties:
+#' ##  Fit the Bradley-Terry model to data for flutes, using the simple 
+#' ##  'add 0.5' method to handle ties:
 #' ##
 #' flutes.model <- BTm(cbind(win1.adj, win2.adj), field1, field2, ~ field,
 #'                     id = "field",
