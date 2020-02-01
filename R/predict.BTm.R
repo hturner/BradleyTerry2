@@ -177,12 +177,12 @@ predict.BTm <- function (object, newdata = NULL,
                          envir = environment(object$formula))
         nfix <- length(object$coefficients)
         newdata <- data.frame(matrix(, nrow(setup$X), 0))
-        keep <- match(names(object$coefficients), colnames(setup$X),
-                      nomatch = 0)
-        if (0 %in% keep){
+        keep <- as.logical(match(colnames(setup$X), names(object$coefficients),
+                                 nomatch = 0))
+        if (any(!keep)){
             ## new players with missing data - set to NA
-            missing <- rowSums(setup$X[,-keep, drop = FALSE]) != 0
-            setup$X <- setup$X[, keep]
+            missing <- rowSums(setup$X[,!keep, drop = FALSE]) != 0
+            setup$X <- setup$X[, keep, drop = FALSE]
             setup$X[missing,] <- NA
         }
         if (ncol(setup$X) != nfix) {
