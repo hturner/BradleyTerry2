@@ -26,5 +26,5 @@ devtools::install_github("hturner/BradleyTerry2")
 ## Code of conduct
 
 Please note that this project is released with a [Contributor Code of
-Conduct](CONDUCT.md). By participating in this project you agree to
-abide by its terms.
+Conduct](https://github.com/hturner/BradleyTerry2/blob/master/CONDUCT.md).
+By participating in this project you agree to abide by its terms.

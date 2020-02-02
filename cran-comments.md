@@ -1,8 +1,6 @@
 ## General comments
 
-This is a minor update: 
- * updating tests to avoid failures due to minor discrepancies
- * fixing a minor bug
+This is a minor update to fix the URI in the README.
 
 ## Test environments
 
@@ -10,7 +8,7 @@ This is a minor update:
     * Ubuntu 18.04.2, R 3.6.2
     
 * R-hub
-    * Debian Linux, R-devel, GCC [x]
+    * Debian Linux, R-devel, GCC
     * Windows Server 2008 R2 SP1, R-release, 32/64 bit
     * macOS 10.11 El Capitan, R-release (experimental)
     
