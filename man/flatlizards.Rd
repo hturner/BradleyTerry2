@@ -4,7 +4,8 @@
 \name{flatlizards}
 \alias{flatlizards}
 \title{Augrabies Male Flat Lizards: Contest Results and Predictor Variables}
-\format{This dataset is a list containing two data frames:
+\format{
+This dataset is a list containing two data frames:
 \code{flatlizards$contests} and \code{flatlizards$predictors}.
 
 The \code{flatlizards$contests} data frame has 100 observations on the
@@ -47,7 +48,8 @@ length of the lizard.}
 \item{head.height}{numeric, head height.}
 \item{condition}{numeric, a measure of body condition.}
 \item{repro.tactic}{a factor indicating reproductive tactic; levels
-are \code{resident} and \code{floater}.} }}
+are \code{resident} and \code{floater}.} }
+}
 \source{
 The data were collected by Dr Martin Whiting,
 \url{http://whitinglab.com/people/martin-whiting/}, and they appear here

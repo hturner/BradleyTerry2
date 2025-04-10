@@ -40,7 +40,7 @@
 #' `se = TRUE`, a list with components \item{fit }{Predictions}
 #' \item{se.fit }{Estimated standard errors}
 #' @author Heather Turner
-#' @seealso [predict.glm()], [predict.glmmPQL()]
+#' @seealso [predict.glm()], [MASS::predict.glmmPQL()]
 #' @keywords models
 #' @examples
 #' 

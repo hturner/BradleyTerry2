@@ -4,7 +4,8 @@
 \name{springall}
 \alias{springall}
 \title{Springall (1973) Data on Subjective Evaluation of Flavour Strength}
-\format{A list containing two data frames, \code{springall$contests} and
+\format{
+A list containing two data frames, \code{springall$contests} and
 \code{springall$predictors}.
 
 The \code{springall$contests} data frame has 36 observations (one for each
@@ -31,7 +32,8 @@ flavour concentration}
 \item{gel}{numeric, the gel concentration}
 \item{flav.2}{numeric, equal to \code{flav^2}}
 \item{gel.2}{numeric, equal to \code{gel^2}}
-\item{flav.gel}{numeric, equal to \code{flav * gel}} }}
+\item{flav.gel}{numeric, equal to \code{flav * gel}} }
+}
 \source{
 Springall, A (1973) Response surface fitting using a generalization
 of the Bradley-Terry paired comparison method.  \emph{Applied Statistics}

@@ -4,9 +4,11 @@
 \name{citations}
 \alias{citations}
 \title{Statistics Journal Citation Data from Stigler (1994)}
-\format{A 4 by 4 contingency table of citations, cross-classified by the
+\format{
+A 4 by 4 contingency table of citations, cross-classified by the
 factors \code{cited} and \code{citing} each with levels \code{Biometrika},
-\verb{Comm Statist}, \code{JASA}, and \code{JRSS-B}.}
+\verb{Comm Statist}, \code{JASA}, and \code{JRSS-B}.
+}
 \source{
 Agresti, A. (2002) \emph{Categorical Data Analysis} (2nd ed).  New
 York: Wiley.

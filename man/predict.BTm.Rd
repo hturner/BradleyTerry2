@@ -187,7 +187,7 @@ BTabilities(table6.model)
 
 }
 \seealso{
-\code{\link[=predict.glm]{predict.glm()}}, \code{\link[=predict.glmmPQL]{predict.glmmPQL()}}
+\code{\link[=predict.glm]{predict.glm()}}, \code{\link[MASS:predict.glmmPQL]{MASS::predict.glmmPQL()}}
 }
 \author{
 Heather Turner

@@ -5,7 +5,8 @@
 \alias{CEMS}
 \title{Dittrich, Hatzinger and Katzenbeisser (1998, 2001) Data on Management School
 Preference in Europe}
-\format{A list containing three data frames, \code{CEMS$preferences},
+\format{
+A list containing three data frames, \code{CEMS$preferences},
 \code{CEMS$students} and \code{CEMS$schools}.
 
 The \code{CEMS$preferences} data frame has \code{303 * 15 = 4505}
@@ -54,7 +55,8 @@ management school) on the following 7 variables: \describe{
 \item{St.Gallen}{numeric (value 0 or 1)}
 \item{Stockholm}{numeric (value 0 or 1)}
 \item{LAT}{numeric
-(value 0 or 1) indicating a 'Latin' city} }}
+(value 0 or 1) indicating a 'Latin' city} }
+}
 \source{
 Royal Statistical Society datasets website, at
 \url{https://rss.onlinelibrary.wiley.com/hub/journal/14679876/series-c-datasets/pre_2016}.
