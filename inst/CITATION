@@ -1,21 +1,12 @@
-citHeader("To cite BradleyTerry2 in publications use:")
-
-citEntry(entry = "Article",
-  title        = "Bradley-Terry Models in {R}: The {BradleyTerry2} Package",
-  author       = personList(as.person("Heather Turner"),
-                   as.person("David Firth")),
-  journal      = "Journal of Statistical Software",
-  year         = "2012",
-  volume       = "48",
-  number       = "9",
-  pages        = "1--21",
-  doi          = "10.18637/jss.v048.i09",
-
-  textVersion  =
-  paste("Heather Turner and David Firth (2012).",
-        "Bradley-Terry Models in R: The BradleyTerry2 Package.",
-        "Journal of Statistical Software, 48(9), 1-21.",
-        "DOI https://doi.org/10.18637/jss.v048.i09.")
+bibentry(
+  bibtype  = "Article",
+  title = "Bradley-Terry Models in {R}: The {BradleyTerry2} Package",
+  author = c(person("Heather", "Turner"),
+             person("David", "Firth")),
+  journal  = "Journal of Statistical Software",
+  year     = "2012",
+  volume   = "48",
+  number   = "9",
+  pages    = "1--21",
+  doi      = "10.18637/jss.v048.i09",
 )
-
-

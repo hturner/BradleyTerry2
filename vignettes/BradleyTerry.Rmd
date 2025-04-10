@@ -41,7 +41,6 @@ bibliography: BradleyTerry.bib
 
 ---
 
-::: article
 ``` {r include=FALSE}
 library <- function(...) suppressPackageStartupMessages(base::library(...))
 library(knitr)
@@ -820,7 +819,7 @@ citations.sf <- countsToBinomial(citations)
 ```
 
 The `citations.sf` data frame can then be used with `BTm` as shown in
-Section \@ref(citations).
+Section \@ref(sec:citations).
 
 ## A list of the functions provided in **BradleyTerry2** {#sec:functions}
 
