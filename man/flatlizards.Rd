@@ -52,7 +52,7 @@ are \code{resident} and \code{floater}.} }
 }
 \source{
 The data were collected by Dr Martin Whiting,
-\url{http://whitinglab.com/people/martin-whiting/}, and they appear here
+\url{https://whitinglab.com/people/martin-whiting/}, and they appear here
 with his kind permission.
 }
 \usage{
