@@ -9,13 +9,13 @@ citEntry(entry = "Article",
   volume       = "48",
   number       = "9",
   pages        = "1--21",
-  url          = "https://www.jstatsoft.org/v48/i09/",
+  doi          = "10.18637/jss.v048.i09",
 
   textVersion  =
-  paste("Heather Turner, David Firth (2012).",
+  paste("Heather Turner and David Firth (2012).",
         "Bradley-Terry Models in R: The BradleyTerry2 Package.",
         "Journal of Statistical Software, 48(9), 1-21.",
-        "URL https://www.jstatsoft.org/v48/i09/.")
+        "DOI https://doi.org/10.18637/jss.v048.i09.")
 )
 
 

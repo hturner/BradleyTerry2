@@ -596,7 +596,7 @@ lm(res ~ head.length, weights = attr(res, "weights"),
 
 As an illustration of evident *non-null* residual structure, consider
 the unrealistically simple model `lizModel` that was fitted in
-Section \@ref(#sec:covariates) above. That model lacks the clearly
+Section \@ref(sec:covariates) above. That model lacks the clearly
 significant predictor variable `throat.PC3`, and the plot shown in
 Figure \@ref(fig:figresiduals) demonstrates this fact graphically:
 
