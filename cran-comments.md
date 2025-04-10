@@ -1,24 +1,25 @@
 ## General comments
 
-This is a minor update to fix the URI in the README.
+This is a minor update:
+
+ * Add package anchor to Rd link to target in different package (as requested)
+ * Convert the Sweave vignette to bookdown
+ * Update various URLs and switch to DOI for JSS articles
 
 ## Test environments
 
-* Local
-    * Ubuntu 18.04.2, R 3.6.2
+1. (Local) macOS 15.3.2, R 4.5.0 RC
+2. (Win-builder) Windows Server 2022, R 4.5.0 RC
+3. (R-hub v2) Fedora Linux 38 R-devel (2025-04-08 r88126), 
+Ubuntu 22.04.5 LTS R-4.5.0 RC
     
-* R-hub
-    * Debian Linux, R-devel, GCC
-    * Windows Server 2008 R2 SP1, R-release, 32/64 bit
-    * macOS 10.11 El Capitan, R-release (experimental)
-    
-### Check results
+## Check results
 
-I get a warning on R-hub macOS, 
+No errors, warnings or notes.
 
-* checking top-level files ... WARNING
-Conversion of ‘README.md’ failed:
-pandoc: Could not fetch https://www.r-pkg.org/badges/version/BradleyTerry2
-TlsExceptionHostPort (HandshakeFailed (Error_Misc "user error (unexpected type received. expecting handshake and got: Alert [(AlertLevel_Fatal,HandshakeFailure)])")) "www.r-pkg.org" 443
+## revdepcheck results
 
-This seems to due to missing https support in an older version of pandoc.
+Checked 6 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
+
+ * Saw 0 new problems
+ * Failed to check 0 packages
