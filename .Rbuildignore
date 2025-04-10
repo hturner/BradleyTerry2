@@ -7,3 +7,5 @@ tmp
 ^\.travis\.yml$
 ^appveyor\.yml$
 ^CONDUCT\.md$
+^doc$
+^Meta$
