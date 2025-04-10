@@ -4,7 +4,8 @@
 \name{chameleons}
 \alias{chameleons}
 \title{Male Cape Dwarf Chameleons: Measured Traits and Contest Outcomes}
-\format{A list containing three data frames: \code{chameleons$winner},
+\format{
+A list containing three data frames: \code{chameleons$winner},
 \code{chameleons$loser} and \code{chameleons$predictors}.
 
 The \code{chameleons$winner} and \code{chameleons$loser} data frames each
@@ -36,7 +37,8 @@ of body mass regression on \code{SVL} (body condition)}
 \item{prop.main}{numeric, proportion (arcsin transformed) of area of
 the flank occupied by the main pink patch on the flank}
 \item{prop.patch}{numeric, proportion (arcsin transformed) of area
-of the flank occupied by the entire flank patch} }}
+of the flank occupied by the entire flank patch} }
+}
 \source{
 The data were obtained by Dr Devi Stuart-Fox,
 \url{https://devistuartfox.com/},

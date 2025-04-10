@@ -4,13 +4,15 @@
 \name{seeds}
 \alias{seeds}
 \title{Seed Germination Data from Crowder (1978)}
-\format{A data frame with 21 observations on the following 4 variables.
+\format{
+A data frame with 21 observations on the following 4 variables.
 \describe{
 \item{r}{the number of germinated seeds.}
 \item{n}{the total number of seeds.}
 \item{seed}{the seed
 variety.}
-\item{extract}{the type of root extract.} }}
+\item{extract}{the type of root extract.} }
+}
 \source{
 Crowder, M. (1978) Beta-Binomial ANOVA for proportions.
 \emph{Applied Statistics}, \strong{27}, 34--37.

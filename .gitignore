@@ -5,3 +5,5 @@
 *.bbl
 *.log
 *.tex
+/doc/
+/Meta/

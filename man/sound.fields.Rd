@@ -4,7 +4,8 @@
 \name{sound.fields}
 \alias{sound.fields}
 \title{Kousgaard (1984) Data on Pair Comparisons of Sound Fields}
-\format{A list containing two data frames, \code{sound.fields$comparisons},
+\format{
+A list containing two data frames, \code{sound.fields$comparisons},
 and \code{sound.fields$design}.
 
 The \code{sound.fields$comparisons} data frame has 84 observations on the
@@ -35,7 +36,8 @@ factor with levels \code{c("0", "1")}, the \emph{reflection} factor (0 for
 \emph{-26dB}, 1 for \emph{-20dB}); contrasts are sum contrasts}
 \item{c}{a factor with levels \code{c("0", "1")}, the
 \emph{reverberation} factor (0 for \emph{-24dB}, 1 for \emph{-20dB});
-contrasts are sum contrasts} }}
+contrasts are sum contrasts} }
+}
 \source{
 Kousgaard, N. (1984) Analysis of a Sound Field Experiment by a Model
 for Paired Comparisons with Explanatory Variables.  \emph{Scandinavian

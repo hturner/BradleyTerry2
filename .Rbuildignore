@@ -4,6 +4,7 @@ tmp
 ^README\.Rmd$
 ^README-.*\.png$
 ^cran-comments\.md$
-^\.travis\.yml$
-^appveyor\.yml$
 ^CONDUCT\.md$
+^doc$
+^Meta$
+^\.github$

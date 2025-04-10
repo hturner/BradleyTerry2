@@ -4,7 +4,8 @@
 \name{icehockey}
 \alias{icehockey}
 \title{College Hockey Men's Division I 2009-10 results}
-\format{A data frame with 1083 observations on the following 6 variables.
+\format{
+A data frame with 1083 observations on the following 6 variables.
 \describe{
 \item{date}{a numeric vector}
 \item{visitor}{a
@@ -19,7 +20,8 @@ with levels \code{AH}, \code{CC}, \code{CH}, \code{EC}, \code{HE},
 \item{result}{a numeric vector: 1 if visitor
 won, 0.5 for a draw and 0 if visitor lost}
 \item{home.ice}{a logical
-vector: 1 if opponent on home ice, 0 if game on neutral ground} }}
+vector: 1 if opponent on home ice, 0 if game on neutral ground} }
+}
 \source{
 \url{http://www.collegehockeystats.net/0910/schedules/men}.
 }
