@@ -1,3 +1,15 @@
+Changes in BradleyTerry2 1.1-3
+==============================
+
+ * fix cross-references in documentation
+ * update references to JSS articles
+ * convert Sweave vignette to bookdown for greater accessibility
+
+Changes in BradleyTerry2 1.1-2
+==============================
+
+ * use absolute vs relative link in README so it works on CRAN
+ 
 Changes in BradleyTerry2 1.1-1
 ==============================
 
