@@ -1,3 +1,5 @@
+# BradleyTerry2 (development version)
+
 Changes in BradleyTerry2 1.1.3
 ==============================
 

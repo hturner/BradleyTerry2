@@ -1,6 +1,6 @@
 Package: BradleyTerry2
 Title: Bradley-Terry Models
-Version: 1.1.3
+Version: 1.1.3.9000
 Authors@R: c(
     person("Heather", "Turner", , "ht@heatherturner.net", role = c("aut", "cre")),
     person("David", "Firth", role = "aut")
