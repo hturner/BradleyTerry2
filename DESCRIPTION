@@ -23,14 +23,12 @@ Imports:
 Suggests: 
     bookdown,
     knitr,
-    litedown,
     prefmod,
     testthat
 Enhances: 
     gnm
 VignetteBuilder: 
-    knitr, 
-    litedown
+    knitr
 Encoding: UTF-8
 Language: en-GB
 LazyData: yes
