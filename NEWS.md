@@ -1,4 +1,4 @@
-Changes in BradleyTerry2 1.1-3
+Changes in BradleyTerry2 1.1.3
 ==============================
 
  * fix cross-references in documentation
