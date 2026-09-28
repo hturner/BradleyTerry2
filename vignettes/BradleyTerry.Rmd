@@ -43,6 +43,7 @@ bibliography: BradleyTerry.bib
 
 ``` {r include=FALSE}
 library <- function(...) suppressPackageStartupMessages(base::library(...))
+prefmod <- requireNamespace("prefmod", quietly = TRUE)
 library(knitr)
 opts_chunk$set(
 tidy=FALSE
@@ -740,7 +741,7 @@ The following steps convert these data into a form suitable for analysis
 with `BTm`. First a new data frame is created from the student-specific
 variables and these variables are converted to factors:
 
-``` {r student-specific_data}
+``` {r student-specific_data, eval = prefmod}
 library("prefmod")
 student <- cemspc[c("ENG", "SEX")]
 student$ENG <- factor(student$ENG, levels = 1:2,
@@ -754,7 +755,7 @@ necessary data. Then a `student` factor is created for indexing the
 student data to produce contest-level data. This is put in a new data
 frame that will hold the contest-specific data.
 
-``` {r student_factor}
+``` {r student_factor, eval = prefmod}
 cems <- list(student = student)
 student <- gl(303, 1, 303 * 15) #303 students, 15 comparisons
 contest <- data.frame(student = student)
@@ -763,7 +764,7 @@ contest <- data.frame(student = student)
 Next the outcome data is converted to a binomial response, adjusted for
 ties. The result is added to the `contest` data frame.
 
-``` {r binomial_response}
+``` {r binomial_response, eval = prefmod}
 win <- cemspc[, 1:15] == 0
 lose <- cemspc[, 1:15] == 2
 draw <- cemspc[, 1:15] == 1
@@ -775,7 +776,7 @@ Then two factors are created identifying the first and second school in
 each comparison. The comparisons are in the order 1 vs. 2, 1 vs. 3, 2
 vs. 3, 1 vs. 4, ..., so the factors can be created as follows:
 
-``` {r school_factors}
+``` {r school_factors, eval = prefmod}
 lab <- c("London", "Paris", "Milano", "St. Gallen", "Barcelona",
          "Stockholm")
 contest$school1 <- factor(sequence(1:5), levels = 1:6, labels = lab)
@@ -791,7 +792,7 @@ specified.
 
 Finally the `contest` data frame is added to the main list:
 
-``` {r cems_data}
+``` {r cems_data, eval = prefmod}
 cems$contest <- contest
 ```
 
