@@ -26,52 +26,60 @@ export(glmmPQL.control)
 export(plotProportions)
 export(qvcalc)
 importFrom(brglm,brglm)
-importFrom(graphics,curve)
-importFrom(graphics,plot)
-importFrom(graphics,points)
+importFrom(graphics,
+  curve,
+  plot,
+  points
+)
 importFrom(gtools,combinations)
-importFrom(lme4,findbars)
-importFrom(lme4,nobars)
-importFrom(qvcalc,qvcalc)
-importFrom(qvcalc,qvcalc.default)
-importFrom(stats,.checkMFClasses)
-importFrom(stats,.getXlevels)
-importFrom(stats,C)
-importFrom(stats,add.scope)
-importFrom(stats,as.formula)
-importFrom(stats,coef)
-importFrom(stats,contrasts)
-importFrom(stats,delete.response)
-importFrom(stats,drop.scope)
-importFrom(stats,family)
-importFrom(stats,fitted)
-importFrom(stats,formula)
-importFrom(stats,gaussian)
-importFrom(stats,glm.control)
-importFrom(stats,glm.fit)
-importFrom(stats,is.empty.model)
-importFrom(stats,model.frame)
-importFrom(stats,model.matrix)
-importFrom(stats,model.offset)
-importFrom(stats,model.response)
-importFrom(stats,model.weights)
-importFrom(stats,na.exclude)
-importFrom(stats,na.omit)
-importFrom(stats,na.pass)
-importFrom(stats,napredict)
-importFrom(stats,naprint)
-importFrom(stats,optimize)
-importFrom(stats,pchisq)
-importFrom(stats,pf)
-importFrom(stats,plogis)
-importFrom(stats,pnorm)
-importFrom(stats,printCoefmat)
-importFrom(stats,reformulate)
-importFrom(stats,relevel)
-importFrom(stats,runif)
-importFrom(stats,symnum)
-importFrom(stats,terms)
-importFrom(stats,update)
-importFrom(stats,update.formula)
-importFrom(stats,vcov)
+importFrom(lme4,
+  findbars,
+  nobars
+)
+importFrom(qvcalc,
+  qvcalc,
+  qvcalc.default
+)
+importFrom(stats,
+  .checkMFClasses,
+  .getXlevels,
+  C,
+  add.scope,
+  as.formula,
+  coef,
+  contrasts,
+  delete.response,
+  drop.scope,
+  family,
+  fitted,
+  formula,
+  gaussian,
+  glm.control,
+  glm.fit,
+  is.empty.model,
+  model.frame,
+  model.matrix,
+  model.offset,
+  model.response,
+  model.weights,
+  na.exclude,
+  na.omit,
+  na.pass,
+  napredict,
+  naprint,
+  optimize,
+  pchisq,
+  pf,
+  plogis,
+  pnorm,
+  printCoefmat,
+  reformulate,
+  relevel,
+  runif,
+  symnum,
+  terms,
+  update,
+  update.formula,
+  vcov
+)
 importFrom(utils,flush.console)

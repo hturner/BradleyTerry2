@@ -11,6 +11,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{qvcalc}{\code{\link[qvcalc]{qvcalc}}}
+  \item{qvcalc}{\code{\link[qvcalc:qvcalc]{qvcalc()}}}
 }}
 
