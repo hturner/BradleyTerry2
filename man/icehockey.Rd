@@ -114,7 +114,7 @@ cbind(names(sort(ranks, decr = TRUE)[1:10]),
 }
 \references{
 Schlobotnik, J. Build your own rankings:
-\url{http://www.elynah.com/tbrw/2010/rankings.diy.shtml}.
+\url{https://www.elynah.com/tbrw/2010/rankings.diy.shtml}.
 
 College Hockey News \url{https://www.collegehockeynews.com/}.
 
