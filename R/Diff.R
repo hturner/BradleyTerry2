@@ -1,4 +1,5 @@
 #' @importFrom stats is.empty.model model.frame model.matrix model.offset na.omit na.pass reformulate relevel terms
+#' @importFrom reformulas findbars nobars
 Diff <- function(player1, player2, formula = NULL, id = "..", data = NULL,
                  separate.ability = NULL, refcat = NULL, contrasts = NULL,
                  subset = NULL) {

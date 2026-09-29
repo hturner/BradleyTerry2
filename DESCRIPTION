@@ -17,8 +17,8 @@ Depends:
 Imports: 
     brglm,
     gtools,
-    lme4 (>= 1.0),
     qvcalc,
+    reformulas,
     stats
 Suggests: 
     bookdown,

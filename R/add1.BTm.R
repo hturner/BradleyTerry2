@@ -59,7 +59,7 @@
 #' drop1(BTmodel2, test = "Chisq")
 #' 
 #' @importFrom stats add.scope coef model.frame model.offset model.response model.weights formula pchisq pf reformulate terms update update.formula vcov
-#' @importFrom lme4 findbars nobars
+#' @importFrom reformulas findbars nobars
 #' @export
 add1.BTm <- function(object, scope, scale = 0, test = c("none", "Chisq", "F"),
                       x = NULL, ...) {

@@ -32,13 +32,13 @@ importFrom(graphics,
   points
 )
 importFrom(gtools,combinations)
-importFrom(lme4,
-  findbars,
-  nobars
-)
 importFrom(qvcalc,
   qvcalc,
   qvcalc.default
+)
+importFrom(reformulas,
+  findbars,
+  nobars
 )
 importFrom(stats,
   .checkMFClasses,
