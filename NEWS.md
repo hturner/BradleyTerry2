@@ -1,7 +1,10 @@
-# BradleyTerry2 (development version)
+Changes in BradleyTerry2 1.1.4
+==============================
 
+* add examples of compute P(i beats j) and using sum-to-zero contrasts
 * fix bug in BTabilities when there are only two players
 * imports of findbars and nobars updated to use reformulas vs lme4
+* make prefmod optional in vignette
 * avoid using saved reference value to test models fit within functions
 
 Changes in BradleyTerry2 1.1.3
