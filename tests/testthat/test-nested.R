@@ -16,9 +16,15 @@ x <- matrix(c(0,0, 0, 2, 0,0, 0, 0, 0, 0, 0, 0,
               0,3, 6,19, 6,0, 0, 2, 5, 3, 0, 0,
               0,0, 3, 1, 1,0, 0, 0, 1, 0, 0, 0,
               0,0, 0, 2, 0,0, 0, 0, 0, 0, 0, 0,
-              0,0, 1, 0, 0,0, 0, 0, 0, 0, 0, 0),nrow=12)
+              0,0, 1, 0, 0,0, 0, 0, 0, 0, 0, 0), nrow=12)
 colnames(x) <- 1:12
 rownames(x) <- 1:12
+
+## standard call
+c2b <- countsToBinomial(x)
+names(c2b) <- c("allele1", "allele2", "transmitted", "nontransmitted")
+res0 <- BTm(cbind(transmitted, nontransmitted), allele1, allele2,
+            ~allele, id = "allele", data = c2b)
 
 ## function calling BTm, based on data created in function
 fun1 <- function(x) {
@@ -39,14 +45,12 @@ fun2 <- function(x) {
 }
 
 test_that("nested call to BTm works", {
-    # ignore family: mode of initialize changes between R versions
-    res <- fun1(x)
-    res$family <- NULL
-    expect_known_value(res,
-                       file = test_path("outputs/nested.rds"),
-                       tol = tol)
+    # nested call should give same as standard call
+    res1 <- fun1(x)
+    expect_equal(res1, res0)
+    ## second case expresses binomial response differently, 
+    ## so call and model matrix different, but same fit
     res2 <- fun2(x)
-    res2$family <- NULL
-    nm <- setdiff(names(res), c("call", "model"))
-    expect_equal(res[nm], res2[nm])
+    nm <- setdiff(names(res0), c("call", "model"))
+    expect_equal(res0[nm], res2[nm])
 })

@@ -1,6 +1,7 @@
 # BradleyTerry2 (development version)
 
 * imports of findbars and nobars updated to use reformulas vs lme4
+* avoid using saved reference value to test models fit within functions
 
 Changes in BradleyTerry2 1.1.3
 ==============================
