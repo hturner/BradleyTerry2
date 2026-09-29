@@ -149,10 +149,15 @@
 #' 
 #' ##  First fit the "standard" Bradley-Terry model
 #' citeModel <- BTm(cbind(win1, win2), journal1, journal2, data = citations.sf)
+#' BTabilities(citeModel)
 #' 
 #' ##  Now the same thing with a different "reference" journal
 #' citeModel2 <- update(citeModel, refcat = "JASA")
 #' BTabilities(citeModel2)
+#' 
+#' ## Compute probabilities journal i (row) beats journal j (column)
+#' alpha <- exp(BTabilities(citeModel2)[,1])
+#' alpha/outer(alpha, alpha, "+")
 #' 
 #' ##################################################################
 #' ##  Now an example with an order effect -- see Agresti (2002) p438

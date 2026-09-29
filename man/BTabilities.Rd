@@ -53,6 +53,10 @@ names(citations.sf)[1:2] <- c("journal1", "journal2")
 citeModel <- BTm(cbind(win1, win2), journal1, journal2, data = citations.sf)
 BTabilities(citeModel)
 
+##  Compute probabilities journal i (row) beats journal j (column)
+alpha <- exp(BTabilities(citeModel2)[,1])
+alpha/outer(alpha, alpha, "+")
+
 ### baseball example
 
 data(baseball) # start with baseball data as provided by package
@@ -63,9 +67,15 @@ baseball$away.team <- data.frame(team = baseball$away.team, at.home = 0)
 baseballModel2 <- BTm(cbind(home.wins, away.wins), home.team, away.team,
                       formula = ~ team + at.home, id = "team",
                       data = baseball)
+
 ##  Estimate abilities for each team, relative to Baltimore, when
 ##  playing away from home:  
 BTabilities(baseballModel2)
+
+##  Compute probabilities team i (row) beats team j (col), when 
+##  playing away from home
+alpha <- exp(BTabilities(baseballModel2)[,1])
+alpha/outer(alpha, alpha, "+")
 
 }
 \references{
