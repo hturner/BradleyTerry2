@@ -50,3 +50,14 @@ test_that("BTabilities works with sum to zero contrasts", {
     expect_equivalent(BTabilities(mod3)[, "s.e."], 
                       sqrt(diag(t(M) %*% V %*% M)))
 })
+
+test_that("BTabilities works with only two players", {
+    # ref https://github.com/hturner/BradleyTerry2/issues/13
+    lev <- c("Model1", "Model2")
+    head_to_head <- data.frame(player_1 = factor("Model1", lev),
+                               player_2 = factor("Model2", lev),
+                               wins_1 = 7,
+                               wins_2 = 3)
+    mod <- BTm(cbind(wins_1, wins_2), player_1, player_2, data = head_to_head)
+    expect_equal(unname(BTabilities(mod)[2,]), coef(summary(mod))[1:2])
+})
