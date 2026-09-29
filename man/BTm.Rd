@@ -184,8 +184,13 @@ BTabilities(citeModel)
 citeModel2 <- update(citeModel, refcat = "JASA")
 BTabilities(citeModel2)
 
+## Alternatively, use sum-to-zero contrasts for ID factor
+citeModel3 <- update(citeModel, contrasts = list(".." = "contr.sum"))
+BTabilities(citeModel3)
+
 ## Compute probabilities journal i (row) beats journal j (column)
-alpha <- exp(BTabilities(citeModel2)[,1])
+## (same for all contrasts)
+alpha <- exp(BTabilities(citeModel3)[,1])
 alpha/outer(alpha, alpha, "+")
 
 ##################################################################
