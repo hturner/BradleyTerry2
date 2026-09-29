@@ -50,7 +50,7 @@
 #' BTabilities(citeModel)
 #' 
 #' ##  Compute probabilities journal i (row) beats journal j (column)
-#' alpha <- exp(BTabilities(citeModel2)[,1])
+#' alpha <- exp(BTabilities(citeModel)[,1])
 #' alpha/outer(alpha, alpha, "+")
 #' 
 #' ### baseball example
