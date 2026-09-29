@@ -1,5 +1,6 @@
 # BradleyTerry2 (development version)
 
+* fix bug in BTabilities when there are only two players
 * imports of findbars and nobars updated to use reformulas vs lme4
 * avoid using saved reference value to test models fit within functions
 

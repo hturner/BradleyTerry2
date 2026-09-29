@@ -154,7 +154,7 @@ BTabilities <-  function (model)
             fac <- C(relevel(fac, model$refcat),
                      "contr.treatment")
         } else fac <- C(fac, model$contrasts[[model$id]])
-        contr <- contrasts(fac)[player.names,]
+        contr <- contrasts(fac)[player.names, , drop = FALSE]
         ## calc abilities and s.e., fill in NA as necessary
         if (!is.null(attr(coef, "na.action"))) {
             contr <- contr[, -attr(coef, "na.action"), drop = FALSE]
